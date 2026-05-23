@@ -342,7 +342,7 @@
     const groupNumbers = normalizeArray(group.slot_group).map(Number);
     const sharedIndex = groupNumbers.indexOf(questionNumber) + 1;
 
-    return {
+    const question = {
       id: `GEN-R${String(questionNumber).padStart(3, "0")}-${setItem.item_id}`,
       question_number: questionNumber,
       test_level: "TOPIK I",
@@ -371,7 +371,21 @@
       insert_positions: setItem.insert_positions,
       correct_position: setItem.correct_position || ""
     };
+
+    if (setItem.type === "sentence_order") {
+      question.sentence_items = normalizeArray(setItem.sentence_items);
+      question.correct_order = normalizeArray(setItem.correct_order);
+    }
+
+    if (setItem.type === "sentence_insert") {
+      question.insert_sentence = setItem.insert_sentence || "";
+      question.insert_positions = normalizeArray(setItem.insert_positions);
+      question.correct_position = setItem.correct_position || "";
+    }
+
+    return question;
   }
+
 
   function generateQuestionArrayFromAvailableBank(bank, template) {
     const report = buildStructureReport(bank, template);
@@ -444,6 +458,23 @@
     return report;
   }
 
+  function downloadJson(data, fileName) {
+    const jsonText = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonText], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+
+    window.setTimeout(function () {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 0);
+  }
+
   async function tryGeneratePreview() {
     const bank = await loadJson(BANK_URL);
     const template = await loadJson(TEMPLATE_URL);
@@ -458,8 +489,23 @@
     return generatedQuestions;
   }
 
+  async function generateAndDownload() {
+    const generatedQuestions = await tryGeneratePreview();
+
+    if (!Array.isArray(generatedQuestions) || generatedQuestions.length !== 40) {
+      throw new Error("생성된 문항 수가 40문항이 아닙니다.");
+    }
+
+    downloadJson(generatedQuestions, "generated-reading-questions.json");
+
+    console.log("generated-reading-questions.json 다운로드가 시작되었습니다.");
+
+    return generatedQuestions;
+  }
+
   window.TOPIKQuestionGenerator = {
     checkOnly,
-    tryGeneratePreview
+    tryGeneratePreview,
+    generateAndDownload
   };
 })();
