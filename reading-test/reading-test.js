@@ -352,24 +352,53 @@ function bindEvents() {
   });
 }
 
-async function loadQuestions() {
-  try {
-    const response = await fetch("./reading-questions.json", { cache: "no-store" });
+async function fetchQuestionFile(url) {
+  const response = await fetch(url, { cache: "no-store" });
 
-    if (!response.ok) {
-      throw new Error("reading-questions.json을 찾을 수 없습니다.");
-    }
-
-    const data = await response.json();
-    const normalizedData = normalizeQuestions(data);
-    const groupedData = enrichPassageGroups(normalizedData);
-    validateQuestions(groupedData);
-    questions = groupedData;
-  } catch (error) {
-    console.warn("reading-questions.json을 불러오지 못해 31~70번 예비 데이터를 사용합니다.", error);
-    questions = enrichPassageGroups(generateFallbackQuestions());
+  if (!response.ok) {
+    throw new Error(`${url} 파일을 불러오지 못했습니다. 상태 코드: ${response.status}`);
   }
 
+  return response.json();
+}
+
+async function loadQuestions() {
+  const questionFiles = [
+    {
+      url: "./generated-reading-questions.json",
+      label: "generated-reading-questions.json"
+    },
+    {
+      url: "./reading-questions.json",
+      label: "reading-questions.json"
+    }
+  ];
+
+  let lastError = null;
+
+  for (const file of questionFiles) {
+    try {
+      const data = await fetchQuestionFile(file.url);
+      const normalizedData = normalizeQuestions(data);
+      const groupedData = enrichPassageGroups(normalizedData);
+
+      validateQuestions(groupedData);
+
+      questions = groupedData;
+      sortQuestionsByNumber();
+
+      console.info(`TOPIK I Reading questions loaded from ${file.label}: ${questions.length}`);
+
+      return;
+    } catch (error) {
+      lastError = error;
+      console.warn(`${file.label}을 불러오지 못했습니다. 다음 파일을 확인합니다.`, error);
+    }
+  }
+
+  console.warn("문항 JSON을 불러오지 못해 31~70번 예비 데이터를 사용합니다.", lastError);
+
+  questions = enrichPassageGroups(generateFallbackQuestions());
   sortQuestionsByNumber();
 }
 
