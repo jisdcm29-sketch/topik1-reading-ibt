@@ -566,7 +566,10 @@ function analyzeReadingResult(data) {
       test_scope: data.test_scope || "",
       question_number_start: data.question_number_start || 31,
       question_number_end: data.question_number_end || 70,
-      is_full_40_question_set: Boolean(data.is_full_40_question_set)
+      is_full_40_question_set: Boolean(data.is_full_40_question_set),
+      generated_exam_mode: data.generated_exam_mode || "random",
+      generated_exam_round: data.generated_exam_round || "",
+      generated_exam_label: data.generated_exam_label || "랜덤 출제"
     },
     student: {
       name: data.student_name || "",
@@ -711,6 +714,7 @@ function renderReport(report) {
       <tbody>
         <tr><th>응시자 이름</th><td>${escapeHtml(student.name)}</td><th>전화번호</th><td>${escapeHtml(student.phone)}</td></tr>
         <tr><th>시험명</th><td>${escapeHtml(report.source.test_name)}</td><th>시험 범위</th><td>${escapeHtml(report.source.test_scope)}</td></tr>
+<tr><th>출제 방식</th><td>${escapeHtml(report.source.generated_exam_label || "랜덤 출제")}</td><th>출제 회차</th><td>${escapeHtml(report.source.generated_exam_round || "전체 랜덤")}</td></tr>
         <tr><th>시작 시간</th><td>${escapeHtml(student.started_at)}</td><th>제출 시간</th><td>${escapeHtml(student.submitted_at)}</td></tr>
       </tbody>
     </table>
@@ -799,6 +803,8 @@ function buildTxtReport(report) {
   lines.push(`전화번호: ${report.student.phone}`);
   lines.push(`시험명: ${report.source.test_name}`);
   lines.push(`시험 범위: ${report.source.test_scope}`);
+  lines.push(`출제 방식: ${report.source.generated_exam_label || "랜덤 출제"}`);
+  lines.push(`출제 회차: ${report.source.generated_exam_round || "전체 랜덤"}`);
   lines.push(`시작 시간: ${report.student.started_at}`);
   lines.push(`제출 시간: ${report.student.submitted_at}`);
   lines.push("");
