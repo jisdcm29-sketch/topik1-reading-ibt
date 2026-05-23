@@ -27,3 +27,4 @@ C:\topik1-separated-system\reading-test\reading-questions.json
 - reading-questions.json은 아직 '실제 문제 입력용 구조'입니다.
 - 문제 원문, 보기, 정답, 해설은 다음 단계에서 31~40부터 나누어 입력합니다.
 - 이미지가 필요한 40~42, 63~64 등은 images 폴더에 이미지 파일을 넣고 image_url을 설정하세요.
+GitHub Pages redeploy check.
