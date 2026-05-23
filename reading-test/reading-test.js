@@ -1369,10 +1369,14 @@ function renderInlineBlankChoiceQuestion(question) {
 }
 
 function buildBlankPassageHtml(passage, selectedText) {
-  const safePassage = escapeHtml(passage || "");
-  const blankPatterns = ["(     )", "(    )", "(   )", "(  )", "( )", "( ㉠ )", "(㉠)", "㉠", "( ㉡ )", "(㉡)", "㉡", "_____", "____", "[빈칸]", "[blank]"];
+  let html = escapeHtml(passage || "");
+
   const insertedHtml = selectedText
     ? getInsertedAnswerHtml(selectedText)
+    : "";
+
+  const genericBlankHtml = selectedText
+    ? insertedHtml
     : `<span style="
         display:inline-block;
         min-width:96px;
@@ -1386,13 +1390,58 @@ function buildBlankPassageHtml(passage, selectedText) {
         font-weight:900;
       ">(　　　)</span>`;
 
-  for (const pattern of blankPatterns) {
-    if (safePassage.includes(pattern)) {
-      return safePassage.replace(pattern, insertedHtml).replace(/\n/g, "<br>");
+  const circledBlankPatterns = [
+    { regex: /\(\s*㉠\s*\)/, label: "㉠" },
+    { regex: /\(\s*㉡\s*\)/, label: "㉡" },
+    { regex: /\(\s*㉢\s*\)/, label: "㉢" },
+    { regex: /\(\s*㉣\s*\)/, label: "㉣" },
+    { regex: /㉠/, label: "㉠" },
+    { regex: /㉡/, label: "㉡" },
+    { regex: /㉢/, label: "㉢" },
+    { regex: /㉣/, label: "㉣" }
+  ];
+
+  for (const item of circledBlankPatterns) {
+    if (item.regex.test(html)) {
+      const markerHtml = selectedText
+        ? insertedHtml
+        : `<span style="
+            display:inline-block;
+            min-width:48px;
+            height:30px;
+            margin:0 4px;
+            border:2px solid #0877f2;
+            border-radius:8px;
+            background:#ffffff;
+            color:#003f8f;
+            text-align:center;
+            font-weight:900;
+          ">(${item.label})</span>`;
+
+      return html.replace(item.regex, markerHtml).replace(/\n/g, "<br>");
     }
   }
 
-  return `${safePassage} ${insertedHtml}`.replace(/\n/g, "<br>");
+  const genericBlankPatterns = [
+    "(     )",
+    "(    )",
+    "(   )",
+    "(  )",
+    "( )",
+    "()",
+    "_____",
+    "____",
+    "[빈칸]",
+    "[blank]"
+  ];
+
+  for (const pattern of genericBlankPatterns) {
+    if (html.includes(pattern)) {
+      return html.replace(pattern, genericBlankHtml).replace(/\n/g, "<br>");
+    }
+  }
+
+  return html.replace(/\n/g, "<br>");
 }
 
 /* 문장 삽입 위치형: ㄱ/ㄴ/ㄷ/ㄹ을 누르면 보기 문장이 해당 위치에 삽입 */
@@ -2065,9 +2114,6 @@ function placeSentenceInSlot(question, sentenceItems, slotIndex, label) {
   renderQuestion();
 }
 
-
-
-
 function isCommonPassageBlankChoice(question) {
   if (!question) return false;
 
@@ -2091,13 +2137,40 @@ function isCommonPassageBlankChoice(question) {
 
 function hasBlankMarker(text) {
   const value = String(text || "");
-  const blankPatterns = ["(     )", "(    )", "(   )", "(  )", "( )", "_____", "____", "[빈칸]", "[blank]"];
+
+  const blankPatterns = [
+    "(     )",
+    "(    )",
+    "(   )",
+    "(  )",
+    "( )",
+
+    "( ㉠ )",
+    "(㉠)",
+    "㉠",
+
+    "( ㉡ )",
+    "(㉡)",
+    "㉡",
+
+    "( ㉢ )",
+    "(㉢)",
+    "㉢",
+
+    "( ㉣ )",
+    "(㉣)",
+    "㉣",
+
+    "_____",
+    "____",
+    "[빈칸]",
+    "[blank]"
+  ];
 
   return blankPatterns.some(function (pattern) {
     return value.includes(pattern);
   });
 }
-
 function renderCommonPassageBlankChoiceQuestion(question) {
   const groupHeaderHtml = buildPassageGroupHeader(question);
   const questionNumberLabelHtml = buildQuestionNumberLabelForPanel(question);
