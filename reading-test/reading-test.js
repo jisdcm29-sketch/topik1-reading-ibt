@@ -74,8 +74,13 @@ let timerId = null;
 let latestResult = null;
 let latestResultText = "";
 
-const elements = {};
+let latestExamGenerationOptions = {
+  mode: "random",
+  round: "",
+  label: "랜덤 출제"
+};
 
+const elements = {};
 const INSERTED_HIGHLIGHT_CLASS = "inserted-answer-highlight";
 
 function getInsertedAnswerHtml(text) {
@@ -303,9 +308,9 @@ function bindEvents() {
   elements.startButton.addEventListener("click", startTest);
 
 if (elements.newExamButton) {
+  createExamModeSelector();
   elements.newExamButton.addEventListener("click", createNewRandomExam);
 }
-
   elements.studentNameInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       elements.studentPhoneInput.focus();
@@ -407,6 +412,94 @@ async function loadQuestions() {
   questions = enrichPassageGroups(generateFallbackQuestions());
   sortQuestionsByNumber();
 }
+function createExamModeSelector() {
+  if (!elements || !elements.newExamButton) {
+    return;
+  }
+
+  if (document.getElementById("examModeSelect")) {
+    return;
+  }
+
+  const wrapper = document.createElement("div");
+  wrapper.id = "examModeSelectWrapper";
+  wrapper.style.margin = "14px 0";
+  wrapper.style.padding = "12px";
+  wrapper.style.border = "1px solid #cfe2ff";
+  wrapper.style.borderRadius = "12px";
+  wrapper.style.background = "#f8fbff";
+
+  const label = document.createElement("label");
+  label.setAttribute("for", "examModeSelect");
+  label.textContent = "시험지 선택";
+  label.style.display = "block";
+  label.style.fontWeight = "700";
+  label.style.marginBottom = "8px";
+  label.style.color = "#003f8f";
+
+  const select = document.createElement("select");
+  select.id = "examModeSelect";
+  select.style.width = "100%";
+  select.style.height = "44px";
+  select.style.border = "1px solid #b8c7d9";
+  select.style.borderRadius = "10px";
+  select.style.padding = "0 12px";
+  select.style.fontSize = "16px";
+
+  select.innerHTML = [
+    '<option value="random">랜덤 출제: 102회 + 103회 + 100회 혼합</option>',
+    '<option value="round-102">102회 고정 출제</option>',
+    '<option value="round-103">103회 고정 출제</option>',
+    '<option value="round-100">100회 고정 출제</option>'
+  ].join("");
+
+  const help = document.createElement("div");
+  help.textContent = "검수할 때는 회차 고정, 실제 시험에는 랜덤 출제를 사용하세요. 선택 후 반드시 새 문제 만들기를 누르세요.";
+  help.style.marginTop = "6px";
+  help.style.fontSize = "13px";
+  help.style.color = "#5f6b7a";
+
+  wrapper.appendChild(label);
+  wrapper.appendChild(select);
+  wrapper.appendChild(help);
+
+  elements.newExamButton.parentNode.insertBefore(wrapper, elements.newExamButton);
+}
+
+function getSelectedExamGenerationOptions() {
+  const select = document.getElementById("examModeSelect");
+  const selectedValue = select ? select.value : "random";
+
+  if (selectedValue === "round-102") {
+    return {
+      mode: "round",
+      round: "102",
+      label: "102회 고정 출제"
+    };
+  }
+
+  if (selectedValue === "round-103") {
+    return {
+      mode: "round",
+      round: "103",
+      label: "103회 고정 출제"
+    };
+  }
+
+  if (selectedValue === "round-100") {
+    return {
+      mode: "round",
+      round: "100",
+      label: "100회 고정 출제"
+    };
+  }
+
+  return {
+    mode: "random",
+    round: "",
+    label: "랜덤 출제"
+  };
+}
 async function createNewRandomExam() {
   if (
     !window.TOPIKQuestionGenerator ||
@@ -427,7 +520,12 @@ async function createNewRandomExam() {
   setNewExamMessage("문제은행에서 새 문제 세트를 만드는 중입니다.", "#5f6368");
 
   try {
-    const generatedData = await window.TOPIKQuestionGenerator.tryGeneratePreview();
+   const examGenerationOptions = getSelectedExamGenerationOptions();
+latestExamGenerationOptions = examGenerationOptions;
+
+console.info("TOPIK I Reading 선택 시험지:", examGenerationOptions);
+
+const generatedData = await window.TOPIKQuestionGenerator.tryGeneratePreview(examGenerationOptions);
 
     const normalizedData = normalizeQuestions(generatedData);
     const groupedData = enrichPassageGroups(normalizedData);
@@ -2800,6 +2898,9 @@ function gradeTest(submitReason) {
     section: TEST_CONFIG.section,
     test_name: TEST_CONFIG.testDisplayName,
     test_scope: "TOPIK I IBT Reading 31-70",
+    generated_exam_mode: latestExamGenerationOptions.mode || "random",
+    generated_exam_round: latestExamGenerationOptions.round || "",
+    generated_exam_label: latestExamGenerationOptions.label || "랜덤 출제",
     question_number_start: TEST_CONFIG.questionNumberStart,
     question_number_end: TEST_CONFIG.questionNumberEnd,
     expected_total_questions: TEST_CONFIG.expectedTotalQuestions,
