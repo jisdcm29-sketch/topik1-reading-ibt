@@ -205,6 +205,131 @@
 
     return result;
   }
+    function cloneForExamMode(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function normalizeExamRoundValue(value) {
+    const text = String(value || "").trim();
+
+    if (text === "100" || text.includes("100")) {
+      return "100";
+    }
+
+    if (text === "103" || text.includes("103")) {
+      return "103";
+    }
+
+    if (text === "102" || text.includes("102")) {
+      return "102";
+    }
+
+    return "";
+  }
+
+  function inferSingleItemRound(item, index) {
+    const directRound = normalizeExamRoundValue(item && item.exam_round);
+    if (directRound) {
+      return directRound;
+    }
+
+    const text = [
+      item && item.id,
+      item && item.source,
+      item && item.source_exam,
+      item && item.original_question_number
+    ].map(function (value) {
+      return String(value || "");
+    }).join(" ");
+
+    const textRound = normalizeExamRoundValue(text);
+    if (textRound) {
+      return textRound;
+    }
+
+    // 현재 병합 순서 기준:
+    // single_items 0~17   = 102회
+    // single_items 18~35  = 103회
+    // single_items 36~53  = 100회
+    if (index >= 0 && index < 18) {
+      return "102";
+    }
+
+    if (index >= 18 && index < 36) {
+      return "103";
+    }
+
+    return "100";
+  }
+
+  function inferPassageSetRound(set, index) {
+    const directRound = normalizeExamRoundValue(set && set.exam_round);
+    if (directRound) {
+      return directRound;
+    }
+
+    const text = [
+      set && set.set_id,
+      set && set.source,
+      set && set.source_exam,
+      set && set.set_type
+    ].map(function (value) {
+      return String(value || "");
+    }).join(" ");
+
+    const textRound = normalizeExamRoundValue(text);
+    if (textRound) {
+      return textRound;
+    }
+
+    // 현재 병합 순서 기준:
+    // passage_sets 0~10   = 102회
+    // passage_sets 11~21  = 103회
+    // passage_sets 22~32  = 100회
+    if (index >= 0 && index < 11) {
+      return "102";
+    }
+
+    if (index >= 11 && index < 22) {
+      return "103";
+    }
+
+    return "100";
+  }
+
+  function applyExamGenerationOptionsToBank(bank, options) {
+    const normalizedOptions = options || {};
+    const mode = normalizedOptions.mode || "random";
+    const round = normalizedOptions.round || "";
+
+    if (mode !== "round" || !round) {
+      return bank;
+    }
+
+    const filteredBank = cloneForExamMode(bank);
+
+    filteredBank.single_items = normalizeArray(bank.single_items).filter(function (item, index) {
+      return inferSingleItemRound(item, index) === round;
+    });
+
+    filteredBank.passage_sets = normalizeArray(bank.passage_sets).filter(function (set, index) {
+      return inferPassageSetRound(set, index) === round;
+    });
+
+    filteredBank.selected_exam_mode = "round";
+    filteredBank.selected_exam_round = round;
+
+    console.info("TOPIK I Reading 회차 고정 문제은행 필터:", {
+      selected_round: round,
+      single_items: filteredBank.single_items.length,
+      passage_sets: filteredBank.passage_sets.length,
+      passage_set_items: filteredBank.passage_sets.reduce(function (sum, set) {
+        return sum + normalizeArray(set.items).length;
+      }, 0)
+    });
+
+    return filteredBank;
+  }
 
   function buildStructureReport(bank, template) {
     const report = {
@@ -385,10 +510,180 @@
 
     return question;
   }
+  function toNumberArrayForRound(value) {
+    if (Array.isArray(value)) {
+      return value
+        .map(Number)
+        .filter(Number.isFinite);
+    }
 
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? [parsed] : [];
+  }
 
-  function generateQuestionArrayFromAvailableBank(bank, template) {
-    const report = buildStructureReport(bank, template);
+  function getSingleItemTargetSlot(item) {
+    const targetSlots = toNumberArrayForRound(item && item.target_slots);
+
+    if (targetSlots.length > 0) {
+      return targetSlots[0];
+    }
+
+    const targetSlot = Number(item && item.target_slot);
+    if (Number.isFinite(targetSlot)) {
+      return targetSlot;
+    }
+
+    const originalNumber = Number(item && item.original_question_number);
+    if (Number.isFinite(originalNumber)) {
+      return originalNumber;
+    }
+
+    return null;
+  }
+
+  function getPassageSetTargetSlots(set) {
+    const targetSlots = toNumberArrayForRound(set && set.target_slots);
+
+    if (targetSlots.length > 0) {
+      return targetSlots;
+    }
+
+    return normalizeArray(set && set.items)
+      .map(function (item) {
+        return Number(item && item.target_slot);
+      })
+      .filter(Number.isFinite)
+      .sort(function (a, b) {
+        return a - b;
+      });
+  }
+
+  function findTemplateSingleSlot(template, questionNumber, item) {
+    const matchedSlot = normalizeArray(template.single_slots).find(function (slot) {
+      return Number(slot.slot) === Number(questionNumber);
+    });
+
+    if (matchedSlot) {
+      return matchedSlot;
+    }
+
+    return {
+      slot: questionNumber,
+      required_type: item.type,
+      instruction: item.instruction || "",
+      category: item.category || "",
+      diagnostic_area: item.diagnostic_area || "",
+      points: Number(item.points) || 0
+    };
+  }
+
+  function findTemplateGroupSlot(template, targetSlots, set) {
+    const matchedGroup = normalizeArray(template.slot_groups).find(function (group) {
+      return sameNumberArray(group.slot_group, targetSlots);
+    });
+
+    if (matchedGroup) {
+      return matchedGroup;
+    }
+
+    return {
+      slot_group: targetSlots,
+      required_set_type: set.set_type || "",
+      group_title: set.instruction || set.set_id || "",
+      required_items: normalizeArray(set.items).map(function (item) {
+        return {
+          slot: Number(item.target_slot),
+          required_type: item.type,
+          category: item.category || "",
+          points: Number(item.points) || 0
+        };
+      })
+    };
+  }
+
+  function generateFixedRoundQuestionArrayFromFilteredBank(workingBank, template, options) {
+    const round = options && options.round ? String(options.round) : "";
+    const generatedExamId = `${makeGeneratedExamId()}-round-${round}`;
+    const generatedQuestions = [];
+
+    normalizeArray(workingBank.single_items).forEach(function (item) {
+      const questionNumber = getSingleItemTargetSlot(item);
+
+      if (!Number.isFinite(questionNumber)) {
+        return;
+      }
+
+      const slot = findTemplateSingleSlot(template, questionNumber, item);
+      generatedQuestions.push(convertSingleItemToQuestion(item, slot, generatedExamId));
+    });
+
+    normalizeArray(workingBank.passage_sets).forEach(function (set) {
+      const targetSlots = getPassageSetTargetSlots(set);
+
+      if (!targetSlots.length) {
+        return;
+      }
+
+      const group = findTemplateGroupSlot(template, targetSlots, set);
+
+      normalizeArray(set.items)
+        .slice()
+        .sort(function (a, b) {
+          return Number(a.target_slot) - Number(b.target_slot);
+        })
+        .forEach(function (setItem) {
+          generatedQuestions.push(
+            convertPassageSetItemToQuestion(set, setItem, group, generatedExamId)
+          );
+        });
+    });
+
+    generatedQuestions.sort(function (a, b) {
+      return Number(a.question_number) - Number(b.question_number);
+    });
+
+    const numbers = generatedQuestions.map(function (question) {
+      return Number(question.question_number);
+    });
+
+    const missingNumbers = [];
+
+    for (let number = 31; number <= 70; number += 1) {
+      if (!numbers.includes(number)) {
+        missingNumbers.push(number);
+      }
+    }
+
+    if (generatedQuestions.length !== 40 || missingNumbers.length > 0) {
+      throw new Error(
+        `${round}회 고정 시험지 생성 실패: 생성 문항 ${generatedQuestions.length}개, 누락 번호 ${missingNumbers.join(", ") || "없음"}`
+      );
+    }
+
+    console.info("TOPIK I Reading 회차 고정 시험지 생성 완료:", {
+      round: round,
+      generated_exam_id: generatedExamId,
+      total_questions: generatedQuestions.length,
+      first_question: generatedQuestions[0],
+      last_question: generatedQuestions[generatedQuestions.length - 1]
+    });
+
+    return generatedQuestions;
+  }
+
+  function generateQuestionArrayFromAvailableBank(bank, template, options) {
+  const workingBank = applyExamGenerationOptionsToBank(bank, options);
+  const normalizedOptions = options || {};
+
+  if (normalizedOptions.mode === "round" && normalizedOptions.round) {
+    return generateFixedRoundQuestionArrayFromFilteredBank(
+      workingBank,
+      template,
+      normalizedOptions
+    );
+  }
+
+  const report = buildStructureReport(workingBank, template);
 
     if (!report.can_generate_full_exam_now) {
       throw new Error(
@@ -401,7 +696,7 @@
     const generatedQuestions = [];
 
     normalizeArray(template.single_slots).forEach(function (slot) {
-      const candidates = findSingleCandidates(bank, slot).filter(function (item) {
+      const candidates = findSingleCandidates(workingBank, slot).filter(function (item) {
         return !usedBankIds.has(item.id);
       });
 
@@ -416,7 +711,7 @@
     });
 
     normalizeArray(template.slot_groups).forEach(function (group) {
-      const setCandidates = findSetCandidates(bank, group).filter(function (set) {
+      const setCandidates = findSetCandidates(workingBank, group).filter(function (set) {
         return !usedBankIds.has(set.set_id);
       });
 
@@ -475,11 +770,11 @@
     }, 0);
   }
 
-  async function tryGeneratePreview() {
+  async function tryGeneratePreview(options) {
     const bank = await loadJson(BANK_URL);
     const template = await loadJson(TEMPLATE_URL);
 
-    const generatedQuestions = generateQuestionArrayFromAvailableBank(bank, template);
+    const generatedQuestions = generateQuestionArrayFromAvailableBank(bank, template, options);
 
     console.group("TOPIK I Reading generated question preview");
     console.log("생성 문항 수:", generatedQuestions.length);
@@ -489,8 +784,8 @@
     return generatedQuestions;
   }
 
-  async function generateAndDownload() {
-    const generatedQuestions = await tryGeneratePreview();
+ async function generateAndDownload(options) {
+    const generatedQuestions = await tryGeneratePreview(options);
 
     if (!Array.isArray(generatedQuestions) || generatedQuestions.length !== 40) {
       throw new Error("생성된 문항 수가 40문항이 아닙니다.");
