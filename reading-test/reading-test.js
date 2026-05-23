@@ -2799,7 +2799,7 @@ function gradeTest(submitReason) {
     test_level: TEST_CONFIG.testLevel,
     section: TEST_CONFIG.section,
     test_name: TEST_CONFIG.testDisplayName,
-    test_scope: "TOPIK I PBT Reading 31-70",
+    test_scope: "TOPIK I IBT Reading 31-70",
     question_number_start: TEST_CONFIG.questionNumberStart,
     question_number_end: TEST_CONFIG.questionNumberEnd,
     expected_total_questions: TEST_CONFIG.expectedTotalQuestions,
