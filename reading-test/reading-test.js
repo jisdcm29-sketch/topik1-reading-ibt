@@ -825,9 +825,18 @@ function normalizeQuestions(data) {
         "",
       insert_positions: Array.isArray(question.insert_positions) ? question.insert_positions : undefined,
       correct_position:
-        question.correct_position ||
-        question.answer_position ||
-        ""
+  question.correct_position ||
+  question.answer_position ||
+  "",
+source_bank_id: question.source_bank_id || "",
+source_set_id: question.source_set_id || "",
+generated_exam_id: question.generated_exam_id || "",
+template_slot:
+  question.template_slot === undefined ||
+  question.template_slot === null ||
+  question.template_slot === ""
+    ? questionNumber
+    : Number(question.template_slot)
     };
   });
 }
@@ -913,6 +922,23 @@ function validateQuestions(data) {
       throw new Error(`${question.id} 문항의 answer는 1~4 사이 숫자여야 합니다.`);
     }
   });
+}
+function getQuestionTraceFields(question) {
+  const templateSlot =
+    question.template_slot === undefined ||
+    question.template_slot === null ||
+    question.template_slot === ""
+      ? Number(question.question_number)
+      : Number(question.template_slot);
+
+  return {
+    source_bank_id: question.source_bank_id || null,
+    source_set_id: question.source_set_id || null,
+    generated_exam_id: question.generated_exam_id || null,
+    template_slot: Number.isFinite(templateSlot)
+      ? templateSlot
+      : Number(question.question_number)
+  };
 }
 
 function startTest() {
@@ -2674,7 +2700,8 @@ function gradeTest(submitReason) {
       sentence_order_result: null,
       sentence_insert_result: null,
       is_correct: isCorrect,
-      description: question.description
+      description: question.description,
+      ...getQuestionTraceFields(question)
     };
   });
 
@@ -2774,7 +2801,8 @@ function gradeSentenceOrderQuestion(question) {
     },
     sentence_insert_result: null,
     is_correct: isCorrect,
-    description: question.description
+    description: question.description,
+    ...getQuestionTraceFields(question)
   };
 }
 
@@ -2818,7 +2846,8 @@ function gradeSentenceInsertQuestion(question) {
       position_labels: labels
     },
     is_correct: isCorrect,
-    description: question.description
+    description: question.description,
+    ...getQuestionTraceFields(question)
   };
 }
 
