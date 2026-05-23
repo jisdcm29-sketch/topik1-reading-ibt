@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TOPIK I Reading Diagnosis</title>
+  <style>
+    :root {
+      --blue: #0b72e7;
+      --dark-blue: #003b86;
+      --light-blue: #eaf4ff;
+      --border: #d7e1ec;
+      --text: #111827;
+      --muted: #6b7280;
+      --bg: #f3f6fa;
+      --danger: #d93025;
+      --good: #15803d;
+      --warn: #b45309;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
+      line-height: 1.6;
+    }
+
+    .app-header {
+      background: var(--blue);
+      color: #fff;
+      padding: 18px 28px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    }
+
+    .app-header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 26px auto 70px;
+      padding: 0 18px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      color: var(--dark-blue);
+      font-size: 22px;
+    }
+
+    .panel h3 {
+      margin: 20px 0 10px;
+      color: var(--dark-blue);
+      font-size: 18px;
+    }
+
+    .guide {
+      background: var(--light-blue);
+      border: 1px solid #b9d9ff;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 14px 0;
+    }
+
+    .file-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    input[type="file"] {
+      flex: 1;
+      min-width: 300px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      background: var(--blue);
+      color: #fff;
+    }
+
+    button.secondary {
+      background: #fff;
+      color: var(--blue);
+      border: 2px solid var(--blue);
+    }
+
+    button.danger {
+      background: var(--danger);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .status {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status.error {
+      color: var(--danger);
+      font-weight: 800;
+    }
+
+    .status.ok {
+      color: var(--good);
+      font-weight: 800;
+    }
+
+    .report-actions {
+      display: none;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .report-actions.show {
+      display: flex;
+    }
+
+    #reportArea {
+      display: none;
+    }
+
+    #reportArea.show {
+      display: block;
+    }
+
+    .report-paper {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 30px;
+    }
+
+    .report-title {
+      border-bottom: 3px solid var(--blue);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .report-title h2 {
+      margin: 0;
+      font-size: 26px;
+      color: var(--dark-blue);
+    }
+
+    .report-title p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .summary-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: #fbfdff;
+    }
+
+    .summary-card .label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .summary-card .value {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--dark-blue);
+    }
+
+    .level-box {
+      border-radius: 12px;
+      border: 2px solid var(--blue);
+      background: var(--light-blue);
+      padding: 16px;
+      margin: 18px 0;
+    }
+
+    .level-box strong {
+      color: var(--dark-blue);
+      font-size: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 18px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 9px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f1f7ff;
+      color: var(--dark-blue);
+      font-weight: 900;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-right: 4px;
+      background: #e7f0ff;
+      color: var(--dark-blue);
+      border: 1px solid #b9d9ff;
+    }
+
+    .tag.bad {
+      background: #fff1f1;
+      color: var(--danger);
+      border-color: #ffd0d0;
+    }
+
+    .tag.good {
+      background: #ecfdf3;
+      color: var(--good);
+      border-color: #bbf7d0;
+    }
+
+    .prescription-list {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+
+    .prescription-list li {
+      margin-bottom: 8px;
+    }
+
+    .wrong-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin: 10px 0 18px;
+    }
+
+    .wrong-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fff;
+      font-size: 14px;
+    }
+
+    .wrong-item strong {
+      color: var(--danger);
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    @media (max-width: 800px) {
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .wrong-list { grid-template-columns: 1fr; }
+      .app-header h1 { font-size: 20px; }
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 14mm;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .app-header,
+      .uploadPanel,
+      .report-actions {
+        display: none !important;
+      }
+
+      .container {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .panel {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      #reportArea {
+        display: block !important;
+      }
+
+      .report-paper {
+        border: none;
+        border-radius: 0;
+        padding: 0;
+      }
+
+      button {
+        display: none;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .wrong-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <h1>TOPIK I Reading Diagnosis & Prescription</h1>
+  </header>
+
+  <main class="container">
+    <section class="panel uploadPanel">
+      <h2>읽기 결과 진단·처방</h2>
+      <p>
+        이 프로그램은 시험을 직접 실행하지 않습니다.
+        <strong>reading-result.json</strong> 파일만 불러와서 점수, 오답 유형, category별 취약점, 학습 처방을 분석합니다.
+      </p>
+
+      <div class="guide">
+        <strong>사용 순서</strong><br />
+        1. reading-test에서 제출 후 <strong>reading-result.json</strong>을 다운로드합니다.<br />
+        2. 아래에서 파일을 선택합니다.<br />
+        3. 진단 보고서를 생성합니다.<br />
+        4. JSON/TXT 보고서를 다운로드하거나 브라우저 인쇄 기능으로 PDF 저장합니다.
+      </div>
+
+      <div class="file-row">
+        <input id="resultFile" type="file" accept=".json,application/json" />
+        <button id="analyzeBtn" type="button">진단 보고서 생성</button>
+      </div>
+
+      <div id="status" class="status">reading-result.json 파일을 선택하세요.</div>
+
+      <div id="reportActions" class="report-actions">
+        <button id="downloadJsonBtn" type="button">diagnosis-report.json 다운로드</button>
+        <button id="downloadTxtBtn" type="button" class="secondary">diagnosis-report.txt 다운로드</button>
+        <button id="printBtn" type="button" class="secondary">PDF로 인쇄 / 저장</button>
+        <button id="resetBtn" type="button" class="danger">다시 불러오기</button>
+      </div>
+    </section>
+
+    <section id="reportArea" class="panel">
+      <div id="reportPaper" class="report-paper"></div>
+    </section>
+  </main>
+
+  <script src="./reading-diagnosis.js?v=reading-diagnosis-prescription-v2"></script>
+</body>
+</html>
