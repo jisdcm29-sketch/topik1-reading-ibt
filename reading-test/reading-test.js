@@ -267,6 +267,8 @@ function cacheElements() {
   elements.studentPhoneInput = document.getElementById("studentPhoneInput");
   elements.startButton = document.getElementById("startButton");
   elements.startMessage = document.getElementById("startMessage");
+  elements.newExamButton = document.getElementById("newExamButton");
+  elements.newExamMessage = document.getElementById("newExamMessage");
 
   elements.studentNameDisplay = document.getElementById("studentNameDisplay");
   elements.studentPhoneDisplay = document.getElementById("studentPhoneDisplay");
@@ -299,6 +301,10 @@ function cacheElements() {
 
 function bindEvents() {
   elements.startButton.addEventListener("click", startTest);
+
+if (elements.newExamButton) {
+  elements.newExamButton.addEventListener("click", createNewRandomExam);
+}
 
   elements.studentNameInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
@@ -400,6 +406,102 @@ async function loadQuestions() {
 
   questions = enrichPassageGroups(generateFallbackQuestions());
   sortQuestionsByNumber();
+}
+async function createNewRandomExam() {
+  if (
+    !window.TOPIKQuestionGenerator ||
+    typeof window.TOPIKQuestionGenerator.tryGeneratePreview !== "function"
+  ) {
+    setNewExamMessage(
+      "question-generator.js를 불러오지 못했습니다. index.html의 script 연결을 확인하세요.",
+      "#d93025"
+    );
+    return;
+  }
+
+  if (elements.newExamButton) {
+    elements.newExamButton.disabled = true;
+    elements.newExamButton.textContent = "새 문제 생성 중...";
+  }
+
+  setNewExamMessage("문제은행에서 새 문제 세트를 만드는 중입니다.", "#5f6368");
+
+  try {
+    const generatedData = await window.TOPIKQuestionGenerator.tryGeneratePreview();
+
+    const normalizedData = normalizeQuestions(generatedData);
+    const groupedData = enrichPassageGroups(normalizedData);
+
+    validateQuestions(groupedData);
+
+    if (groupedData.length !== TEST_CONFIG.expectedTotalQuestions) {
+      throw new Error(
+        `생성 문항 수가 ${TEST_CONFIG.expectedTotalQuestions}문항이 아닙니다.`
+      );
+    }
+
+    const numbers = groupedData.map(function (question) {
+      return Number(question.question_number);
+    });
+
+    const missingNumbers = [];
+
+    for (
+      let number = TEST_CONFIG.questionNumberStart;
+      number <= TEST_CONFIG.questionNumberEnd;
+      number += 1
+    ) {
+      if (!numbers.includes(number)) {
+        missingNumbers.push(number);
+      }
+    }
+
+    if (missingNumbers.length > 0) {
+      throw new Error(`누락된 문항 번호가 있습니다: ${missingNumbers.join(", ")}`);
+    }
+
+    questions = groupedData;
+    sortQuestionsByNumber();
+
+    answers = {};
+    reviewMarks = {};
+    sentenceOrderAnswers = {};
+    selectedSentenceForOrder = null;
+    currentIndex = getStartQuestionIndex();
+
+    const generatedExamId =
+      questions[0] && questions[0].generated_exam_id
+        ? questions[0].generated_exam_id
+        : "새 랜덤 시험지";
+
+    setNewExamMessage(
+      `새 문제 세트가 준비되었습니다. (${generatedExamId})`,
+      "#188038"
+    );
+
+    console.info("TOPIK I Reading 새 랜덤 문제 세트 적용 완료:", {
+      generated_exam_id: generatedExamId,
+      total_questions: questions.length,
+      first_question: questions[0]
+    });
+  } catch (error) {
+    console.error("새 문제 세트 생성 실패:", error);
+    setNewExamMessage(`새 문제 세트 생성 실패: ${error.message}`, "#d93025");
+  } finally {
+    if (elements.newExamButton) {
+      elements.newExamButton.disabled = false;
+      elements.newExamButton.textContent = "새 문제 만들기";
+    }
+  }
+}
+
+function setNewExamMessage(text, color) {
+  if (!elements.newExamMessage) {
+    return;
+  }
+
+  elements.newExamMessage.textContent = text;
+  elements.newExamMessage.style.color = color || "#5f6368";
 }
 
 function sortQuestionsByNumber() {
