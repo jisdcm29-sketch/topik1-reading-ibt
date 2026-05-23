@@ -1,0 +1,284 @@
+{
+  "bank_version": "0.1",
+  "bank_name": "TOPIK I Reading Question Bank",
+  "level": "TOPIK I",
+  "section": "reading",
+  "question_number_start": 31,
+  "question_number_end": 70,
+  "status": "starter_structure",
+  "description": "TOPIK I 읽기 31~70번 구조를 유지하면서 유형별 랜덤 출제를 준비하기 위한 문제은행입니다.",
+  "single_items": [
+    {
+      "id": "QB-R031-001",
+      "source": "current-reading-questions",
+      "original_question_number": 31,
+      "target_slots": [31, 32, 33],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "topic_content",
+      "category": "주제·소재 파악",
+      "diagnostic_area": "짧은 글의 중심 소재 이해",
+      "instruction": "무엇에 대한 내용입니까?",
+      "question": "무엇에 대한 내용입니까?",
+      "passage": "저는 누나가 있습니다. 동생도 있습니다.",
+      "options": [
+        "나라",
+        "나이",
+        "날짜",
+        "가족"
+      ],
+      "correct_answer": 4,
+      "points": 2,
+      "description": "가족 구성원인 누나와 동생에 대한 내용입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R034-001",
+      "source": "current-reading-questions",
+      "original_question_number": 34,
+      "target_slots": [34, 35, 36, 37, 38, 39],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 어휘·표현 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "저는 의사입니다. (   )에서 일합니다.",
+      "options": [
+        "병원",
+        "서점",
+        "미용실",
+        "우체국"
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "의사는 병원에서 일합니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R040-001",
+      "source": "current-reading-questions",
+      "original_question_number": 40,
+      "target_slots": [40, 41, 42],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "visual_not_matching",
+      "category": "자료 이해",
+      "diagnostic_area": "그림·표·자료 정보 파악",
+      "instruction": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "question": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "passage": "",
+      "options": [
+        "일요일은 맑습니다.",
+        "오늘은 비가 옵니다.",
+        "내일은 토요일입니다.",
+        "인주시의 날씨입니다."
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "그림에서는 오늘 10월 10일은 흐리고, 토요일은 비가 오며, 일요일은 맑습니다. 그래서 '오늘은 비가 옵니다'가 맞지 않습니다.",
+      "image_url": "./images/R040.png"
+    },
+    {
+      "id": "QB-R043-001",
+      "source": "current-reading-questions",
+      "original_question_number": 43,
+      "target_slots": [43, 44, 45],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "same_content",
+      "category": "내용 일치 파악",
+      "diagnostic_area": "짧은 글의 세부 내용 이해",
+      "instruction": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "question": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "passage": "저는 은행에서 일합니다. 은행에 외국인 손님이 많이 옵니다. 저는 그 손님들하고 영어로 이야기합니다.",
+      "options": [
+        "저는 영어를 할 수 없습니다.",
+        "저는 요즘 일을 하지 않습니다.",
+        "저는 은행에서 일을 하려고 합니다.",
+        "저는 은행에서 외국 사람을 많이 만납니다."
+      ],
+      "correct_answer": 4,
+      "points": 3,
+      "description": "직업, 장소, 만나는 사람에 대한 세부 정보를 확인하는 문항입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R046-001",
+      "source": "current-reading-questions",
+      "original_question_number": 46,
+      "target_slots": [46, 47, 48],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "main_idea",
+      "category": "중심 내용 파악",
+      "diagnostic_area": "글의 중심 생각 이해",
+      "instruction": "다음을 읽고 중심 내용을 고르십시오.",
+      "question": "다음을 읽고 중심 내용을 고르십시오.",
+      "passage": "요즘 춤을 배우고 있습니다. 춤을 추는 것이 아주 재미있습니다. 그래서 매일 춤 연습을 합니다.",
+      "options": [
+        "저는 춤을 오래 배웠습니다.",
+        "저는 춤을 배우는 것이 즐겁습니다.",
+        "저는 요즘 춤을 출 시간이 없습니다.",
+        "저는 친구와 춤 연습을 하고 싶습니다."
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "춤을 배우는 즐거움과 매일 연습하는 이유를 파악하는 문항입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R057-001",
+      "source": "current-reading-questions",
+      "original_question_number": 57,
+      "target_slots": [57, 58],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "sentence_order",
+      "category": "문장 순서 배열",
+      "diagnostic_area": "사건의 시간 순서와 연결 관계 이해",
+      "instruction": "[57~58] 다음을 순서에 맞게 배열하십시오.",
+      "question": "오른쪽의 문장을 왼쪽 순서 칸으로 끌어다 놓아 순서를 맞추십시오.",
+      "passage": "",
+      "options": [
+        "(가)",
+        "(나)",
+        "(다)",
+        "(라)"
+      ],
+      "correct_answer": "(가)-(라)-(다)-(나)",
+      "points": 3,
+      "description": "방송국에 가서 기다리다가 좋아하는 배우를 보고 사진을 찍은 순서로 배열하는 문항입니다.",
+      "image_url": "",
+      "sentence_items": [
+        {
+          "label": "(가)",
+          "text": "저는 친구들과 함께 방송국을 구경하러 갔습니다."
+        },
+        {
+          "label": "(나)",
+          "text": "저는 뛰어가서 그 배우와 함께 사진을 찍었습니다."
+        },
+        {
+          "label": "(다)",
+          "text": "그때 제가 좋아하는 배우가 저쪽으로 지나갔습니다."
+        },
+        {
+          "label": "(라)",
+          "text": "우리는 방송국 일 층에서 안내 직원을 기다리고 있었습니다."
+        }
+      ],
+      "correct_order": [
+        "(가)",
+        "(라)",
+        "(다)",
+        "(나)"
+      ]
+    }
+  ],
+  "passage_sets": [
+    {
+      "set_id": "QB-G049-050-001",
+      "source": "current-reading-questions",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [49, 50],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[49~50] 다음을 읽고 물음에 답하십시오.",
+      "passage": "우리 가족은 오랫동안 외국에 살았습니다. 외국 미용실은 가격이 비쌌습니다. 그래서 우리 가족은 미용실에 가지 않았습니다. 남편과 아이의 머리는 제가 잘라 주었습니다. 처음에는 잘 못 (   ) 나중에는 잘 자르게 되었습니다. 지금 우리 가족은 한국에서 살고 있습니다. 저는 요즘도 가족들의 머리를 잘라 줍니다.",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-G049-050-001-I1",
+          "target_slot": 49,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "문맥에 맞는 연결 표현 이해",
+          "question": "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "자르면",
+            "자르니까",
+            "잘랐거나",
+            "잘랐지만"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "처음에는 잘 못했지만 나중에는 잘하게 되었다는 대조 흐름을 이해하는 문항입니다."
+        },
+        {
+          "item_id": "QB-G049-050-001-I2",
+          "target_slot": 50,
+          "type": "common_passage_question",
+          "category": "공통 지문 내용 일치",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "우리 가족은 한국에 돌아왔습니다.",
+            "외국의 미용실은 가격이 쌌습니다.",
+            "요즘은 아이의 머리를 잘라 주지 않습니다.",
+            "우리 가족은 외국에서 미용실에 자주 갔습니다."
+          ],
+          "correct_answer": 1,
+          "points": 2,
+          "description": "글에서 가족이 지금 한국에서 살고 있다는 정보를 확인하는 문항입니다."
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G059-060-001",
+      "source": "current-reading-questions",
+      "set_type": "sentence_insert_common_passage_2_questions",
+      "target_slots": [59, 60],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[59~60] 다음을 읽고 물음에 답하십시오.",
+      "passage": "얼마 전에 제가 초등학교 때 쓴 일기장을 보았습니다. ㉠\n거기에는 제가 선생님께 칭찬을 듣고 기뻐하는 이야기가 써 있었습니다. ㉡\n일기를 보고 갑자기 선생님이 생각나서 학교로 전화를 해 봤습니다. 선생님은 아직 그 초등학교에 계셨습니다. ㉢\n선생님을 만나서 초등학교 때의 이야기를 나누었습니다. ㉣",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-G059-060-001-I1",
+          "target_slot": 59,
+          "type": "sentence_insert",
+          "category": "문장 삽입",
+          "diagnostic_area": "문맥 흐름과 문장 위치 이해",
+          "question": "다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.",
+          "insert_sentence": "반가운 마음에 저는 초등학교로 찾아갔습니다.",
+          "insert_positions": [
+            "㉠",
+            "㉡",
+            "㉢",
+            "㉣"
+          ],
+          "options": [
+            "㉠",
+            "㉡",
+            "㉢",
+            "㉣"
+          ],
+          "correct_answer": 3,
+          "correct_position": "㉢",
+          "points": 2,
+          "description": "문장의 앞뒤 연결을 보고 선생님이 아직 학교에 계신다는 사실을 확인한 뒤 찾아가는 흐름을 파악하는 문항입니다."
+        },
+        {
+          "item_id": "QB-G059-060-001-I2",
+          "target_slot": 60,
+          "type": "common_passage_question",
+          "category": "공통 지문 이해",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "저는 선생님을 만나러 갔습니다.",
+            "선생님이 저에게 전화를 하셨습니다.",
+            "선생님은 지금 다른 학교에 계십니다.",
+            "저는 초등학교 때의 일기장을 잃어버렸습니다."
+          ],
+          "correct_answer": 1,
+          "points": 3,
+          "description": "글에서 일기장을 본 뒤 초등학교에 전화하고 선생님을 만나러 간 내용을 확인하는 문항입니다."
+        }
+      ]
+    }
+  ]
+}
