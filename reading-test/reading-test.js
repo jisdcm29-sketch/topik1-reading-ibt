@@ -3120,29 +3120,25 @@ function saveReadingResultForDiagnosis(result) {
 }
 
 function renderDiagnosisLinkButton() {
-  const downloadButtons = document.querySelector(".download-buttons");
+  const duplicatedButton = document.getElementById("diagnosisLinkButton");
 
-  if (!downloadButtons) {
+  if (duplicatedButton) {
+    duplicatedButton.remove();
+  }
+
+  const openDiagnosisButton = document.getElementById("openDiagnosisButton");
+
+  if (!openDiagnosisButton) {
     return;
   }
 
-  const oldButton = document.getElementById("diagnosisLinkButton");
+  openDiagnosisButton.style.display = "inline-flex";
+  openDiagnosisButton.removeAttribute("aria-hidden");
+  openDiagnosisButton.removeAttribute("onclick");
 
-  if (oldButton) {
-    oldButton.remove();
-  }
-
-  const diagnosisButton = document.createElement("button");
-  diagnosisButton.id = "diagnosisLinkButton";
-  diagnosisButton.type = "button";
-  diagnosisButton.className = "button";
-  diagnosisButton.textContent = "진단 보고서 보기";
-
-  diagnosisButton.addEventListener("click", function () {
+  openDiagnosisButton.onclick = function () {
     window.location.href = AUTO_DIAGNOSIS_URL;
-  });
-
-  downloadButtons.appendChild(diagnosisButton);
+  };
 }
 
 function formatDateTimeForDisplay(isoText) {
