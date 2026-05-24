@@ -369,31 +369,31 @@
     <section class="panel uploadPanel">
       <h2>읽기 결과 진단·처방</h2>
       <p>
-        이 프로그램은 시험을 직접 실행하지 않습니다.
-        <strong>reading-result.json</strong> 파일만 불러와서 점수, 오답 유형, category별 취약점, 학습 처방을 분석합니다.
-      </p>
+  자동 연결된 읽기 시험 결과를 바탕으로 진단·처방 보고서를 생성합니다.
+  보고서 확인 후 필요한 경우 PDF로 인쇄 / 저장하세요.
+</p>
 
-      <div class="guide">
-        <strong>사용 순서</strong><br />
-        1. reading-test에서 제출 후 <strong>reading-result.json</strong>을 다운로드합니다.<br />
-        2. 아래에서 파일을 선택합니다.<br />
-        3. 진단 보고서를 생성합니다.<br />
-        4. JSON/TXT 보고서를 다운로드하거나 브라우저 인쇄 기능으로 PDF 저장합니다.
-      </div>
+<div class="guide" style="display: none;" aria-hidden="true">
+  <strong>사용 순서</strong><br />
+  1. reading-test에서 제출 후 <strong>reading-result.json</strong>을 다운로드합니다.<br />
+  2. 아래에서 파일을 선택합니다.<br />
+  3. 진단 보고서를 생성합니다.<br />
+  4. JSON/TXT 보고서를 다운로드하거나 브라우저 인쇄 기능으로 PDF 저장합니다.
+</div>
 
-      <div class="file-row">
-        <input id="resultFile" type="file" accept=".json,application/json" />
-        <button id="analyzeBtn" type="button">진단 보고서 생성</button>
-      </div>
+<div class="file-row" style="display: none;" aria-hidden="true">
+  <input id="resultFile" type="file" accept=".json,application/json" />
+  <button id="analyzeBtn" type="button">진단 보고서 생성</button>
+</div>
 
-      <div id="status" class="status">reading-result.json 파일을 선택하세요.</div>
+<div id="status" class="status">자동 연결된 reading-result를 확인하고 있습니다.</div>
 
-      <div id="reportActions" class="report-actions">
-        <button id="downloadJsonBtn" type="button">diagnosis-report.json 다운로드</button>
-        <button id="downloadTxtBtn" type="button" class="secondary">diagnosis-report.txt 다운로드</button>
-        <button id="printBtn" type="button" class="secondary">PDF로 인쇄 / 저장</button>
-        <button id="resetBtn" type="button" class="danger">다시 불러오기</button>
-      </div>
+<div id="reportActions" class="report-actions">
+  <button id="downloadJsonBtn" type="button" style="display: none;" aria-hidden="true">diagnosis-report.json 다운로드</button>
+  <button id="downloadTxtBtn" type="button" class="secondary" style="display: none;" aria-hidden="true">diagnosis-report.txt 다운로드</button>
+  <button id="printBtn" type="button" class="secondary">PDF로 인쇄 / 저장</button>
+  <button id="resetBtn" type="button" class="danger" style="display: none;" aria-hidden="true">다시 불러오기</button>
+</div>
     </section>
 
     <section id="reportArea" class="panel">
