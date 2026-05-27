@@ -615,8 +615,8 @@ async function createNewRandomExam() {
   try {
     const generatedExamInfo = await generateSelectedExamForCurrentSelection();
 
-    setNewExamMessage(
-      `새 문제 세트가 준비되었습니다. (${generatedExamInfo.examGenerationOptions.label} / ${generatedExamInfo.generatedExamId})`,
+       setNewExamMessage(
+      "새 문제 세트가 준비되었습니다.",
       "#188038"
     );
 

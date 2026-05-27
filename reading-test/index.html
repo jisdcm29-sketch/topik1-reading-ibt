@@ -1033,6 +1033,269 @@
       height: 38px !important;
       font-size: 16px !important;
     }
+  /*
+      시작 화면 균형 조정 v4
+      - 첫 로그인 화면만 조정
+      - 시험 실행 화면은 건드리지 않음
+      - 한 화면 안에 모두 보이되, 아래 빈 공간이 너무 크지 않도록 중앙 배치
+      - v3보다 덜 압축해서 답답하지 않게 보이도록 조정
+    */
+
+    #startScreen {
+      min-height: 100vh !important;
+      padding: 0 !important;
+      overflow-y: auto !important;
+      background: #ffffff !important;
+    }
+
+    #startScreen > section {
+      min-height: 100vh !important;
+      padding: 0 !important;
+      background: #ffffff !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    #startScreen > section > header {
+      flex: 0 0 auto !important;
+      padding: 22px 16px !important;
+      font-size: 32px !important;
+      line-height: 1.25 !important;
+      letter-spacing: -0.4px !important;
+    }
+
+    #startScreen > section > div {
+      flex: 1 1 auto !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      padding: 18px 16px 46px !important;
+    }
+
+    #startScreen > section > div > div {
+      width: min(560px, 92vw) !important;
+      margin: 0 auto !important;
+    }
+
+    #startScreen > section > div > div > div:first-child {
+      margin-bottom: 18px !important;
+    }
+
+    #startScreen > section > div > div > div:first-child > div:first-child {
+      font-size: 28px !important;
+      line-height: 1.25 !important;
+      margin-bottom: 6px !important;
+    }
+
+    #startScreen > section > div > div > div:first-child > div:last-child {
+      font-size: 15px !important;
+      line-height: 1.45 !important;
+    }
+
+    #startScreen .form-row {
+      margin-bottom: 13px !important;
+    }
+
+    #startScreen .form-row label {
+      margin-bottom: 6px !important;
+      font-size: 16px !important;
+      line-height: 1.25 !important;
+    }
+
+    #authPasswordInput,
+    #studentNameInput,
+    #studentPhoneInput {
+      height: 44px !important;
+      min-height: 44px !important;
+      padding-top: 7px !important;
+      padding-bottom: 7px !important;
+      font-size: 16px !important;
+      border-radius: 10px !important;
+    }
+
+    #authCheckButton {
+      height: 44px !important;
+      min-height: 44px !important;
+      padding-top: 7px !important;
+      padding-bottom: 7px !important;
+      font-size: 16px !important;
+      border-radius: 10px !important;
+    }
+
+    #authMessage,
+    #startMessage {
+      min-height: 18px !important;
+      margin: 7px 0 !important;
+      font-size: 14px !important;
+      line-height: 1.35 !important;
+    }
+
+    #examSelectBox {
+      margin: 12px 0 16px !important;
+      padding: 16px 16px !important;
+      border-radius: 12px !important;
+    }
+
+    #examSelectBox label {
+      margin-bottom: 8px !important;
+      font-size: 16px !important;
+      line-height: 1.25 !important;
+    }
+
+    #examModeSelect {
+      height: 44px !important;
+      min-height: 44px !important;
+      padding-top: 6px !important;
+      padding-bottom: 6px !important;
+      font-size: 16px !important;
+      border-radius: 10px !important;
+    }
+
+    #examSelectBox > div {
+      margin-top: 8px !important;
+      font-size: 13px !important;
+      line-height: 1.45 !important;
+    }
+
+    #newExamButton {
+      height: 44px !important;
+      min-height: 44px !important;
+      margin: 11px 0 0 !important;
+      padding-top: 7px !important;
+      padding-bottom: 7px !important;
+      font-size: 16px !important;
+      border-radius: 10px !important;
+    }
+
+    #newExamMessage {
+      min-height: 20px !important;
+      max-height: 24px !important;
+      margin: 8px 0 0 !important;
+      font-size: 13px !important;
+      line-height: 1.35 !important;
+      overflow: hidden !important;
+      text-align: center !important;
+      white-space: nowrap !important;
+      text-overflow: ellipsis !important;
+    }
+
+    #startButton {
+      height: 50px !important;
+      min-height: 50px !important;
+      margin-top: 18px !important;
+      padding-top: 9px !important;
+      padding-bottom: 9px !important;
+      font-size: 17px !important;
+      border-radius: 10px !important;
+    }
+
+    @media (max-height: 860px) {
+      #startScreen > section > header {
+        padding: 18px 16px !important;
+        font-size: 30px !important;
+      }
+
+      #startScreen > section > div {
+        align-items: center !important;
+        padding-top: 14px !important;
+        padding-bottom: 34px !important;
+      }
+
+      #startScreen > section > div > div {
+        width: min(540px, 92vw) !important;
+      }
+
+      #startScreen > section > div > div > div:first-child {
+        margin-bottom: 14px !important;
+      }
+
+      #startScreen > section > div > div > div:first-child > div:first-child {
+        font-size: 26px !important;
+      }
+
+      #startScreen .form-row {
+        margin-bottom: 11px !important;
+      }
+
+      #examSelectBox {
+        margin-top: 10px !important;
+        margin-bottom: 13px !important;
+        padding: 14px 15px !important;
+      }
+
+      #authPasswordInput,
+      #studentNameInput,
+      #studentPhoneInput,
+      #authCheckButton,
+      #examModeSelect,
+      #newExamButton {
+        height: 42px !important;
+        min-height: 42px !important;
+      }
+
+      #startButton {
+        height: 48px !important;
+        min-height: 48px !important;
+        margin-top: 15px !important;
+      }
+    }
+
+    @media (max-height: 760px) {
+      #startScreen > section > header {
+        padding: 13px 16px !important;
+        font-size: 28px !important;
+      }
+
+      #startScreen > section > div {
+        padding-top: 10px !important;
+        padding-bottom: 18px !important;
+      }
+
+      #startScreen > section > div > div > div:first-child {
+        margin-bottom: 10px !important;
+      }
+
+      #startScreen > section > div > div > div:first-child > div:first-child {
+        font-size: 24px !important;
+      }
+
+      #startScreen .form-row {
+        margin-bottom: 8px !important;
+      }
+
+      #examSelectBox {
+        margin-top: 7px !important;
+        margin-bottom: 9px !important;
+        padding: 11px 13px !important;
+      }
+
+      #examSelectBox > div {
+        font-size: 12px !important;
+        line-height: 1.3 !important;
+      }
+
+      #authPasswordInput,
+      #studentNameInput,
+      #studentPhoneInput,
+      #authCheckButton,
+      #examModeSelect,
+      #newExamButton {
+        height: 38px !important;
+        min-height: 38px !important;
+      }
+
+      #newExamMessage {
+        min-height: 17px !important;
+        max-height: 20px !important;
+        margin-top: 5px !important;
+      }
+
+      #startButton {
+        height: 42px !important;
+        min-height: 42px !important;
+        margin-top: 8px !important;
+      }
+    }
   </style>
 </head>
 
@@ -1348,7 +1611,7 @@ if (newExamButton) {
 }
 
 if (newExamMessage && !enabled) {
-  newExamMessage.textContent = "인증 후 새 문제 세트를 만들 수 있습니다.";
+  newExamMessage.textContent = "인증 후 사용 가능합니다.";
   newExamMessage.style.color = "#5f6368";
 }
       }
@@ -1385,8 +1648,8 @@ if (newExamMessage && !enabled) {
         authCheckButton.disabled = true;
         setCandidateInputsEnabled(true);
 
-        if (newExamMessage) {
-  newExamMessage.textContent = "기본 문제 세트가 준비되어 있습니다. 필요하면 새 문제 만들기를 누르세요.";
+       if (newExamMessage) {
+  newExamMessage.textContent = "새 문제 만들기 후 시험을 시작하세요.";
   newExamMessage.style.color = "#188038";
 }
 
@@ -1541,7 +1804,7 @@ studentNameInput.focus();
   </main>
 
   <script src="./question-generator.js?v=browser-random-v1"></script>
-  <script src="./reading-test.js?v=sentence-order-step-v1"></script>
+  <script src="./reading-test.js?v=start-screen-fit-v4"></script>
 
   <script>
     /*
