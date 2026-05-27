@@ -3,6 +3,8 @@
 console.log("TOPIK I Reading Diagnosis loaded: prescription-v2");
 
 const AUTO_DIAGNOSIS_STORAGE_KEY = "topik1_latest_reading_result";
+const WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY = "topik1_wrong_review_question_numbers";
+const WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY = "topik1_wrong_review_source_result";
 
 const state = {
   sourceResult: null,
@@ -19,8 +21,11 @@ const els = {
   downloadJsonBtn: document.getElementById("downloadJsonBtn"),
   downloadTxtBtn: document.getElementById("downloadTxtBtn"),
   printBtn: document.getElementById("printBtn"),
-  resetBtn: document.getElementById("resetBtn")
+  resetBtn: document.getElementById("resetBtn"),
+  wrongReviewBtn: document.getElementById("wrongReviewBtn"),
+  wrongReviewCountBadge: document.getElementById("wrongReviewCountBadge")
 };
+
 
 function setStatus(message, type = "") {
   els.status.textContent = message;
@@ -154,7 +159,131 @@ function groupStats(items, key) {
     }))
     .sort((a, b) => b.wrong - a.wrong || a.accuracy - b.accuracy || a.name.localeCompare(b.name, "ko"));
 }
+const TOPIK1_READING_RANGE_DEFINITIONS = [
+  {
+    label: "31~34번",
+    start: 31,
+    end: 34,
+    focus: "빈칸·어휘·문법",
+    description: "문맥에 맞는 어휘, 조사, 연결 표현 선택"
+  },
+  {
+    label: "35~38번",
+    start: 35,
+    end: 38,
+    focus: "짧은 글 내용 파악",
+    description: "짧은 글의 주제, 소재, 내용 일치·불일치 파악"
+  },
+  {
+    label: "39~42번",
+    start: 39,
+    end: 42,
+    focus: "자료·그림 정보 파악",
+    description: "그림, 표, 안내 자료의 핵심 정보 이해"
+  },
+  {
+    label: "43~46번",
+    start: 43,
+    end: 46,
+    focus: "문장 순서·흐름 이해",
+    description: "문장 배열, 시간 흐름, 지시어와 연결 관계 파악"
+  },
+  {
+    label: "47~48번",
+    start: 47,
+    end: 48,
+    focus: "중심 내용·세부 정보",
+    description: "글의 중심 생각과 구체적 정보 이해"
+  },
+  {
+    label: "49~56번",
+    start: 49,
+    end: 56,
+    focus: "공통 지문·생활문 정보",
+    description: "공통 지문, 안내문, 생활문에서 필요한 정보 찾기"
+  },
+  {
+    label: "57~60번",
+    start: 57,
+    end: 60,
+    focus: "문장 순서·문장 삽입",
+    description: "글의 흐름, 삽입 위치, 문장 간 연결 단서 파악"
+  },
+  {
+    label: "61~70번",
+    start: 61,
+    end: 70,
+    focus: "긴 지문·공통 지문 이해",
+    description: "긴 글의 세부 내용, 추론, 글쓴이 의도 파악"
+  }
+];
 
+function buildQuestionRangeAnalysis(items) {
+  return TOPIK1_READING_RANGE_DEFINITIONS.map((range) => {
+    const rangeItems = items.filter((item) => {
+      const questionNumber = Number(item.question_number);
+      return questionNumber >= range.start && questionNumber <= range.end;
+    });
+
+    const total = rangeItems.length;
+    const correct = rangeItems.filter((item) => item.is_correct).length;
+    const wrongItems = rangeItems.filter((item) => !item.is_correct);
+
+    const pointsPossible = rangeItems.reduce((sum, item) => {
+      return sum + numberOrZero(item.points);
+    }, 0);
+
+    const pointsEarned = rangeItems.reduce((sum, item) => {
+      return sum + numberOrZero(item.earned_points);
+    }, 0);
+
+    const wrongQuestions = wrongItems
+      .map((item) => Number(item.question_number))
+      .filter(Number.isFinite)
+      .sort((a, b) => a - b);
+
+    return {
+      label: range.label,
+      start: range.start,
+      end: range.end,
+      focus: range.focus,
+      description: range.description,
+      total,
+      correct,
+      wrong: wrongItems.length,
+      points_possible: pointsPossible,
+      points_earned: pointsEarned,
+      accuracy: percent(correct, total),
+      wrong_questions: wrongQuestions
+    };
+  });
+}
+
+function renderQuestionRangeRows(rangeAnalysis) {
+  if (!Array.isArray(rangeAnalysis) || rangeAnalysis.length === 0) {
+    return `
+      <tr>
+        <td colspan="6">문항 구간별 분석 자료가 없습니다.</td>
+      </tr>
+    `;
+  }
+
+  return rangeAnalysis
+    .map((range) => `
+      <tr>
+        <td>${escapeHtml(range.label)}</td>
+        <td>
+          <strong>${escapeHtml(range.focus)}</strong><br />
+          <span class="note">${escapeHtml(range.description)}</span>
+        </td>
+        <td>${range.correct} / ${range.total}</td>
+        <td>${range.points_earned} / ${range.points_possible}</td>
+        <td>${range.accuracy}%</td>
+        <td>${escapeHtml(range.wrong_questions.join(", ") || "관련 문항 없음")}</td>
+      </tr>
+    `)
+    .join("");
+}
 function makeWeaknessList(categoryAnalysis, diagnosticAnalysis) {
   const categoryWeaknesses = categoryAnalysis
     .filter((stat) => stat.wrong > 0)
@@ -469,12 +598,12 @@ function buildPrescriptions(reportBase) {
 
   prescriptions.push(buildTimeManagementPlan(summary));
 
-  categoryWeaknesses.forEach((weakness, index) => {
+  categoryWeaknesses.slice(0, 3).forEach((weakness, index) => {
     const wrongItems = getWrongItemsByCategory(reportBase, weakness.name);
     const categoryPrescription = prescriptionForCategory(weakness.name, wrongItems);
 
     prescriptions.push({
-      title: `${index + 1}. category 집중 처방: ${categoryPrescription.title}`,
+      title: `유형별 보완: ${categoryPrescription.title}`,
       detail: [
         `오답 ${weakness.wrong}개, 정답률 ${weakness.accuracy}%입니다.`,
         categoryPrescription.detail
@@ -483,12 +612,12 @@ function buildPrescriptions(reportBase) {
     });
   });
 
-  diagnosticWeaknesses.slice(0, 5).forEach((weakness, index) => {
+  diagnosticWeaknesses.slice(0, 2).forEach((weakness) => {
     const wrongItems = getWrongItemsByDiagnosticArea(reportBase, weakness.name);
     const diagnosticPrescription = prescriptionForDiagnosticArea(weakness.name, wrongItems);
 
     prescriptions.push({
-      title: `${index + 1}. diagnostic_area 세부 처방: ${diagnosticPrescription.title}`,
+      title: `진단 영역 보완: ${diagnosticPrescription.title}`,
       detail: [
         `이 영역에서는 ${weakness.total}문항 중 ${weakness.wrong}문항을 틀렸습니다.`,
         diagnosticPrescription.detail
@@ -497,12 +626,15 @@ function buildPrescriptions(reportBase) {
     });
   });
 
-  prescriptions.push({
-    title: "3일 복습 루틴",
+   prescriptions.push({
+    title: "2주 학습 계획",
     detail: [
-      "1일차: 오답 문항만 다시 풀고 정답 근거 문장을 표시합니다.",
-      "2일차: 같은 category 문항을 다시 풀고, 틀린 이유를 유형별로 정리합니다.",
-      "3일차: 시간을 정해 놓고 다시 풀어 봅니다. 한 문항에 오래 걸리면 다음 문항으로 넘어간 뒤 마지막에 다시 확인하는 연습을 합니다."
+      "1~3일차: 오답과 미응답 문항을 다시 풀고 정답 근거 문장을 표시하세요.",
+      "4~6일차: 약한 유형을 같은 유형끼리 묶어 집중적으로 다시 풉니다.",
+      "7일차: 시간 제한 없이 31~70번 전체 흐름을 다시 확인하고, 자주 틀리는 유형을 정리하세요.",
+      "8~10일차: 목표 점수보다 한 단계 높은 난이도의 지문을 하루 2~3세트씩 풉니다.",
+      "11~13일차: 60분 시간 제한을 두고 실전처럼 풀어 보세요.",
+      "14일차: 오답 문항만 다시 확인하고, 새 문제보다 이전 오답의 근거를 정확히 찾는 데 집중하세요."
     ].join(" ")
   });
 
@@ -533,6 +665,7 @@ function analyzeReadingResult(data) {
 
   const categoryAnalysis = groupStats(items, "category");
   const diagnosticAreaAnalysis = groupStats(items, "diagnostic_area");
+  const questionRangeAnalysis = buildQuestionRangeAnalysis(items);
   const weaknesses = makeWeaknessList(categoryAnalysis, diagnosticAreaAnalysis);
   const strengths = makeStrengthList(categoryAnalysis);
 
@@ -591,6 +724,7 @@ function analyzeReadingResult(data) {
     predicted_reading_level: level,
     strengths,
     weaknesses,
+    question_range_analysis: questionRangeAnalysis,
     category_analysis: categoryAnalysis,
     diagnostic_area_analysis: diagnosticAreaAnalysis,
     wrong_items: wrongItems,
@@ -646,15 +780,34 @@ function renderWrongItems(wrongItems) {
     </div>
   `;
 }
-
 function formatPrescriptionTitle(title) {
-  return String(title ?? "")
+  let cleanTitle = String(title ?? "")
     .replace(/^\d+\.\s*/, "")
-    .replace(/^category 집중 처방:/, "category 처방:")
-    .replace(/^diagnostic_area 세부 처방:\s*세부 진단 보완:/, "세부 처방:")
-    .replace(/^diagnostic_area 세부 처방:/, "세부 처방:")
-    .replace(/^세부 진단 보완:/, "세부 처방:")
+    .replace(/\s+/g, " ")
     .trim();
+
+  cleanTitle = cleanTitle
+    .replace(/^category\s*집중\s*처방\s*:\s*/i, "유형별 보완: ")
+    .replace(/^category\s*처방\s*:\s*/i, "유형별 보완: ")
+    .replace(/^diagnostic_area\s*세부\s*처방\s*:\s*/i, "진단 영역 보완: ")
+    .replace(/^세부\s*진단\s*보완\s*:\s*/i, "진단 영역 보완: ")
+    .replace(/^세부\s*처방\s*:\s*/i, "진단 영역 보완: ")
+    .trim();
+
+  cleanTitle = cleanTitle
+    .replace(/^진단\s*영역\s*보완\s*:\s*세부\s*진단\s*보완\s*:\s*/i, "진단 영역 보완: ")
+    .replace(/^진단\s*영역\s*보완\s*:\s*세부\s*처방\s*:\s*/i, "진단 영역 보완: ")
+    .replace(/^유형별\s*보완\s*:\s*category\s*처방\s*:\s*/i, "유형별 보완: ")
+    .replace(/^유형별\s*보완\s*:\s*category\s*집중\s*처방\s*:\s*/i, "유형별 보완: ")
+    .trim();
+
+  cleanTitle = cleanTitle
+    .replace(/^(진단\s*영역\s*보완\s*:\s*)+/i, "진단 영역 보완: ")
+    .replace(/^(유형별\s*보완\s*:\s*)+/i, "유형별 보완: ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return cleanTitle;
 }
 
 function renderPrescriptions(prescriptions) {
@@ -689,60 +842,173 @@ function renderPrescriptions(prescriptions) {
     </div>
   `;
 }
+function formatReportDateTime(value) {
+  const rawValue = String(value || "").trim();
+
+  if (!rawValue) {
+    return "-";
+  }
+
+  const date = new Date(rawValue);
+
+  if (Number.isNaN(date.getTime())) {
+    return rawValue;
+  }
+
+  return date.toLocaleString("ko-KR", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+function formatReportTimeRange(student) {
+  const startedAt = formatReportDateTime(student.started_at);
+  const submittedAt = formatReportDateTime(student.submitted_at);
+
+  if (startedAt === "-" && submittedAt === "-") {
+    return "-";
+  }
+
+  return `${startedAt} ~ ${submittedAt}`;
+}
 
 function renderReport(report) {
   const summary = report.summary;
   const student = report.student;
   const level = report.predicted_reading_level;
 
+  const examTimeText = formatReportTimeRange(student);
+  const generatedExamLabel = report.source.generated_exam_label || "랜덤 출제";
+  const generatedExamRound = report.source.generated_exam_round || "전체 랜덤";
+
   const strengthsHtml = report.strengths.length
-    ? report.strengths.map((item) => `<span class="tag good">${escapeHtml(item.name)} ${item.accuracy}%</span>`).join(" ")
+    ? report.strengths
+        .map((item) => `<span class="tag good">${escapeHtml(item.name)} ${item.accuracy}%</span>`)
+        .join(" ")
     : `<span class="tag">아직 뚜렷한 강점 없음</span>`;
 
   const weaknessTags = report.weaknesses.categoryWeaknesses.length
-    ? report.weaknesses.categoryWeaknesses.map((item) => `<span class="tag bad">${escapeHtml(item.name)} 오답 ${item.wrong}개</span>`).join(" ")
+    ? report.weaknesses.categoryWeaknesses
+        .map((item) => `<span class="tag bad">${escapeHtml(item.name)} 오답 ${item.wrong}개</span>`)
+        .join(" ")
     : `<span class="tag good">큰 취약 영역 없음</span>`;
 
   els.reportPaper.innerHTML = `
     <div class="report-title">
-      <h2>TOPIK I Reading Level Test 진단·처방 보고서</h2>
-      <p>이 보고서는 reading-result.json을 기반으로 생성되었습니다.</p>
+      <h2>TOPIK I 읽기 진단 보고서</h2>
+      <p>
+        ${escapeHtml(report.source.test_name || "TOPIK I Reading PBT-type IBT Simulation")}
+        · ${escapeHtml(report.source.test_scope || "TOPIK I PBT Reading 31-70")}
+      </p>
     </div>
 
-    <h3>1. 응시자 정보</h3>
-    <table>
-      <tbody>
-        <tr><th>응시자 이름</th><td>${escapeHtml(student.name)}</td><th>전화번호</th><td>${escapeHtml(student.phone)}</td></tr>
-        <tr><th>시험명</th><td>${escapeHtml(report.source.test_name)}</td><th>시험 범위</th><td>${escapeHtml(report.source.test_scope)}</td></tr>
-<tr><th>출제 방식</th><td>${escapeHtml(report.source.generated_exam_label || "랜덤 출제")}</td><th>출제 회차</th><td>${escapeHtml(report.source.generated_exam_round || "전체 랜덤")}</td></tr>
-        <tr><th>시작 시간</th><td>${escapeHtml(student.started_at)}</td><th>제출 시간</th><td>${escapeHtml(student.submitted_at)}</td></tr>
-      </tbody>
-    </table>
-
-    <h3>2. 점수 요약</h3>
     <div class="summary-grid">
-      <div class="summary-card"><div class="label">읽기 점수</div><div class="value">${summary.reading_score_100} / 100</div></div>
-      <div class="summary-card"><div class="label">정답 수</div><div class="value">${summary.correct_count} / ${summary.total_questions}</div></div>
-      <div class="summary-card"><div class="label">오답 수</div><div class="value">${summary.wrong_count}</div></div>
-      <div class="summary-card"><div class="label">정답률</div><div class="value">${summary.accuracy}%</div></div>
+      <div class="summary-card">
+        <div class="label">응시자</div>
+        <div class="value">${escapeHtml(student.name || "-")}</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="label">읽기 점수</div>
+        <div class="value">${summary.reading_score_100}점</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="label">정답 수</div>
+        <div class="value">${summary.correct_count} / ${summary.total_questions}</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="label">미응답</div>
+        <div class="value">${summary.unanswered_count}</div>
+      </div>
     </div>
 
     <div class="level-box">
       <strong>${escapeHtml(level.title)}</strong><br />
-      기준 범위: ${escapeHtml(level.range)}<br />
+      읽기 점수 구간: ${escapeHtml(level.range)}<br />
+      현재 정답률: ${summary.accuracy}% · 오답 수: ${summary.wrong_count}문항<br />
+      다음 목표: ${summary.reading_score_100}점 → ${report.next_goal.target_score}점<br />
       ${escapeHtml(level.message)}
-      <div class="note">주의: 이 판정은 읽기 100점 기준의 예상 레벨입니다. TOPIK I 공식 등급은 듣기+읽기 200점 기준으로 계산합니다.</div>
     </div>
+
+    <div
+      style="
+        border-left:6px solid #b45309;
+        background:#fff7ed;
+        border-radius:10px;
+        padding:14px 16px;
+        margin:18px 0;
+        color:#3f2a10;
+        line-height:1.7;
+      "
+    >
+      <strong style="color:#8a3b00;">공식 급수 안내</strong><br />
+      이 보고서는 TOPIK I 읽기 영역만 기준으로 한 예상 수준입니다.
+      공식 TOPIK I 급수는 듣기와 읽기 합산 200점 기준으로 결정되므로,
+      이 결과만으로 공식 급수를 확정할 수 없습니다.
+    </div>
+
+    <h3>1. 시험 정보</h3>
+    <table>
+      <tbody>
+        <tr>
+          <th>시험명</th>
+          <td>${escapeHtml(report.source.test_name)}</td>
+        </tr>
+        <tr>
+          <th>시험 범위</th>
+          <td>${escapeHtml(report.source.test_scope)}</td>
+        </tr>
+        <tr>
+          <th>출제 방식</th>
+          <td>${escapeHtml(generatedExamLabel)}</td>
+        </tr>
+        <tr>
+          <th>출제 회차</th>
+          <td>${escapeHtml(generatedExamRound)}</td>
+        </tr>
+        <tr>
+          <th>응시 시간</th>
+          <td>${escapeHtml(examTimeText)}</td>
+        </tr>
+        <tr>
+          <th>응시자 정보</th>
+          <td>${escapeHtml(student.name || "-")} / ${escapeHtml(student.phone || "-")}</td>
+        </tr>
+        <tr>
+          <th>문항 수</th>
+          <td>${summary.total_questions}문항</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>2. 문항 구간별 분석</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>구간</th>
+          <th>진단 초점</th>
+          <th>정답 수</th>
+          <th>점수</th>
+          <th>정답률</th>
+          <th>문제 발생 문항</th>
+        </tr>
+      </thead>
+      <tbody>${renderQuestionRangeRows(report.question_range_analysis)}</tbody>
+    </table>
 
     <h3>3. 강점과 약점</h3>
     <p><strong>강점:</strong> ${strengthsHtml}</p>
     <p><strong>우선 보완 영역:</strong> ${weaknessTags}</p>
-
-    <h3>4. category별 분석</h3>
+    <h3>4. 유형별 분석</h3>
     <table>
       <thead>
         <tr>
-          <th>category</th>
+          <th>유형</th>
           <th>정답/문항</th>
           <th>오답</th>
           <th>정답률</th>
@@ -753,11 +1019,11 @@ function renderReport(report) {
       <tbody>${renderStatRows(report.category_analysis)}</tbody>
     </table>
 
-    <h3>5. 세부 진단 영역 분석</h3>
+    <h3>5. 진단 영역별 분석</h3>
     <table>
       <thead>
         <tr>
-          <th>diagnostic_area</th>
+          <th>진단 영역</th>
           <th>정답/문항</th>
           <th>오답</th>
           <th>정답률</th>
@@ -768,27 +1034,16 @@ function renderReport(report) {
       <tbody>${renderStatRows(report.diagnostic_area_analysis)}</tbody>
     </table>
 
-    <div class="page-break"></div>
-
     <h3>6. 오답 문항 목록</h3>
     ${renderWrongItems(report.wrong_items)}
 
-    <h3>7. 학습 처방</h3>
+    <h3>7. 학습 처방 및 2주 학습 계획</h3>
     ${renderPrescriptions(report.prescriptions)}
-
-    <h3>8. 다음 목표</h3>
-    <div class="level-box">
-      현재 ${report.next_goal.current_score}점 → 다음 목표 ${report.next_goal.target_score}점<br />
-      ${escapeHtml(report.next_goal.target_message)}
-    </div>
-
-    <p class="note">
-      PDF 저장 방법: 상단의 “PDF로 인쇄 / 저장” 버튼을 누른 뒤, 프린터를 “PDF로 저장”으로 선택하고 A4 크기로 저장하세요.
-    </p>
   `;
 
   els.reportArea.classList.add("show");
   els.reportActions.classList.add("show");
+  updateWrongReviewCountBadge();
 }
 
 function buildTxtReport(report) {
@@ -941,6 +1196,7 @@ function handleAutoAnalyze() {
     renderReport(report);
 
     setStatus("자동 연결된 reading-result로 진단 보고서가 생성되었습니다.", "ok");
+    updateWrongReviewCountBadge();
 
     if (els.reportArea && els.reportArea.scrollIntoView) {
       els.reportArea.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -953,6 +1209,157 @@ function handleAutoAnalyze() {
     );
   }
 }
+function getRemainingWrongReviewNumbers() {
+  try {
+    const raw = localStorage.getItem(WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+
+    if (Array.isArray(parsed)) {
+      return Array.from(
+        new Set(
+          parsed
+            .map(Number)
+            .filter(Number.isFinite)
+        )
+      ).sort(function (a, b) {
+        return a - b;
+      });
+    }
+
+    const reviewPackageRaw = localStorage.getItem(
+      WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY
+    );
+    const reviewPackage = reviewPackageRaw ? JSON.parse(reviewPackageRaw) : null;
+
+    if (
+      reviewPackage &&
+      Array.isArray(reviewPackage.remaining_wrong_review_question_numbers)
+    ) {
+      return Array.from(
+        new Set(
+          reviewPackage.remaining_wrong_review_question_numbers
+            .map(Number)
+            .filter(Number.isFinite)
+        )
+      ).sort(function (a, b) {
+        return a - b;
+      });
+    }
+
+    if (state.report && Array.isArray(state.report.wrong_items)) {
+      const fallbackNumbers = state.report.wrong_items
+        .map(function (item) {
+          return Number(item.question_number);
+        })
+        .filter(Number.isFinite);
+
+      return Array.from(new Set(fallbackNumbers)).sort(function (a, b) {
+        return a - b;
+      });
+    }
+
+    if (state.sourceResult && Array.isArray(state.sourceResult.items)) {
+      const fallbackNumbers = state.sourceResult.items
+        .filter(function (item) {
+          return !item.is_correct;
+        })
+        .map(function (item) {
+          return Number(item.question_number);
+        })
+        .filter(Number.isFinite);
+
+      return Array.from(new Set(fallbackNumbers)).sort(function (a, b) {
+        return a - b;
+      });
+    }
+
+    return [];
+  } catch (error) {
+    console.error("오답풀이 문항 번호를 읽지 못했습니다.", error);
+    return [];
+  }
+}
+function updateWrongReviewCountBadge() {
+  if (!els.wrongReviewCountBadge) {
+    return;
+  }
+
+  const remainingNumbers = getRemainingWrongReviewNumbers();
+  const count = remainingNumbers.length;
+
+  els.wrongReviewCountBadge.textContent = `남은 오답풀이: ${count}문항`;
+
+  if (count === 0) {
+    els.wrongReviewCountBadge.style.color = "#15803d";
+  } else {
+    els.wrongReviewCountBadge.style.color = "#003b86";
+  }
+
+  if (els.wrongReviewBtn) {
+    els.wrongReviewBtn.textContent =
+      count > 0 ? `오답 다시 풀기 (${count}문항)` : "오답 다시 풀기";
+    els.wrongReviewBtn.disabled = count === 0;
+  }
+}
+
+function openTopik1WrongReview() {
+  const remainingNumbers = getRemainingWrongReviewNumbers();
+  updateWrongReviewCountBadge();
+
+  if (!state.sourceResult) {
+    setStatus("먼저 TOPIK I 읽기 진단 보고서를 생성하세요.", "error");
+    return;
+  }
+
+  if (
+    state.sourceResult.test_level &&
+    state.sourceResult.test_level !== "TOPIK I"
+  ) {
+    setStatus("TOPIK I 읽기 결과가 아닙니다. TOPIK I 결과로 다시 진단하세요.", "error");
+    return;
+  }
+
+  if (
+    state.sourceResult.section &&
+    state.sourceResult.section !== "reading"
+  ) {
+    setStatus("읽기 결과가 아닙니다. reading-result.json을 확인하세요.", "error");
+    return;
+  }
+
+  localStorage.setItem(
+    WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY,
+    JSON.stringify({
+      saved_at: new Date().toISOString(),
+      source: "reading-diagnosis",
+      source_result: state.sourceResult,
+      remaining_wrong_review_question_numbers: remainingNumbers
+    })
+  );
+
+  localStorage.setItem(
+    WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY,
+    JSON.stringify(remainingNumbers)
+  );
+
+  if (remainingNumbers.length === 0) {
+    setStatus("남은 오답풀이 문항이 없습니다.", "ok");
+    updateWrongReviewCountBadge();
+    return;
+  }
+
+  const wrongReviewUrl =
+    "../reading-test/index.html?mode=wrong-review&topik=1&v=topik1-wrong-review-" +
+    Date.now();
+
+  console.info("TOPIK I 오답 다시 풀기 이동:", {
+    url: wrongReviewUrl,
+    remainingNumbers
+  });
+
+  window.location.href = wrongReviewUrl;
+}
+
 
 function handleDownloadJson() {
   if (!state.report) {
@@ -1004,5 +1411,10 @@ els.downloadJsonBtn.addEventListener("click", handleDownloadJson);
 els.downloadTxtBtn.addEventListener("click", handleDownloadTxt);
 els.printBtn.addEventListener("click", handlePrint);
 els.resetBtn.addEventListener("click", handleReset);
+
+if (els.wrongReviewBtn) {
+  els.wrongReviewBtn.addEventListener("click", openTopik1WrongReview);
+}
+
 
 handleAutoAnalyze();

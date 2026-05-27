@@ -264,13 +264,35 @@
     }
 
     .prescription-list {
-      padding-left: 20px;
-      margin-top: 8px;
+      display: grid;
+      gap: 10px;
+      margin: 10px 0 16px;
+      padding-left: 0;
     }
 
-    .prescription-list li {
-      margin-bottom: 8px;
+    .prescription-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 13px 16px;
+      break-inside: avoid;
+      page-break-inside: avoid;
     }
+
+    .prescription-item p {
+      margin: 0 0 6px;
+    }
+
+    .prescription-item p:last-child {
+      margin-bottom: 0;
+    }
+
+    .prescription-item strong {
+      color: var(--dark-blue);
+      font-size: 15px;
+    }
+
+
 
     .wrong-list {
       display: grid;
@@ -279,12 +301,14 @@
       margin: 10px 0 18px;
     }
 
-    .wrong-item {
+     .wrong-item {
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 10px 12px;
       background: #fff;
       font-size: 14px;
+      break-inside: avoid;
+      page-break-inside: avoid;
     }
 
     .wrong-item strong {
@@ -354,8 +378,18 @@
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
 
-      .wrong-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+       .wrong-list {
+        display: block;
+        column-count: 2;
+        column-gap: 8px;
+      }
+
+      .wrong-item {
+        display: inline-block;
+        width: 100%;
+        margin: 0 0 8px;
+        break-inside: avoid;
+        page-break-inside: avoid;
       }
     }
   </style>
@@ -392,7 +426,23 @@
   <button id="downloadJsonBtn" type="button" style="display: none;" aria-hidden="true">diagnosis-report.json 다운로드</button>
   <button id="downloadTxtBtn" type="button" class="secondary" style="display: none;" aria-hidden="true">diagnosis-report.txt 다운로드</button>
   <button id="printBtn" type="button" class="secondary">PDF로 인쇄 / 저장</button>
-  <button id="resetBtn" type="button" class="danger" style="display: none;" aria-hidden="true">다시 불러오기</button>
+<button id="wrongReviewBtn" type="button" class="secondary">오답 다시 풀기</button>
+<span
+  id="wrongReviewCountBadge"
+  class="status"
+  style="
+    display:inline-flex;
+    align-items:center;
+    min-height:44px;
+    padding:0 10px;
+    margin-left:4px;
+    color:#003b86;
+    font-weight:800;
+  "
+>
+  남은 오답풀이: 확인 중
+</span>
+<button id="resetBtn" type="button" class="danger" style="display: none;" aria-hidden="true">다시 불러오기</button>
 </div>
     </section>
 
@@ -401,6 +451,6 @@
     </section>
   </main>
 
-  <script src="./reading-diagnosis.js?v=reading-diagnosis-prescription-v2"></script>
+   <script src="./reading-diagnosis.js?v=report-wrong-card-print-v1"></script>
 </body>
 </html>
