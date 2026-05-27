@@ -28,10 +28,13 @@ const TEST_CONFIG = {
 };
 
 const AUTO_DIAGNOSIS_STORAGE_KEY = "topik1_latest_reading_result";
+const WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY = "topik1_wrong_review_question_numbers";
+const WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY = "topik1_wrong_review_source_result";
 const AUTO_DIAGNOSIS_URL = "../reading-diagnosis/index.html?auto=1";
 
-const DEFAULT_READING_POINTS = {
-  31: 2, 32: 2, 33: 2,
+let currentRunMode = "normal";
+
+const DEFAULT_READING_POINTS = {  31: 2, 32: 2, 33: 2,
   34: 2, 35: 2, 36: 2, 37: 3, 38: 3, 39: 2,
   40: 3, 41: 3, 42: 3,
   43: 3, 44: 2, 45: 3,
@@ -256,11 +259,25 @@ function highlightPlainTextInsideElement(rootElement, targetText) {
 
 document.addEventListener("DOMContentLoaded", initReadingTest);
 
-function initReadingTest() {
+async function initReadingTest() {
   console.info("TOPIK I Reading loaded: v5-no-review-result");
   cacheElements();
   bindEvents();
-  loadQuestions();
+
+  try {
+    await loadQuestions();
+
+    if (isWrongReviewMode()) {
+      startWrongReviewMode();
+    }
+  } catch (error) {
+    console.error("TOPIK I Reading 초기화 실패:", error);
+
+    if (elements.startMessage) {
+      elements.startMessage.textContent =
+        error.message || "시험 초기화 중 오류가 발생했습니다.";
+    }
+  }
 }
 
 function cacheElements() {
@@ -291,6 +308,7 @@ function cacheElements() {
   elements.submitButton = document.getElementById("submitButton");
 
   elements.questionListButton = document.getElementById("questionListButton");
+  elements.wrongReviewBackButton = document.getElementById("wrongReviewBackButton");
   elements.questionListBackdrop = document.getElementById("questionListBackdrop");
   elements.closeQuestionListButton = document.getElementById("closeQuestionListButton");
   elements.submitFromListButton = document.getElementById("submitFromListButton");
@@ -329,7 +347,12 @@ if (elements.newExamButton) {
   elements.submitButton.addEventListener("click", requestSubmit);
 
   elements.questionListButton.addEventListener("click", openQuestionList);
-  elements.closeQuestionListButton.addEventListener("click", closeQuestionList);
+
+if (elements.wrongReviewBackButton) {
+  elements.wrongReviewBackButton.addEventListener("click", returnToDiagnosisFromWrongReview);
+}
+
+elements.closeQuestionListButton.addEventListener("click", closeQuestionList);
   elements.submitFromListButton.addEventListener("click", requestSubmit);
 
   elements.questionListBackdrop.addEventListener("click", function (event) {
@@ -454,7 +477,7 @@ function createExamModeSelector() {
   ].join("");
 
   const help = document.createElement("div");
-  help.textContent = "검수할 때는 회차 고정, 실제 시험에는 랜덤 출제를 사용하세요. 선택 후 반드시 새 문제 만들기를 누르세요.";
+  help.textContent = "검수할 때는 회차 고정, 실제 시험에는 랜덤 출제를 사용하세요. 시험 시작 시 현재 선택한 시험지가 자동 적용됩니다.";
   help.style.marginTop = "6px";
   help.style.fontSize = "13px";
   help.style.color = "#5f6b7a";
@@ -500,18 +523,88 @@ function getSelectedExamGenerationOptions() {
     label: "랜덤 출제"
   };
 }
-async function createNewRandomExam() {
+function validateGeneratedQuestionSetForExam(groupedData) {
+  if (groupedData.length !== TEST_CONFIG.expectedTotalQuestions) {
+    throw new Error(
+      `생성 문항 수가 ${TEST_CONFIG.expectedTotalQuestions}문항이 아닙니다.`
+    );
+  }
+
+  const numbers = groupedData.map(function (question) {
+    return Number(question.question_number);
+  });
+
+  const missingNumbers = [];
+
+  for (
+    let number = TEST_CONFIG.questionNumberStart;
+    number <= TEST_CONFIG.questionNumberEnd;
+    number += 1
+  ) {
+    if (!numbers.includes(number)) {
+      missingNumbers.push(number);
+    }
+  }
+
+  if (missingNumbers.length > 0) {
+    throw new Error(`누락된 문항 번호가 있습니다: ${missingNumbers.join(", ")}`);
+  }
+}
+
+function applyGeneratedExamData(generatedData, examGenerationOptions) {
+  const normalizedData = normalizeQuestions(generatedData);
+  const groupedData = enrichPassageGroups(normalizedData);
+
+  validateQuestions(groupedData);
+  validateGeneratedQuestionSetForExam(groupedData);
+
+  questions = groupedData;
+  sortQuestionsByNumber();
+
+  latestExamGenerationOptions = examGenerationOptions;
+
+  answers = {};
+  reviewMarks = {};
+  sentenceOrderAnswers = {};
+  selectedSentenceForOrder = null;
+  currentIndex = getStartQuestionIndex();
+
+  return questions[0] && questions[0].generated_exam_id
+    ? questions[0].generated_exam_id
+    : "새 시험지";
+}
+
+async function generateSelectedExamForCurrentSelection() {
   if (
     !window.TOPIKQuestionGenerator ||
     typeof window.TOPIKQuestionGenerator.tryGeneratePreview !== "function"
   ) {
-    setNewExamMessage(
-      "question-generator.js를 불러오지 못했습니다. index.html의 script 연결을 확인하세요.",
-      "#d93025"
+    throw new Error(
+      "question-generator.js를 불러오지 못했습니다. index.html의 script 연결을 확인하세요."
     );
-    return;
   }
 
+  const examGenerationOptions = getSelectedExamGenerationOptions();
+
+  console.info("TOPIK I Reading 선택 시험지:", examGenerationOptions);
+
+  const generatedData = await window.TOPIKQuestionGenerator.tryGeneratePreview(
+    examGenerationOptions
+  );
+
+  const generatedExamId = applyGeneratedExamData(
+    generatedData,
+    examGenerationOptions
+  );
+
+  return {
+    examGenerationOptions,
+    generatedExamId,
+    totalQuestions: questions.length
+  };
+}
+
+async function createNewRandomExam() {
   if (elements.newExamButton) {
     elements.newExamButton.disabled = true;
     elements.newExamButton.textContent = "새 문제 생성 중...";
@@ -520,68 +613,14 @@ async function createNewRandomExam() {
   setNewExamMessage("문제은행에서 새 문제 세트를 만드는 중입니다.", "#5f6368");
 
   try {
-   const examGenerationOptions = getSelectedExamGenerationOptions();
-latestExamGenerationOptions = examGenerationOptions;
-
-console.info("TOPIK I Reading 선택 시험지:", examGenerationOptions);
-
-const generatedData = await window.TOPIKQuestionGenerator.tryGeneratePreview(examGenerationOptions);
-
-    const normalizedData = normalizeQuestions(generatedData);
-    const groupedData = enrichPassageGroups(normalizedData);
-
-    validateQuestions(groupedData);
-
-    if (groupedData.length !== TEST_CONFIG.expectedTotalQuestions) {
-      throw new Error(
-        `생성 문항 수가 ${TEST_CONFIG.expectedTotalQuestions}문항이 아닙니다.`
-      );
-    }
-
-    const numbers = groupedData.map(function (question) {
-      return Number(question.question_number);
-    });
-
-    const missingNumbers = [];
-
-    for (
-      let number = TEST_CONFIG.questionNumberStart;
-      number <= TEST_CONFIG.questionNumberEnd;
-      number += 1
-    ) {
-      if (!numbers.includes(number)) {
-        missingNumbers.push(number);
-      }
-    }
-
-    if (missingNumbers.length > 0) {
-      throw new Error(`누락된 문항 번호가 있습니다: ${missingNumbers.join(", ")}`);
-    }
-
-    questions = groupedData;
-    sortQuestionsByNumber();
-
-    answers = {};
-    reviewMarks = {};
-    sentenceOrderAnswers = {};
-    selectedSentenceForOrder = null;
-    currentIndex = getStartQuestionIndex();
-
-    const generatedExamId =
-      questions[0] && questions[0].generated_exam_id
-        ? questions[0].generated_exam_id
-        : "새 랜덤 시험지";
+    const generatedExamInfo = await generateSelectedExamForCurrentSelection();
 
     setNewExamMessage(
-      `새 문제 세트가 준비되었습니다. (${generatedExamId})`,
+      `새 문제 세트가 준비되었습니다. (${generatedExamInfo.examGenerationOptions.label} / ${generatedExamInfo.generatedExamId})`,
       "#188038"
     );
 
-    console.info("TOPIK I Reading 새 랜덤 문제 세트 적용 완료:", {
-      generated_exam_id: generatedExamId,
-      total_questions: questions.length,
-      first_question: questions[0]
-    });
+    console.info("TOPIK I Reading 새 문제 세트 적용 완료:", generatedExamInfo);
   } catch (error) {
     console.error("새 문제 세트 생성 실패:", error);
     setNewExamMessage(`새 문제 세트 생성 실패: ${error.message}`, "#d93025");
@@ -592,7 +631,6 @@ const generatedData = await window.TOPIKQuestionGenerator.tryGeneratePreview(exa
     }
   }
 }
-
 function setNewExamMessage(text, color) {
   if (!elements.newExamMessage) {
     return;
@@ -1038,8 +1076,487 @@ function getQuestionTraceFields(question) {
       : Number(question.question_number)
   };
 }
+function isWrongReviewMode() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("mode") === "wrong-review";
+}
+function parseJsonSafely(raw, fallbackValue) {
+  try {
+    return raw ? JSON.parse(raw) : fallbackValue;
+  } catch (error) {
+    console.error("localStorage JSON 파싱 실패:", error);
+    return fallbackValue;
+  }
+}
 
-function startTest() {
+function getWrongReviewStoragePackage() {
+  return parseJsonSafely(
+    localStorage.getItem(WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY),
+    null
+  );
+}
+
+function getWrongReviewSourceResult() {
+  const reviewPackage = getWrongReviewStoragePackage();
+
+  if (
+    reviewPackage &&
+    reviewPackage.source_result &&
+    Array.isArray(reviewPackage.source_result.items)
+  ) {
+    return reviewPackage.source_result;
+  }
+
+  const latestResult = parseJsonSafely(
+    localStorage.getItem(AUTO_DIAGNOSIS_STORAGE_KEY),
+    null
+  );
+
+  if (latestResult && Array.isArray(latestResult.items)) {
+    return latestResult;
+  }
+
+  return null;
+}
+
+function getWrongReviewNumbers(sourceResult) {
+  const storedRaw = localStorage.getItem(
+    WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY
+  );
+
+  const storedNumbers = parseJsonSafely(storedRaw, null);
+
+  if (Array.isArray(storedNumbers)) {
+    return Array.from(
+      new Set(
+        storedNumbers
+          .map(Number)
+          .filter(Number.isFinite)
+      )
+    ).sort(function (a, b) {
+      return a - b;
+    });
+  }
+
+  const reviewPackage = getWrongReviewStoragePackage();
+
+  if (
+    reviewPackage &&
+    Array.isArray(reviewPackage.remaining_wrong_review_question_numbers)
+  ) {
+    return Array.from(
+      new Set(
+        reviewPackage.remaining_wrong_review_question_numbers
+          .map(Number)
+          .filter(Number.isFinite)
+      )
+    ).sort(function (a, b) {
+      return a - b;
+    });
+  }
+
+  if (sourceResult && Array.isArray(sourceResult.items)) {
+    return Array.from(
+      new Set(
+        sourceResult.items
+          .filter(function (item) {
+            return !item.is_correct;
+          })
+          .map(function (item) {
+            return Number(item.question_number);
+          })
+          .filter(Number.isFinite)
+      )
+    ).sort(function (a, b) {
+      return a - b;
+    });
+  }
+
+  return [];
+}
+
+function convertResultItemToQuestion(item) {
+  const questionNumber = Number(item.question_number);
+  const sentenceOrderResult = item.sentence_order_result || {};
+  const sentenceInsertResult = item.sentence_insert_result || {};
+  const safeOptions = Array.isArray(item.options) ? item.options : [];
+
+  const sentenceItems = Array.isArray(sentenceOrderResult.sentence_items)
+    ? sentenceOrderResult.sentence_items
+    : Array.isArray(item.sentence_items)
+      ? item.sentence_items
+      : undefined;
+
+  const correctOrder = Array.isArray(item.correct_order)
+    ? item.correct_order
+    : Array.isArray(sentenceOrderResult.correct_order)
+      ? sentenceOrderResult.correct_order
+      : undefined;
+
+  const insertPositionLabels = Array.isArray(sentenceInsertResult.position_labels)
+    ? sentenceInsertResult.position_labels
+    : safeOptions;
+
+  const correctPosition =
+    item.correct_position ||
+    sentenceInsertResult.correct_position ||
+    "";
+
+  const correctAnswerNumber = Number(item.correct_answer);
+  let answerValue = Number.isFinite(correctAnswerNumber)
+    ? correctAnswerNumber
+    : null;
+
+  if (
+    item.type === "sentence_insert" &&
+    answerValue === null &&
+    correctPosition &&
+    Array.isArray(insertPositionLabels)
+  ) {
+    const positionIndex = insertPositionLabels.findIndex(function (label) {
+      return String(label).trim() === String(correctPosition).trim();
+    });
+
+    if (positionIndex >= 0) {
+      answerValue = positionIndex + 1;
+    }
+  }
+
+  return {
+    id: item.id || `WR-R${String(questionNumber).padStart(3, "0")}`,
+    question_number: questionNumber,
+    test_level: TEST_CONFIG.testLevel,
+    section: TEST_CONFIG.section,
+    type: item.type || "same_content",
+    instruction: item.instruction || item.question || "",
+    passage: item.passage || "",
+    question: item.question || "",
+    options: safeOptions,
+    answer: answerValue,
+    correct_answer: item.correct_answer,
+    points: getQuestionPoints(questionNumber, item.points),
+    category: item.category || "미분류",
+    diagnostic_area: item.diagnostic_area || "미분류",
+    description: item.description || "",
+    image_url: item.image_url || "",
+    passage_group_id: item.passage_group_id || "",
+    passage_group_title: item.passage_group_title || "",
+    passage_group_numbers: Array.isArray(item.passage_group_numbers)
+      ? item.passage_group_numbers.map(Number)
+      : [],
+    shared_passage: item.passage || "",
+    shared_image_url: item.image_url || "",
+    shared_passage_index: item.shared_passage_index || null,
+    shared_passage_total: item.shared_passage_total || null,
+    sentence_items: sentenceItems,
+    correct_order: correctOrder,
+    insert_sentence:
+      item.insert_sentence ||
+      sentenceInsertResult.insert_sentence ||
+      "",
+    insert_positions:
+      Array.isArray(item.insert_positions)
+        ? item.insert_positions
+        : insertPositionLabels,
+    correct_position: correctPosition,
+    source_bank_id: item.source_bank_id || "",
+    source_set_id: item.source_set_id || "",
+    generated_exam_id: item.generated_exam_id || "",
+    template_slot:
+      item.template_slot === undefined ||
+      item.template_slot === null ||
+      item.template_slot === ""
+        ? questionNumber
+        : Number(item.template_slot)
+  };
+}
+
+function buildWrongReviewQuestions(sourceResult, reviewNumbers) {
+  if (!sourceResult || !Array.isArray(sourceResult.items)) {
+    return [];
+  }
+
+  const numberSet = new Set(
+    reviewNumbers
+      .map(Number)
+      .filter(Number.isFinite)
+  );
+
+  const convertedQuestions = sourceResult.items
+    .filter(function (item) {
+      return numberSet.has(Number(item.question_number));
+    })
+    .map(convertResultItemToQuestion);
+
+  const groupNumberMap = {};
+
+  convertedQuestions.forEach(function (question) {
+    if (!question.passage_group_id) {
+      return;
+    }
+
+    if (!groupNumberMap[question.passage_group_id]) {
+      groupNumberMap[question.passage_group_id] = [];
+    }
+
+    if (!groupNumberMap[question.passage_group_id].includes(question.question_number)) {
+      groupNumberMap[question.passage_group_id].push(question.question_number);
+    }
+  });
+
+  return convertedQuestions.map(function (question) {
+    if (!question.passage_group_id || !groupNumberMap[question.passage_group_id]) {
+      return question;
+    }
+
+    return {
+      ...question,
+      passage_group_numbers: groupNumberMap[question.passage_group_id].sort(function (a, b) {
+        return a - b;
+      })
+    };
+  });
+}
+function showWrongReviewBackButton() {
+  if (!elements.wrongReviewBackButton) {
+    return;
+  }
+
+  elements.wrongReviewBackButton.style.display = "inline-flex";
+  elements.wrongReviewBackButton.removeAttribute("aria-hidden");
+  elements.wrongReviewBackButton.tabIndex = 0;
+}
+
+function hideWrongReviewBackButton() {
+  if (!elements.wrongReviewBackButton) {
+    return;
+  }
+
+  elements.wrongReviewBackButton.style.display = "none";
+  elements.wrongReviewBackButton.setAttribute("aria-hidden", "true");
+  elements.wrongReviewBackButton.tabIndex = -1;
+}
+function gradeWrongReviewQuestionForProgress(question) {
+  if (!question) {
+    return null;
+  }
+
+  if (question.type === "sentence_order") {
+    return gradeSentenceOrderQuestion(question);
+  }
+
+  if (question.type === "sentence_insert") {
+    return gradeSentenceInsertQuestion(question);
+  }
+
+  const studentAnswer = answers[question.id] || null;
+  const correctAnswer = Number(question.answer);
+  const points = getQuestionPoints(question.question_number, question.points);
+  const isCorrect = studentAnswer === correctAnswer;
+
+  return {
+    question_number: question.question_number,
+    is_answered: isQuestionAnswered(question),
+    is_correct: isCorrect,
+    student_answer: studentAnswer,
+    correct_answer: correctAnswer,
+    points,
+    earned_points: isCorrect ? points : 0
+  };
+}
+
+function saveWrongReviewProgressBeforeReturn() {
+  if (currentRunMode !== "wrong_review") {
+    return [];
+  }
+
+  const progressItems = questions
+    .map(gradeWrongReviewQuestionForProgress)
+    .filter(Boolean);
+
+  const remainingNumbers = progressItems
+    .filter(function (item) {
+      return !item.is_correct;
+    })
+    .map(function (item) {
+      return Number(item.question_number);
+    })
+    .filter(Number.isFinite)
+    .sort(function (a, b) {
+      return a - b;
+    });
+
+  const existingPackage = getWrongReviewStoragePackage();
+  const existingSourceResult =
+    existingPackage && existingPackage.source_result
+      ? existingPackage.source_result
+      : getWrongReviewSourceResult();
+
+  localStorage.setItem(
+    WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY,
+    JSON.stringify(remainingNumbers)
+  );
+
+  localStorage.setItem(
+    WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY,
+    JSON.stringify({
+      saved_at: new Date().toISOString(),
+      source: "reading-test-wrong-review-partial-return",
+      source_result: existingSourceResult,
+      latest_wrong_review_partial_progress: {
+        saved_at: new Date().toISOString(),
+        total_review_questions: questions.length,
+        answered_count: progressItems.filter(function (item) {
+          return item.is_answered;
+        }).length,
+        remaining_wrong_review_question_numbers: remainingNumbers,
+        items: progressItems
+      },
+      remaining_wrong_review_question_numbers: remainingNumbers
+    })
+  );
+
+  console.info("오답풀이 중간 진행 저장 완료:", {
+    remainingNumbers,
+    progressItems
+  });
+
+  return remainingNumbers;
+}
+function returnToDiagnosisFromWrongReview() {
+  if (currentRunMode !== "wrong_review") {
+    window.location.href =
+      AUTO_DIAGNOSIS_URL + "&v=return-normal-" + Date.now();
+    return;
+  }
+
+  const ok = confirm(
+    [
+      "오답풀이를 중간 종료하고 진단 보고서로 돌아가시겠습니까?",
+      "",
+      "현재까지 푼 문항은 바로 채점됩니다.",
+      "맞힌 문항은 남은 오답풀이 목록에서 제외됩니다.",
+      "틀린 문항과 미응답 문항은 다음 오답풀이에 다시 나옵니다."
+    ].join("\n")
+  );
+
+  if (!ok) {
+    return;
+  }
+
+  stopTimer();
+
+  const remainingNumbers = saveWrongReviewProgressBeforeReturn();
+
+  console.info("오답풀이 중간 종료 후 진단 보고서 이동:", {
+    remainingNumbers
+  });
+
+  window.location.href =
+    AUTO_DIAGNOSIS_URL + "&v=return-wrong-review-" + Date.now();
+}
+function startWrongReviewMode() {
+  const sourceResult = getWrongReviewSourceResult();
+
+  if (!sourceResult) {
+    if (elements.startMessage) {
+      elements.startMessage.textContent =
+        "오답풀이 원본 결과가 없습니다. 먼저 일반 40문항 시험을 제출하고 진단 보고서에서 오답 다시 풀기를 눌러 주세요.";
+    }
+
+    console.warn("오답풀이 원본 결과가 없습니다.");
+    return;
+  }
+
+  if (sourceResult.test_level && sourceResult.test_level !== TEST_CONFIG.testLevel) {
+    if (elements.startMessage) {
+      elements.startMessage.textContent =
+        "TOPIK I 읽기 결과가 아닙니다. TOPIK I 결과로 다시 진단하세요.";
+    }
+
+    console.warn("TOPIK I 결과가 아닌 데이터입니다.", sourceResult.test_level);
+    return;
+  }
+
+  if (sourceResult.section && sourceResult.section !== TEST_CONFIG.section) {
+    if (elements.startMessage) {
+      elements.startMessage.textContent =
+        "읽기 결과가 아닙니다. reading-result.json을 확인하세요.";
+    }
+
+    console.warn("reading 결과가 아닌 데이터입니다.", sourceResult.section);
+    return;
+  }
+
+  const reviewNumbers = getWrongReviewNumbers(sourceResult);
+  const reviewQuestions = buildWrongReviewQuestions(sourceResult, reviewNumbers);
+
+  if (reviewQuestions.length === 0) {
+    localStorage.setItem(
+      WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY,
+      JSON.stringify([])
+    );
+
+    if (elements.startMessage) {
+      elements.startMessage.textContent =
+        "남은 오답풀이 문항이 없습니다. 진단 보고서로 돌아가 확인하세요.";
+    }
+
+    console.info("남은 오답풀이 문항이 없습니다.");
+    return;
+  }
+
+  currentRunMode = "wrong_review";
+
+  questions = enrichPassageGroups(normalizeQuestions(reviewQuestions));
+  sortQuestionsByNumber();
+
+  studentName = sourceResult.student_name || "오답풀이";
+  studentPhone = sourceResult.student_phone || "";
+  startedAt = new Date().toISOString();
+  submittedAt = "";
+  answers = {};
+  reviewMarks = {};
+  sentenceOrderAnswers = {};
+  selectedSentenceForOrder = null;
+  remainingSeconds = TEST_CONFIG.timeLimitSeconds;
+  latestResult = null;
+  latestResultText = "";
+
+  latestExamGenerationOptions = {
+    mode: "wrong_review",
+    round: sourceResult.generated_exam_round || "",
+    label: "오답 다시 풀기"
+  };
+
+  currentIndex = 0;
+
+  if (elements.studentNameDisplay) {
+    elements.studentNameDisplay.textContent = studentName;
+  }
+
+  if (elements.studentPhoneDisplay) {
+    elements.studentPhoneDisplay.textContent = studentPhone;
+  }
+
+  closeQuestionList();
+  showWrongReviewBackButton();
+  showScreen("test");
+  renderTimer();
+  renderQuestion();
+  startTimer();
+
+  console.info("TOPIK I 오답풀이 모드 시작:", {
+    reviewNumbers,
+    totalQuestions: questions.length
+  });
+
+  window.scrollTo({ top: 0, behavior: "auto" });
+}
+
+async function startTest() {
+  currentRunMode = "normal";
+
   const name = elements.studentNameInput.value.trim();
   const phone = elements.studentPhoneInput.value.trim();
 
@@ -1060,6 +1577,41 @@ function startTest() {
     return;
   }
 
+  const originalStartButtonText = elements.startButton
+    ? elements.startButton.textContent
+    : "";
+
+  try {
+    if (elements.startButton) {
+      elements.startButton.disabled = true;
+      elements.startButton.textContent = "시험지 확인 중...";
+    }
+
+    elements.startMessage.textContent = "선택한 시험지를 확인하고 있습니다.";
+
+    const generatedExamInfo = await generateSelectedExamForCurrentSelection();
+
+    console.info("TOPIK I Reading 시험 시작 전 시험지 적용 완료:", generatedExamInfo);
+  } catch (error) {
+    console.error("시험 시작 전 시험지 적용 실패:", error);
+    elements.startMessage.textContent =
+      error.message || "선택한 시험지를 불러오지 못했습니다. 잠시 후 다시 시도하세요.";
+
+    if (elements.startButton) {
+      elements.startButton.disabled = false;
+      elements.startButton.textContent = originalStartButtonText;
+    }
+
+    return;
+  }
+
+  if (elements.startButton) {
+    elements.startButton.disabled = false;
+    elements.startButton.textContent = originalStartButtonText;
+  }
+
+  hideWrongReviewBackButton();
+
   studentName = name;
   studentPhone = phone;
   startedAt = new Date().toISOString();
@@ -1071,6 +1623,7 @@ function startTest() {
   remainingSeconds = TEST_CONFIG.timeLimitSeconds;
   latestResult = null;
   latestResultText = "";
+  elements.startMessage.textContent = "";
 
   sortQuestionsByNumber();
   currentIndex = getStartQuestionIndex();
@@ -1110,7 +1663,7 @@ function startTimer() {
     if (remainingSeconds <= 0) {
       stopTimer();
       alert("시험 시간이 종료되어 자동 제출됩니다.");
-      submitTest("time_over");
+      submitTest(currentRunMode === "wrong_review" ? "wrong_review" : "time_over");
     }
   }, 1000);
 }
@@ -1150,10 +1703,17 @@ function renderQuestion() {
     return;
   }
 
-  renderQuestionInstruction(question);
+   renderQuestionInstruction(question);
   renderQuestionStage(question);
+
+  highlightNegativeQuestionWordsInRenderedDom();
   highlightInsertedAnswersInCurrentStage(question);
-  window.setTimeout(function () { highlightInsertedAnswersInCurrentStage(question); }, 0);
+
+  window.setTimeout(function () {
+    highlightNegativeQuestionWordsInRenderedDom();
+    highlightInsertedAnswersInCurrentStage(question);
+  }, 0);
+
   renderNavigationButtons();
   renderReviewButton(question);
   renderProgress();
@@ -1265,102 +1825,276 @@ function bindPassageGroupButtons() {
 }
 
 function buildQuestionNumberLabelForPanel(question) {
-  const localLabel = getQuestionLocalLabel(question);
-  return localLabel
-    ? `<div style="color:#003f8f; font-weight:900; margin-bottom:8px;">${escapeHtml(localLabel)} 문제</div>`
-    : "";
+  const questionNumber = Number(question && question.question_number);
+
+  if (!Number.isFinite(questionNumber)) {
+    return "";
+  }
+
+  return `
+    <div
+      class="panel-question-number"
+      style="
+        color:#003f8f;
+        font-weight:900;
+        margin-bottom:10px;
+      "
+    >
+      ${questionNumber}번 문제
+    </div>
+  `;
+}
+function buildNegativeQuestionTextHtml(text) {
+  const sourceText = String(text || "");
+  const escapedText = escapeHtml(sourceText);
+
+  const highlightStyle = `
+    color:#d93025;
+    -webkit-text-fill-color:#d93025;
+    font-weight:900;
+  `;
+
+  return escapedText
+    .replaceAll(
+      "맞지 않는 것",
+      `<span style="${highlightStyle}">맞지 않는 것</span>`
+    )
+    .replaceAll(
+      "내용과 다른 것",
+      `내용과 <span style="${highlightStyle}">다른 것</span>`
+    )
+    .replaceAll(
+      "다른 것을",
+      `<span style="${highlightStyle}">다른 것</span>을`
+    );
+}
+function highlightNegativeQuestionWordsInRenderedDom() {
+  const targetRoots = [
+    elements.questionInstruction,
+    elements.questionStage
+  ].filter(Boolean);
+
+  const targetPhrases = [
+    "맞지 않는 것",
+    "다른 것"
+  ];
+
+  targetRoots.forEach(function (rootElement) {
+    targetPhrases.forEach(function (phrase) {
+      highlightTextPhraseInsideElement(rootElement, phrase);
+    });
+  });
 }
 
+function highlightTextPhraseInsideElement(rootElement, targetText) {
+  if (!rootElement || !targetText) {
+    return;
+  }
+
+  const walker = document.createTreeWalker(
+    rootElement,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: function (node) {
+        if (!node || !node.nodeValue || !node.nodeValue.includes(targetText)) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        const parentElement = node.parentElement;
+
+        if (
+          parentElement &&
+          parentElement.closest &&
+          parentElement.closest(
+            ".negative-question-highlight, button, .option-button, input, select"
+          )
+        ) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+
+  const matchingNodes = [];
+
+  while (walker.nextNode()) {
+    matchingNodes.push(walker.currentNode);
+  }
+
+  matchingNodes.forEach(function (textNode) {
+    const sourceText = textNode.nodeValue;
+    const pieces = sourceText.split(targetText);
+
+    if (pieces.length <= 1) {
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    pieces.forEach(function (piece, index) {
+      if (piece) {
+        fragment.appendChild(document.createTextNode(piece));
+      }
+
+      if (index < pieces.length - 1) {
+        const highlightSpan = document.createElement("span");
+        highlightSpan.className = "negative-question-highlight";
+        highlightSpan.textContent = targetText;
+        highlightSpan.style.setProperty("color", "#d93025", "important");
+        highlightSpan.style.setProperty("-webkit-text-fill-color", "#d93025", "important");
+        highlightSpan.style.setProperty("font-weight", "900", "important");
+        fragment.appendChild(highlightSpan);
+      }
+    });
+
+    textNode.parentNode.replaceChild(fragment, textNode);
+  });
+}
+function getQuestionTextForPanel(question, fallbackText) {
+  const questionNumber = Number(question && question.question_number);
+  const rawText = String(question && question.question ? question.question : "").trim();
+  const safeFallback = fallbackText || "물음에 답하십시오.";
+
+  if (!rawText) {
+    return safeFallback;
+  }
+
+  if (Number.isFinite(questionNumber)) {
+    const placeholderPattern = new RegExp(
+      "^\\s*\\[?" +
+        questionNumber +
+        "\\]?\\s*번\\s*(문제\\s*)?질문\\s*(을\\s*여기에\\s*입력하세요\\.?|[:：.]?\\s*)$"
+    );
+
+    if (placeholderPattern.test(rawText)) {
+      return safeFallback;
+    }
+
+    const cleanedText = rawText
+      .replace(
+        new RegExp(
+          "^\\s*\\[?" +
+            questionNumber +
+            "\\]?\\s*번\\s*(문제\\s*)?질문\\s*[:：]?\\s*"
+        ),
+        ""
+      )
+      .trim();
+
+    if (cleanedText && !cleanedText.includes("여기에 입력하세요")) {
+      return cleanedText;
+    }
+
+    if (!cleanedText || cleanedText.includes("여기에 입력하세요")) {
+      return safeFallback;
+    }
+  }
+
+  if (rawText.includes("여기에 입력하세요")) {
+    return safeFallback;
+  }
+
+  return rawText;
+}
 function renderQuestionInstruction(question) {
   const number = question.question_number;
   const displayLabel = getQuestionDisplayLabel(question);
 
+  function setInstructionHtml(text) {
+    elements.questionInstruction.innerHTML = buildNegativeQuestionTextHtml(text);
+  }
+
   if (question.instruction) {
     const instructionText = String(question.instruction).trim();
     const alreadyHasRangeLabel = /^\[\d+\s*~\s*\d+\]/.test(instructionText);
-    const alreadyHasNumberLabel = instructionText.startsWith(`[${number}]`) || instructionText.startsWith(displayLabel);
+    const alreadyHasNumberLabel =
+      instructionText.startsWith(`[${number}]`) ||
+      instructionText.startsWith(displayLabel);
 
-    elements.questionInstruction.textContent =
+    const finalText =
       alreadyHasRangeLabel || alreadyHasNumberLabel
         ? instructionText
         : `${displayLabel} ${instructionText}`;
+
+    setInstructionHtml(finalText);
     return;
   }
 
   if (question.type === "common_passage_question" || hasPassageGroup(question)) {
-    elements.questionInstruction.textContent =
-      `${displayLabel} 다음 글을 읽고 물음에 답하십시오.`;
+    setInstructionHtml(`${displayLabel} 다음 글을 읽고 물음에 답하십시오.`);
     return;
   }
 
   if (question.type === "blank_choice") {
-    elements.questionInstruction.textContent =
-      `[${number}] <보기>와 같이 빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.`;
+    setInstructionHtml(
+      `[${number}] <보기>와 같이 빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.`
+    );
     return;
   }
 
   if (question.type === "sentence_insert") {
-    elements.questionInstruction.textContent =
-      `[${number}] 다음 문장이 들어갈 위치로 알맞은 곳을 고르십시오.`;
+    setInstructionHtml(
+      `[${number}] 다음 문장이 들어갈 위치로 알맞은 곳을 고르십시오.`
+    );
     return;
   }
 
   if (question.type === "not_matching") {
-    elements.questionInstruction.textContent =
-      `[${number}] 다음 글을 읽고 내용과 다른 것을 고르십시오.`;
+    setInstructionHtml(
+      `[${number}] 다음 글을 읽고 내용과 다른 것을 고르십시오.`
+    );
     return;
   }
 
   if (question.type === "topic_content") {
-    elements.questionInstruction.textContent =
-      `[${number}] 무엇에 대한 내용입니까?`;
+    setInstructionHtml(`[${number}] 무엇에 대한 내용입니까?`);
     return;
   }
 
   if (question.type === "main_idea") {
-    elements.questionInstruction.textContent =
-      `[${number}] 다음 글을 읽고 중심 생각으로 알맞은 것을 고르십시오.`;
+    setInstructionHtml(
+      `[${number}] 다음 글을 읽고 중심 생각으로 알맞은 것을 고르십시오.`
+    );
     return;
   }
 
   if (question.type === "sentence_order") {
-    elements.questionInstruction.textContent =
-      `[${number}] 다음을 순서대로 맞게 배열하십시오.`;
+    setInstructionHtml(`[${number}] 다음을 순서대로 맞게 배열하십시오.`);
     return;
   }
 
   if (question.type === "detail") {
-    elements.questionInstruction.textContent =
-      `[${number}] 다음 글을 읽고 내용과 같은 것을 고르십시오.`;
+    setInstructionHtml(
+      `[${number}] 다음 글을 읽고 내용과 같은 것을 고르십시오.`
+    );
     return;
   }
 
   if (question.type === "notice") {
-    elements.questionInstruction.textContent =
-      `[${number}] 다음 안내문이나 광고문을 읽고 물음에 답하십시오.`;
+    setInstructionHtml(
+      `[${number}] 다음 안내문이나 광고문을 읽고 물음에 답하십시오.`
+    );
     return;
   }
 
   if (question.type === "practical_text") {
-    elements.questionInstruction.textContent =
-      `[${number}] 다음 글을 읽고 물음에 답하십시오.`;
+    setInstructionHtml(`[${number}] 다음 글을 읽고 물음에 답하십시오.`);
     return;
   }
 
   if (question.type === "long_passage_detail") {
-    elements.questionInstruction.textContent =
-      `[${number}] 다음 글을 읽고 물음에 답하십시오.`;
+    setInstructionHtml(`[${number}] 다음 글을 읽고 물음에 답하십시오.`);
     return;
   }
 
   if (question.type === "long_passage_inference") {
-    elements.questionInstruction.textContent =
-      `[${number}] 다음 글을 읽고 물음에 답하십시오.`;
+    setInstructionHtml(`[${number}] 다음 글을 읽고 물음에 답하십시오.`);
     return;
   }
 
-  elements.questionInstruction.textContent =
-    `[${number}] ${question.question}`;
+  setInstructionHtml(`[${number}] ${question.question}`);
 }
 
 function renderQuestionStage(question) {
@@ -1428,6 +2162,7 @@ function renderInlineBlankChoiceQuestion(question) {
     <div style="background:#ffffff; padding:22px 18px 26px; min-height:300px;">
       ${groupHeaderHtml}
       ${questionNumberLabelHtml}
+
       <div class="passage-content" data-passage-content="true" style="
         border:1px solid #e3e6ea;
         border-radius:14px;
@@ -1447,9 +2182,6 @@ function renderInlineBlankChoiceQuestion(question) {
         background:#fbfcfe;
         padding:18px;
       ">
-        <div style="color:#003f8f; font-weight:900; margin-bottom:12px;">
-          선택지
-        </div>
         <div class="options-area">
           ${optionsHtml}
         </div>
@@ -1593,7 +2325,7 @@ function renderSentenceInsertQuestion(question) {
         </article>
 
         <article class="question-panel">
-          <div class="panel-label">현재 문항</div>
+          <div class="panel-label">문제</div>
           <div class="question-content">
             ${questionNumberLabelHtml}
 
@@ -1604,7 +2336,6 @@ function renderSentenceInsertQuestion(question) {
               padding:13px 14px;
               margin-bottom:16px;
             ">
-              <div style="color:#003f8f; font-weight:900; margin-bottom:7px;">삽입할 문장</div>
               <div style="
                 color:#111827;
                 font-size:17px;
@@ -1615,8 +2346,8 @@ function renderSentenceInsertQuestion(question) {
               </div>
             </div>
 
-            <p class="question-text" style="margin-bottom:14px;">
-              ${escapeHtml(question.question || "다음 문장이 들어갈 위치로 알맞은 곳을 고르십시오.")}
+             <p class="question-text" style="margin-bottom:14px;">
+              ${escapeHtml(getQuestionTextForPanel(question, "다음 문장이 들어갈 위치로 알맞은 곳을 고르십시오."))}
             </p>
 
             <div style="color:#003f8f; font-weight:900; margin-bottom:10px;">
@@ -1912,23 +2643,111 @@ function getSentenceOrderPlacedTextStyle(text) {
 
   return "font-size:16px; letter-spacing:0; line-height:1.5; white-space:normal; word-break:keep-all; overflow-wrap:normal;";
 }
+function getSentenceOrderStartCandidateItems(question, sentenceItems) {
+  const correctOrder = getCorrectOrder(question, sentenceItems);
+  const candidateLabels = [];
 
+  function addLabel(label) {
+    const value = String(label || "").trim();
+
+    if (!value) {
+      return;
+    }
+
+    const existsInItems = sentenceItems.some(function (item) {
+      return item.label === value;
+    });
+
+    if (existsInItems && !candidateLabels.includes(value)) {
+      candidateLabels.push(value);
+    }
+  }
+
+  if (Array.isArray(question.start_candidate_labels)) {
+    question.start_candidate_labels.forEach(addLabel);
+  }
+
+  addLabel(correctOrder[0]);
+
+  if (sentenceItems.length > 0) {
+    addLabel(sentenceItems[sentenceItems.length - 1].label);
+  }
+
+  sentenceItems.forEach(function (item) {
+    if (candidateLabels.length < 2) {
+      addLabel(item.label);
+    }
+  });
+
+  return candidateLabels.slice(0, 2).map(function (label) {
+    return sentenceItems.find(function (item) {
+      return item.label === label;
+    });
+  }).filter(Boolean);
+}
+
+function getSentenceOrderVisibleItems(question, sentenceItems, order) {
+  const usedLabels = order.filter(Boolean);
+
+  if (!order[0]) {
+    return getSentenceOrderStartCandidateItems(question, sentenceItems)
+      .filter(function (item) {
+        return !usedLabels.includes(item.label);
+      });
+  }
+
+  return sentenceItems.filter(function (item) {
+    return !usedLabels.includes(item.label);
+  });
+}
+
+function getFirstEmptySentenceOrderSlotIndex(order) {
+  for (let index = 0; index < order.length; index += 1) {
+    if (!order[index]) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function placeSentenceInNextAvailableSlot(question, sentenceItems, label) {
+  if (!label) {
+    return;
+  }
+
+  const order = getSentenceOrderState(question, sentenceItems);
+  const targetIndex = order[0]
+    ? getFirstEmptySentenceOrderSlotIndex(order)
+    : 0;
+
+  if (targetIndex < 0) {
+    return;
+  }
+
+  placeSentenceInSlot(question, sentenceItems, targetIndex, label);
+}
 /* 43~46 문장 순서 배열 drag/drop */
 function renderSentenceOrderQuestion(question) {
   const sentenceItems = getSentenceItems(question);
   const order = getSentenceOrderState(question, sentenceItems);
-  const usedLabels = order.filter(Boolean);
-  const remainingItems = sentenceItems.filter(function (item) {
-    return !usedLabels.includes(item.label);
-  });
+  const visibleItems = getSentenceOrderVisibleItems(question, sentenceItems, order);
+  const hasFirstSentence = Boolean(order[0]);
+
+  const rightPanelTitle = hasFirstSentence
+    ? "남은 문장 목록"
+    : "시작 문장 후보";
+
+  const stepGuideText = hasFirstSentence
+    ? "남은 문장을 순서대로 왼쪽 빈칸에 놓으세요. 문장을 더블클릭하면 다음 빈칸에 자동으로 들어갑니다."
+    : "먼저 시작 문장 후보 두 개 중 하나를 선택하세요. 문장을 더블클릭하면 1번째 칸에 자동으로 들어갑니다.";
 
   elements.questionStage.innerHTML = `
     <div class="view-tab">보기</div>
 
     <div style="background:#ffffff; padding:18px 16px 22px; min-height:360px;">
       <p style="margin:0 0 14px; font-size:15px; line-height:1.55;">
-        오른쪽 문장을 왼쪽 순서 칸으로 끌어다 놓으십시오.
-        마우스로 끌어 놓기 어려우면 오른쪽 문장을 클릭한 뒤 왼쪽 칸을 클릭해도 됩니다.
+        ${escapeHtml(stepGuideText)}
       </p>
 
       <div style="
@@ -1947,6 +2766,13 @@ function renderSentenceOrderQuestion(question) {
           <div id="orderDropArea" style="display:grid; gap:8px;">
             ${order.map(function (label, index) {
               const item = sentenceItems.find((sentenceItem) => sentenceItem.label === label);
+              const emptyText =
+                !order[0] && index === 0
+                  ? "먼저 시작 문장을 여기에 놓으세요"
+                  : !order[0]
+                    ? "시작 문장을 먼저 선택하세요"
+                    : `${index + 1}번째 문장을 여기에 놓으세요`;
+
               const content = item
                 ? `<div style="
                     padding:10px 12px;
@@ -1971,8 +2797,9 @@ function renderSentenceOrderQuestion(question) {
                     line-height:1.45;
                     white-space:nowrap;
                     word-break:keep-all;
+                    cursor:pointer;
                   ">
-                    ${index + 1}번째 문장을 여기에 놓으세요
+                    ${escapeHtml(emptyText)}
                   </div>`;
 
               return `
@@ -1995,11 +2822,37 @@ function renderSentenceOrderQuestion(question) {
           padding:12px;
           overflow:visible;
         ">
-          <div style="color:#003f8f; font-weight:900; margin-bottom:10px;">문장 목록</div>
-          <div id="sentenceItemList" style="display:grid; gap:8px;">
+          <div style="color:#003f8f; font-weight:900; margin-bottom:10px;">
+            ${escapeHtml(rightPanelTitle)}
+          </div>
+
+          <div style="
+            margin-bottom:10px;
+            padding:10px 12px;
+            border:1px solid ${hasFirstSentence ? "#e3e6ea" : "#b9d8ff"};
+            border-radius:10px;
+            background:${hasFirstSentence ? "#f8fafc" : "#e9f3ff"};
+            color:#003f8f;
+            font-size:14px;
+            font-weight:900;
+            line-height:1.5;
+          ">
+            ${hasFirstSentence
+              ? "첫 문장이 선택되었습니다. 이제 남은 문장을 순서대로 배치하세요."
+              : "원래 보기의 첫 문장 후보 중 하나를 먼저 선택하세요."}
+          </div>
+
+          <div
+            id="sentenceItemList"
+            style="
+              display:grid;
+              gap:8px;
+              ${hasFirstSentence ? "" : "grid-template-columns:repeat(2, minmax(0, 1fr));"}
+            "
+          >
             ${
-              remainingItems.length
-                ? remainingItems.map(function (item) {
+              visibleItems.length
+                ? visibleItems.map(function (item) {
                     const selectedStyle =
                       selectedSentenceForOrder &&
                       selectedSentenceForOrder.questionId === question.id &&
@@ -2007,11 +2860,20 @@ function renderSentenceOrderQuestion(question) {
                         ? "background:#e9f3ff;border-color:#0877f2;"
                         : "";
 
+                    const candidateTitle = hasFirstSentence
+                      ? ""
+                      : `<div style="
+                          color:#003f8f;
+                          font-weight:900;
+                          margin-bottom:6px;
+                        ">${escapeHtml(item.label)}로 시작</div>`;
+
                     return `
                       <div
                         class="sentence-order-item"
                         draggable="true"
                         data-label="${escapeAttribute(item.label)}"
+                        title="더블클릭하면 왼쪽 빈칸에 자동 배치됩니다."
                         style="
                           padding:10px 12px;
                           border:1px solid #bfc8d5;
@@ -2020,10 +2882,12 @@ function renderSentenceOrderQuestion(question) {
                           cursor:grab;
                           font-weight:800;
                           overflow:visible;
+                          min-height:${hasFirstSentence ? "auto" : "92px"};
                           ${getSentenceOrderCardTextStyle(item.text)}
                           ${selectedStyle}
                         "
                       >
+                        ${candidateTitle}
                         ${escapeHtml(item.label)} ${escapeHtml(item.text)}
                       </div>
                     `;
@@ -2138,6 +3002,16 @@ function getSentenceOrderState(question, sentenceItems) {
 function bindSentenceOrderEvents(question, sentenceItems) {
   let draggedLabel = null;
 
+  function markSelectedSentenceItem(itemElement) {
+    elements.questionStage.querySelectorAll(".sentence-order-item").forEach(function (element) {
+      element.style.background = "#ffffff";
+      element.style.borderColor = "#bfc8d5";
+    });
+
+    itemElement.style.background = "#e9f3ff";
+    itemElement.style.borderColor = "#0877f2";
+  }
+
   elements.questionStage.querySelectorAll(".sentence-order-item").forEach(function (itemElement) {
     itemElement.addEventListener("dragstart", function (event) {
       draggedLabel = itemElement.dataset.label;
@@ -2149,7 +3023,19 @@ function bindSentenceOrderEvents(question, sentenceItems) {
         questionId: question.id,
         label: itemElement.dataset.label
       };
-      renderQuestion();
+
+      markSelectedSentenceItem(itemElement);
+    });
+
+    itemElement.addEventListener("dblclick", function (event) {
+      event.preventDefault();
+
+      selectedSentenceForOrder = null;
+      placeSentenceInNextAvailableSlot(
+        question,
+        sentenceItems,
+        itemElement.dataset.label
+      );
     });
   });
 
@@ -2160,8 +3046,14 @@ function bindSentenceOrderEvents(question, sentenceItems) {
 
     slotElement.addEventListener("drop", function (event) {
       event.preventDefault();
+
       const label = event.dataTransfer.getData("text/plain") || draggedLabel;
-      placeSentenceInSlot(question, sentenceItems, Number(slotElement.dataset.slotIndex), label);
+      const order = getSentenceOrderState(question, sentenceItems);
+      const targetSlotIndex = order[0]
+        ? Number(slotElement.dataset.slotIndex)
+        : 0;
+
+      placeSentenceInSlot(question, sentenceItems, targetSlotIndex, label);
     });
 
     slotElement.addEventListener("click", function () {
@@ -2170,10 +3062,15 @@ function bindSentenceOrderEvents(question, sentenceItems) {
         selectedSentenceForOrder.questionId === question.id &&
         selectedSentenceForOrder.label
       ) {
+        const order = getSentenceOrderState(question, sentenceItems);
+        const targetSlotIndex = order[0]
+          ? Number(slotElement.dataset.slotIndex)
+          : 0;
+
         placeSentenceInSlot(
           question,
           sentenceItems,
-          Number(slotElement.dataset.slotIndex),
+          targetSlotIndex,
           selectedSentenceForOrder.label
         );
       }
@@ -2181,14 +3078,16 @@ function bindSentenceOrderEvents(question, sentenceItems) {
   });
 
   const resetButton = document.getElementById("resetSentenceOrderButton");
-  resetButton.addEventListener("click", function () {
-    sentenceOrderAnswers[question.id] = Array(sentenceItems.length).fill(null);
-    delete answers[question.id];
-    selectedSentenceForOrder = null;
-    renderQuestion();
-  });
-}
 
+  if (resetButton) {
+    resetButton.addEventListener("click", function () {
+      sentenceOrderAnswers[question.id] = Array(sentenceItems.length).fill(null);
+      delete answers[question.id];
+      selectedSentenceForOrder = null;
+      renderQuestion();
+    });
+  }
+}
 function placeSentenceInSlot(question, sentenceItems, slotIndex, label) {
   if (!label) return;
 
@@ -2316,7 +3215,7 @@ function renderCommonPassageBlankChoiceQuestion(question) {
           <div class="panel-label">문제</div>
           <div class="question-content">
             ${questionNumberLabelHtml}
-            <p class="question-text">${escapeHtml(question.question || "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오.")}</p>
+            <p class="question-text">${escapeHtml(getQuestionTextForPanel(question, "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오."))}</p>
             <div class="options-area">${optionsHtml}</div>
           </div>
         </article>
@@ -2336,20 +3235,34 @@ function renderCommonPassageBlankChoiceQuestion(question) {
 function renderCommonPassageQuestion(question) {
   const groupHeaderHtml = buildPassageGroupHeader(question);
   const questionNumberLabelHtml = buildQuestionNumberLabelForPanel(question);
-  const sharedPassage = getSharedPassage(question);
   const sharedPassageHtml = buildCommonPassageContentHtml(question);
   const sharedImageUrl = getSharedImageUrl(question);
+
   const imageHtml = sharedImageUrl
     ? `
-      <div class="image-area">
+      <div class="image-area" style="padding:20px 22px 10px;">
         <img
           src="${escapeAttribute(sharedImageUrl)}"
           alt="${question.passage_group_title || question.question_number + "번"} 공통 이미지 자료"
-          style="max-width:100%; border:1px solid #e3e6ea; border-radius:10px; display:block; margin:0 auto 12px;"
+          style="
+            width:100%;
+            max-width:100%;
+            max-height:620px;
+            height:auto;
+            object-fit:contain;
+            border:1px solid #e3e6ea;
+            border-radius:10px;
+            display:block;
+            margin:0 auto 12px;
+          "
         />
       </div>
     `
     : "";
+
+  const passageContentHtml = sharedImageUrl
+    ? ""
+    : `<div class="passage-content">${sharedPassageHtml}</div>`;
 
   const optionsHtml = question.options.map(function (optionText, index) {
     const optionNumber = index + 1;
@@ -2371,14 +3284,14 @@ function renderCommonPassageQuestion(question) {
         <article class="passage-panel">
           <div class="panel-label">공통 지문</div>
           ${imageHtml}
-          <div class="passage-content">${sharedPassageHtml}</div>
+          ${passageContentHtml}
         </article>
 
         <article class="question-panel">
-          <div class="panel-label">현재 문항</div>
+          <div class="panel-label">문제</div>
           <div class="question-content">
             ${questionNumberLabelHtml}
-            <p class="question-text">${escapeHtml(question.question || "물음에 답하십시오.")}</p>
+            <p class="question-text">${escapeHtml(getQuestionTextForPanel(question, "물음에 답하십시오."))}</p>
             <div class="options-area">${optionsHtml}</div>
           </div>
         </article>
@@ -2417,24 +3330,24 @@ function shouldRenderOneColumnChoice(question) {
   return oneColumnTypes.includes(question.type);
 }
 
-
 function renderVisualNotMatchingQuestion(question) {
   const questionNumberLabelHtml = buildQuestionNumberLabelForPanel(question);
+
   const imageHtml = question.image_url
     ? `
       <div style="
         display:flex;
         align-items:center;
         justify-content:center;
-        padding:12px;
-        min-height:300px;
+        padding:16px;
+        min-height:380px;
       ">
         <img
           src="${escapeAttribute(question.image_url)}"
           alt="${question.question_number}번 이미지 자료"
           style="
             max-width:100%;
-            max-height:330px;
+            max-height:440px;
             object-fit:contain;
             border:1px solid #e3e6ea;
             border-radius:10px;
@@ -2462,54 +3375,66 @@ function renderVisualNotMatchingQuestion(question) {
     `;
   }).join("");
 
+  const questionTextHtml = buildNegativeQuestionTextHtml(
+    getQuestionTextForPanel(question, "다음을 읽고 맞지 않는 것을 고르십시오.")
+  );
+
   elements.questionStage.innerHTML = `
     <div class="view-tab">보기</div>
+
     <div style="
       background:#ffffff;
-      padding:18px;
-      min-height:360px;
-      display:grid;
-      grid-template-columns:minmax(0, 1.02fr) minmax(330px, 0.98fr);
-      gap:16px;
-      align-items:stretch;
+      padding:20px;
+      min-height:420px;
     ">
-      <article style="
-        border:1px solid #e3e6ea;
-        border-radius:14px;
-        background:#ffffff;
-        overflow:hidden;
-        min-height:360px;
+      <div style="
+        display:grid;
+        grid-template-columns:minmax(0, 1.05fr) minmax(390px, 0.95fr);
+        gap:20px;
+        align-items:stretch;
       ">
-        <div style="
-          padding:12px 14px;
-          border-bottom:1px solid #e3e6ea;
-          font-weight:900;
-          color:#003f8f;
-          background:#fafcff;
-        ">그림 / 자료</div>
-        ${imageHtml}
-      </article>
+        <article style="
+          border:1px solid #e3e6ea;
+          border-radius:14px;
+          background:#ffffff;
+          overflow:hidden;
+          min-height:420px;
+        ">
+          <div style="
+            padding:13px 16px;
+            border-bottom:1px solid #e3e6ea;
+            font-weight:900;
+            color:#003f8f;
+            background:#fafcff;
+            font-size:17px;
+          ">그림 / 자료</div>
 
-      <article style="
-        border:1px solid #e3e6ea;
-        border-radius:14px;
-        background:#fbfcfe;
-        overflow:hidden;
-        min-height:360px;
-      ">
-        <div style="
-          padding:12px 14px;
-          border-bottom:1px solid #e3e6ea;
-          font-weight:900;
-          color:#003f8f;
-          background:#fafcff;
-        ">문제</div>
-        <div style="padding:18px;">
-          ${questionNumberLabelHtml}
-          <p class="question-text">${escapeHtml(question.question || "다음을 읽고 맞지 않는 것을 고르십시오.")}</p>
-          <div class="options-area">${optionsHtml}</div>
-        </div>
-      </article>
+          ${imageHtml}
+        </article>
+
+        <article style="
+          border:1px solid #e3e6ea;
+          border-radius:14px;
+          background:#fbfcfe;
+          overflow:hidden;
+          min-height:420px;
+        ">
+          <div style="
+            padding:13px 16px;
+            border-bottom:1px solid #e3e6ea;
+            font-weight:900;
+            color:#003f8f;
+            background:#fafcff;
+            font-size:17px;
+          ">문제</div>
+
+          <div style="padding:24px;">
+            ${questionNumberLabelHtml}
+            <p class="question-text">${questionTextHtml}</p>
+            <div class="options-area">${optionsHtml}</div>
+          </div>
+        </article>
+      </div>
     </div>
   `;
 
@@ -2519,7 +3444,6 @@ function renderVisualNotMatchingQuestion(question) {
     });
   });
 }
-
 
 function renderOneColumnChoiceQuestion(question) {
   const groupHeaderHtml = buildPassageGroupHeader(question);
@@ -2575,9 +3499,8 @@ function renderOneColumnChoiceQuestion(question) {
         background:#fbfcfe;
         padding:18px;
       ">
-        <div style="color:#003f8f; font-weight:900; margin-bottom:12px;">선택지</div>
-        ${questionNumberLabelHtml}
-        <p class="question-text">${escapeHtml(question.question || "알맞은 것을 고르십시오.")}</p>
+                ${questionNumberLabelHtml}
+        <p class="question-text">${buildNegativeQuestionTextHtml(getQuestionTextForPanel(question, "알맞은 것을 고르십시오."))}</p>
         <div class="options-area">${optionsHtml}</div>
       </div>
     </div>
@@ -2632,7 +3555,7 @@ function renderMultipleChoiceQuestion(question) {
         <div class="panel-label">문제</div>
         <div class="question-content">
           ${questionNumberLabelHtml}
-          <p class="question-text">${escapeHtml(question.question)}</p>
+          <p class="question-text">${escapeHtml(getQuestionTextForPanel(question, "물음에 답하십시오."))}</p>
           <div class="options-area">${optionsHtml}</div>
         </div>
       </article>
@@ -2787,7 +3710,7 @@ function requestSubmit() {
   const ok = confirm(message);
 
   if (ok) {
-    submitTest("manual");
+    submitTest(currentRunMode === "wrong_review" ? "wrong_review" : "manual");
   }
 }
 
@@ -2897,7 +3820,7 @@ function gradeTest(submitReason) {
     test_level: TEST_CONFIG.testLevel,
     section: TEST_CONFIG.section,
     test_name: TEST_CONFIG.testDisplayName,
-    test_scope: "TOPIK I IBT Reading 31-70",
+    test_scope: "TOPIK I PBT Reading 31-70",
     generated_exam_mode: latestExamGenerationOptions.mode || "random",
     generated_exam_round: latestExamGenerationOptions.round || "",
     generated_exam_label: latestExamGenerationOptions.label || "랜덤 출제",
@@ -3094,12 +4017,100 @@ function renderResult(result) {
   }
 }
 
+function isWrongReviewResult(result) {
+  return Boolean(
+    result &&
+      String(result.submit_reason || "") === "wrong_review"
+  );
+}
+
+function isGeneralFullReadingResult(result) {
+  return Boolean(
+    result &&
+      result.section === TEST_CONFIG.section &&
+      Number(result.total_questions) === TEST_CONFIG.expectedTotalQuestions &&
+      result.is_full_40_question_set === true &&
+      !isWrongReviewResult(result)
+  );
+}
+
+function getWrongReviewQuestionNumbersFromResult(result) {
+  if (!result || !Array.isArray(result.items)) {
+    return [];
+  }
+
+  return Array.from(
+    new Set(
+      result.items
+        .filter(function (item) {
+          return !item.is_correct;
+        })
+        .map(function (item) {
+          return Number(item.question_number);
+        })
+        .filter(Number.isFinite)
+    )
+  ).sort(function (a, b) {
+    return a - b;
+  });
+}
+
+function saveWrongReviewRemainingNumbers(result) {
+  const remainingNumbers = getWrongReviewQuestionNumbersFromResult(result);
+  const existingPackage = getWrongReviewStoragePackage();
+  const existingSourceResult =
+    existingPackage && existingPackage.source_result
+      ? existingPackage.source_result
+      : getWrongReviewSourceResult();
+
+  localStorage.setItem(
+    WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY,
+    JSON.stringify(remainingNumbers)
+  );
+
+  localStorage.setItem(
+    WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY,
+    JSON.stringify({
+      saved_at: new Date().toISOString(),
+      source: "reading-test-wrong-review",
+      source_result: existingSourceResult,
+      latest_wrong_review_result: result,
+      remaining_wrong_review_question_numbers: remainingNumbers
+    })
+  );
+
+  console.log(
+    "오답풀이 남은 문항 저장 완료:",
+    WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY,
+    remainingNumbers
+  );
+}
+
 function saveReadingResultForDiagnosis(result) {
   try {
+    if (isWrongReviewResult(result)) {
+      saveWrongReviewRemainingNumbers(result);
+      console.info(
+        "오답풀이 결과이므로 topik1_latest_reading_result를 덮어쓰지 않습니다."
+      );
+      return;
+    }
+
+    if (!isGeneralFullReadingResult(result)) {
+      console.info(
+        "일반 40문항 읽기 결과가 아니므로 자동 진단 기준 결과를 저장하지 않습니다."
+      );
+      return;
+    }
+
+    const savedAt = new Date().toISOString();
+    const wrongReviewQuestionNumbers =
+      getWrongReviewQuestionNumbersFromResult(result);
+
     const dataForDiagnosis = {
       ...result,
       auto_connection: {
-        saved_at: new Date().toISOString(),
+        saved_at: savedAt,
         storage_key: AUTO_DIAGNOSIS_STORAGE_KEY,
         source: "reading-test"
       }
@@ -3110,9 +4121,31 @@ function saveReadingResultForDiagnosis(result) {
       JSON.stringify(dataForDiagnosis)
     );
 
+    localStorage.setItem(
+      WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY,
+      JSON.stringify(wrongReviewQuestionNumbers)
+    );
+
+    localStorage.setItem(
+      WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY,
+      JSON.stringify({
+        saved_at: savedAt,
+        storage_key: WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY,
+        source: "reading-test",
+        source_result: dataForDiagnosis,
+        remaining_wrong_review_question_numbers: wrongReviewQuestionNumbers
+      })
+    );
+
     console.log(
       "reading-result 자동 진단 연결 저장 완료:",
       AUTO_DIAGNOSIS_STORAGE_KEY
+    );
+
+    console.log(
+      "오답 다시 풀기 대상 저장 완료:",
+      WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY,
+      wrongReviewQuestionNumbers
     );
   } catch (error) {
     console.error("reading-result 자동 진단 연결 저장 실패:", error);
@@ -3137,8 +4170,8 @@ function renderDiagnosisLinkButton() {
   openDiagnosisButton.removeAttribute("onclick");
 
   openDiagnosisButton.onclick = function () {
-    window.location.href = AUTO_DIAGNOSIS_URL;
-  };
+  window.location.href = AUTO_DIAGNOSIS_URL + "&v=diagnosis-" + Date.now();
+};
 }
 
 function formatDateTimeForDisplay(isoText) {

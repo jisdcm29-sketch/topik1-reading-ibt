@@ -254,20 +254,20 @@
       color: var(--red);
     }
 
-    .exam-shell {
-      width: min(1120px, calc(100% - 48px));
-      margin: 22px auto 0;
+     .exam-shell {
+      width: min(1360px, calc(100% - 64px));
+      margin: 18px auto 0;
       background: #ffffff;
       border-radius: 12px;
       border: 1px solid var(--line);
       box-shadow: var(--shadow);
-      min-height: calc(100vh - 190px);
+      min-height: calc(100vh - 178px);
       overflow: hidden;
     }
 
     .exam-paper {
-      padding: 28px 34px 36px;
-      min-height: calc(100vh - 190px);
+      padding: 32px 38px 40px;
+      min-height: calc(100vh - 178px);
       overflow-y: auto;
     }
 
@@ -275,39 +275,39 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 26px;
+      padding-bottom: 28px;
       border-bottom: 1px solid var(--line);
     }
 
     .section-title {
       margin: 0;
       color: #002a72;
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 900;
     }
 
     .answer-count {
-      min-width: 72px;
+      min-width: 82px;
       text-align: center;
-      padding: 8px 14px;
+      padding: 9px 16px;
       color: var(--topik-blue);
       border: 2px solid var(--topik-blue);
       border-radius: 8px;
       font-weight: 900;
-      font-size: 16px;
+      font-size: 17px;
       background: #ffffff;
     }
 
     .question-instruction {
-      margin: 28px 0 22px;
-      font-size: 22px;
+      margin: 30px 0 24px;
+      font-size: 24px;
       font-weight: 900;
-      line-height: 1.65;
+      line-height: 1.7;
       color: #222;
     }
 
     .question-stage {
-      min-height: 300px;
+      min-height: 360px;
       border: 1px solid var(--line);
       background: #fbfbfb;
       padding: 0;
@@ -317,8 +317,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 58px;
-      height: 36px;
+      min-width: 62px;
+      height: 38px;
       background: #555;
       color: #ffffff;
       font-weight: 900;
@@ -327,18 +327,18 @@
 
     .blank-box {
       margin: 0;
-      padding: 28px 18px 34px;
-      min-height: 300px;
+      padding: 32px 22px 38px;
+      min-height: 360px;
       background: #ffffff;
     }
 
     .blank-sentence {
-      min-height: 80px;
+      min-height: 96px;
       border: 1px solid var(--line);
       border-radius: 14px;
-      padding: 18px;
-      font-size: 20px;
-      line-height: 2;
+      padding: 20px;
+      font-size: 22px;
+      line-height: 2.05;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
@@ -346,21 +346,21 @@
     }
 
     .blank-select {
-      min-width: 240px;
-      height: 44px;
-      padding: 0 10px;
-      font-size: 18px;
+      min-width: 260px;
+      height: 48px;
+      padding: 0 12px;
+      font-size: 20px;
       border: 1px solid #999;
       background: #ffffff;
     }
 
     .reading-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
-      gap: 18px;
-      min-height: 420px;
+      grid-template-columns: minmax(0, 1.08fr) minmax(390px, 0.92fr);
+      gap: 20px;
+      min-height: 480px;
       background: #ffffff;
-      padding: 18px;
+      padding: 20px;
     }
 
     .passage-panel,
@@ -369,58 +369,64 @@
       border-radius: 12px;
       background: #ffffff;
       overflow: hidden;
-      min-height: 420px;
+      min-height: 480px;
     }
 
     .panel-label {
-      padding: 12px 14px;
+      padding: 13px 16px;
       border-bottom: 1px solid var(--line);
       font-weight: 900;
       color: #003f8f;
       background: #fafcff;
+      font-size: 17px;
     }
 
     .passage-content {
-      padding: 20px;
-      font-size: 18px;
-      line-height: 1.9;
+      padding: 24px;
+      font-size: 20px;
+      line-height: 2;
       white-space: pre-line;
-      min-height: 340px;
+      min-height: 400px;
       overflow-y: auto;
-      max-height: 480px;
+      max-height: 600px;
     }
 
     .image-area {
-      padding: 16px 20px 0;
+      padding: 20px 24px 0;
+    }
+
+    .image-area img {
+      max-width: 100%;
+      max-height: 560px;
     }
 
     .question-content {
-      padding: 20px;
+      padding: 24px;
     }
 
     .question-text {
-      margin: 0 0 18px;
-      font-size: 19px;
+      margin: 0 0 20px;
+      font-size: 21px;
       font-weight: 900;
-      line-height: 1.65;
+      line-height: 1.7;
     }
 
     .options-area {
       display: grid;
-      gap: 12px;
+      gap: 14px;
     }
 
     .option-button {
       width: 100%;
-      min-height: 50px;
-      padding: 13px 16px;
+      min-height: 56px;
+      padding: 14px 18px;
       border: 1px solid #bfc8d5;
       border-radius: 9px;
       background: #ffffff;
       color: var(--text);
       cursor: pointer;
-      font-size: 17px;
-      line-height: 1.5;
+      font-size: 19px;
+      line-height: 1.55;
       text-align: left;
     }
 
@@ -839,6 +845,194 @@
       line-height: inherit !important;
       vertical-align: baseline !important;
     }
+    /*
+      전체 문항 공통 화면 맞춤 조정
+      - 하단 이전 / 전체 문제 / 다음 버튼은 고정 유지
+      - 상단 응시자 / 남은 시간 영역은 화면에 계속 보이도록 유지
+      - 31~70번 모든 문항의 세로 여백을 줄여 본문 공간을 확보
+      - reading-test.js의 일부 inline 높이값은 CSS !important로 덮어쓴다
+    */
+
+    .exam-page {
+      min-height: 100vh !important;
+      padding-bottom: 72px !important;
+      overflow: hidden !important;
+    }
+
+    .topik-header {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 30 !important;
+      min-height: 64px !important;
+      padding: 0 28px !important;
+    }
+
+    .candidate-label {
+      font-size: 12px !important;
+    }
+
+    .candidate-name {
+      font-size: 18px !important;
+    }
+
+    .candidate-phone {
+      font-size: 12px !important;
+    }
+
+    .exam-title {
+      font-size: 24px !important;
+      line-height: 1.25 !important;
+    }
+
+    .timer-pill {
+      padding: 7px 13px !important;
+      font-size: 14px !important;
+    }
+
+    .timer-pill .time {
+      font-size: 21px !important;
+    }
+
+    .exam-shell {
+      width: min(1370px, calc(100% - 64px)) !important;
+      height: calc(100vh - 64px - 72px - 18px) !important;
+      min-height: 0 !important;
+      margin: 10px auto 0 !important;
+      overflow: hidden !important;
+    }
+
+    .exam-paper {
+      height: 100% !important;
+      min-height: 0 !important;
+      padding: 20px 30px 22px !important;
+      overflow-y: auto !important;
+      scrollbar-gutter: stable;
+    }
+
+    .section-row {
+      padding-bottom: 14px !important;
+    }
+
+    .section-title {
+      font-size: 28px !important;
+      line-height: 1.2 !important;
+    }
+
+    .answer-count {
+      min-width: 78px !important;
+      padding: 7px 14px !important;
+      font-size: 16px !important;
+    }
+
+    .question-instruction {
+      margin: 16px 0 12px !important;
+      font-size: 22px !important;
+      line-height: 1.45 !important;
+    }
+
+    .question-stage {
+      min-height: 0 !important;
+    }
+
+    .question-stage > div:not(.view-tab) {
+      padding: 12px 14px 14px !important;
+      min-height: 0 !important;
+    }
+
+    .view-tab {
+      min-width: 58px !important;
+      height: 32px !important;
+    }
+
+    .reading-layout {
+      gap: 14px !important;
+      padding: 0 !important;
+      min-height: 0 !important;
+    }
+
+    .passage-panel,
+    .question-panel {
+      min-height: 0 !important;
+    }
+
+    .panel-label {
+      padding: 10px 14px !important;
+      font-size: 16px !important;
+    }
+
+    .passage-content {
+      padding: 18px 20px !important;
+      font-size: 19px !important;
+      line-height: 1.78 !important;
+      min-height: 0 !important;
+      max-height: none !important;
+    }
+
+    .question-content {
+      padding: 18px 20px !important;
+    }
+
+    .panel-question-number {
+      margin-bottom: 8px !important;
+    }
+
+    .question-text {
+      margin: 0 0 14px !important;
+      font-size: 20px !important;
+      line-height: 1.55 !important;
+    }
+
+    .options-area {
+      gap: 10px !important;
+    }
+
+    .option-button {
+      min-height: 48px !important;
+      padding: 10px 15px !important;
+      font-size: 18px !important;
+      line-height: 1.45 !important;
+    }
+
+    .image-area {
+      padding: 14px 18px 8px !important;
+    }
+
+    .question-stage img {
+      max-width: 100% !important;
+      max-height: min(460px, calc(100vh - 350px)) !important;
+      object-fit: contain !important;
+    }
+
+    .blank-box {
+      padding: 18px 18px 22px !important;
+      min-height: 0 !important;
+    }
+
+    .blank-sentence {
+      min-height: 70px !important;
+      padding: 16px 18px !important;
+      font-size: 20px !important;
+      line-height: 1.8 !important;
+    }
+
+    .blank-select {
+      height: 42px !important;
+      font-size: 18px !important;
+    }
+
+    .small-note {
+      display: none !important;
+    }
+
+    .bottom-nav {
+      min-height: 70px !important;
+      padding: 10px 14% !important;
+    }
+
+    .nav-button {
+      height: 38px !important;
+      font-size: 16px !important;
+    }
   </style>
 </head>
 
@@ -853,8 +1047,8 @@
       padding:0;
       display:flex;
       justify-content:center;
-      align-items:stretch;
-      background:#f2f4f7;
+      align-items:flex-start;
+      background:#ffffff;
     "
   >
     <section
@@ -877,7 +1071,7 @@
           background:#0877f2;
           color:#ffffff;
           text-align:center;
-          padding:30px 16px;
+          padding:28px 16px;
           font-size:34px;
           font-weight:900;
           letter-spacing:-0.5px;
@@ -891,8 +1085,8 @@
           flex:1;
           display:flex;
           justify-content:center;
-          align-items:center;
-          padding:36px 16px 56px;
+          align-items:flex-start;
+          padding:38px 16px 56px;
         "
       >
         <div
@@ -903,7 +1097,7 @@
           <div
             style="
               text-align:center;
-              margin-bottom:34px;
+              margin-bottom:30px;
             "
           >
             <div
@@ -911,7 +1105,7 @@
                 color:#003f8f;
                 font-size:28px;
                 font-weight:900;
-                margin-bottom:10px;
+                margin-bottom:8px;
               "
             >
               응시자 로그인
@@ -929,69 +1123,137 @@
           </div>
 
           <div class="form-row" style="margin-bottom:18px;">
-            <label for="authPasswordInput" style="font-size:18px;">인증 비밀번호</label>
-            <input
-              id="authPasswordInput"
-              type="password"
-              placeholder="인증 비밀번호 입력"
-              autocomplete="off"
+            <label for="authPasswordInput" style="font-size:17px; font-weight:900;">
+              인증 비밀번호
+            </label>
+
+            <div
               style="
-                height:58px;
-                font-size:18px;
-                border-radius:12px;
+                display:grid;
+                grid-template-columns:minmax(0, 1fr) 130px;
+                gap:8px;
+                align-items:center;
               "
-            />
+            >
+              <input
+                id="authPasswordInput"
+                type="password"
+                placeholder="인증 비밀번호 입력"
+                autocomplete="off"
+                style="
+                  height:50px;
+                  font-size:16px;
+                  border-radius:10px;
+                "
+              />
+
+              <button
+                id="authCheckButton"
+                class="button"
+                type="button"
+                style="
+                  height:50px;
+                  font-size:16px;
+                  border-radius:10px;
+                  white-space:nowrap;
+                "
+              >
+                인증 확인
+              </button>
+            </div>
           </div>
 
           <div id="authMessage" class="message" style="text-align:center;"></div>
 
-          <button
-            id="authCheckButton"
-            class="button secondary"
-            type="button"
+          <div
+            id="examSelectBox"
             style="
-              width:100%;
-              height:58px;
-              font-size:20px;
-              margin:4px 0 28px;
+              margin:14px 0 18px;
+              padding:16px;
+              border:1px solid #cfe2ff;
               border-radius:12px;
+              background:#f8fbff;
             "
           >
-            인증 확인
-          </button>
-          <button
-  id="newExamButton"
-  class="button secondary"
-  type="button"
-  disabled
-  style="
-    width:100%;
-    height:58px;
-    font-size:20px;
-    margin:0 0 12px;
-    border-radius:12px;
-  "
->
-  새 문제 만들기
-</button>
+            <label
+              for="examModeSelect"
+              style="
+                display:block;
+                margin-bottom:8px;
+                color:#111827;
+                font-size:16px;
+                font-weight:900;
+              "
+            >
+              시험지 선택
+            </label>
 
-<div
-  id="newExamMessage"
-  style="
-    min-height:24px;
-    margin:0 0 20px;
-    text-align:center;
-    color:#5f6368;
-    font-size:14px;
-    font-weight:800;
-    line-height:1.5;
-  "
->
-  인증 후 새 문제 세트를 만들 수 있습니다.
-</div>
+            <select
+              id="examModeSelect"
+              style="
+                width:100%;
+                height:44px;
+                border:1px solid #b8c7d9;
+                border-radius:10px;
+                padding:0 12px;
+                font-size:16px;
+                background:#ffffff;
+              "
+            >
+              <option value="random">랜덤 출제: 102회 + 103회 + 100회 혼합</option>
+              <option value="round-102">102회 고정 출제</option>
+              <option value="round-103">103회 고정 출제</option>
+              <option value="round-100">100회 고정 출제</option>
+            </select>
+
+            <div
+              style="
+                margin-top:8px;
+                color:#5f6b7a;
+                font-size:13px;
+                line-height:1.6;
+              "
+            >
+              검수 때는 회차 고정, 실제 시험에는 랜덤 출제를 사용하세요.
+              선택 후 반드시 새 문제 만들기를 누르세요.
+            </div>
+
+            <button
+              id="newExamButton"
+              class="button secondary"
+              type="button"
+              disabled
+              style="
+                width:100%;
+                height:48px;
+                font-size:17px;
+                margin:14px 0 0;
+                border-radius:10px;
+              "
+            >
+              새 문제 만들기
+            </button>
+
+            <div
+              id="newExamMessage"
+              style="
+                min-height:22px;
+                margin:10px 0 0;
+                text-align:center;
+                color:#5f6368;
+                font-size:14px;
+                font-weight:800;
+                line-height:1.5;
+              "
+            >
+              인증 후 새 문제 세트를 만들 수 있습니다.
+            </div>
+          </div>
 
           <div class="form-row" style="margin-bottom:18px;">
-            <label for="studentNameInput" style="font-size:18px;">응시자 이름</label>
+            <label for="studentNameInput" style="font-size:17px; font-weight:900;">
+              응시자 이름
+            </label>
             <input
               id="studentNameInput"
               type="text"
@@ -999,25 +1261,27 @@
               autocomplete="name"
               disabled
               style="
-                height:58px;
-                font-size:18px;
-                border-radius:12px;
+                height:50px;
+                font-size:16px;
+                border-radius:10px;
               "
             />
           </div>
 
           <div class="form-row" style="margin-bottom:18px;">
-            <label for="studentPhoneInput" style="font-size:18px;">전화번호</label>
+            <label for="studentPhoneInput" style="font-size:17px; font-weight:900;">
+              전화번호
+            </label>
             <input
               id="studentPhoneInput"
               type="tel"
-              placeholder="예: 010-1234-5678"
+              placeholder="예: 01012345678"
               autocomplete="tel"
               disabled
               style="
-                height:58px;
-                font-size:18px;
-                border-radius:12px;
+                height:50px;
+                font-size:16px;
+                border-radius:10px;
               "
             />
           </div>
@@ -1031,30 +1295,19 @@
             disabled
             style="
               width:100%;
-              height:66px;
-              font-size:25px;
-              border-radius:12px;
+              height:56px;
+              font-size:18px;
+              border-radius:10px;
               margin-top:6px;
             "
           >
-            로그인
+            시험 시작
           </button>
-
-          <div
-            style="
-              text-align:center;
-              margin-top:24px;
-              color:#5f6368;
-              font-size:15px;
-              line-height:1.6;
-            "
-          >
-            TOPIK I Reading · 31번~70번 · 총 40문항 · 60분
-          </div>
         </div>
       </div>
     </section>
   </main>
+
 
   <script>
     /*
@@ -1193,9 +1446,22 @@ studentNameInput.focus();
         <button id="prevButton" class="nav-button" type="button">‹ 이전</button>
       </div>
 
-      <div class="nav-center">
-        <button id="questionListButton" class="nav-button" type="button">▦ 전체 문제</button>
-      </div>
+      <div
+  class="nav-center"
+  style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;"
+>
+  <button id="questionListButton" class="nav-button" type="button">▦ 전체 문제</button>
+
+  <button
+    id="wrongReviewBackButton"
+    class="nav-button"
+    type="button"
+    style="display:none;"
+    aria-hidden="true"
+  >
+    진단 보고서로 돌아가기
+  </button>
+</div>
 
       <div class="nav-right">
         <!-- 기존 reading-test.js 오류 방지를 위해 id는 유지하지만 화면에는 보이지 않게 처리 -->
@@ -1275,7 +1541,7 @@ studentNameInput.focus();
   </main>
 
   <script src="./question-generator.js?v=browser-random-v1"></script>
-  <script src="./reading-test.js?v=v7-blank-marker"></script>
+  <script src="./reading-test.js?v=sentence-order-step-v1"></script>
 
   <script>
     /*
@@ -1354,6 +1620,29 @@ studentNameInput.focus();
         return null;
       }
 
+      function isWrongReviewUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("mode") === "wrong-review";
+      }
+
+      function getLastVisibleQuestionNumber() {
+        const progressButtons = Array.from(
+          document.querySelectorAll("#progressArea .progress-dot")
+        );
+
+        const numbers = progressButtons
+          .map(function (button) {
+            return Number(button.textContent);
+          })
+          .filter(Number.isFinite);
+
+        if (numbers.length === 0) {
+          return LAST_QUESTION_NUMBER;
+        }
+
+        return Math.max.apply(null, numbers);
+      }
+
       function updateSubmitButtonVisibility() {
         const submitButton = document.getElementById("submitButton");
 
@@ -1362,8 +1651,11 @@ studentNameInput.focus();
         }
 
         const currentQuestionNumber = getCurrentQuestionNumber();
+        const targetLastQuestionNumber = isWrongReviewUrl()
+          ? getLastVisibleQuestionNumber()
+          : LAST_QUESTION_NUMBER;
 
-        if (currentQuestionNumber === LAST_QUESTION_NUMBER) {
+        if (currentQuestionNumber === targetLastQuestionNumber) {
           submitButton.style.display = "inline-flex";
           submitButton.removeAttribute("aria-hidden");
           submitButton.tabIndex = 0;
