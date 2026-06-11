@@ -607,12 +607,18 @@
       description: item.description || "",
       image_url: item.image_url || "",
       source_bank_id: item.id,
+      source_round: item.source_round || item.exam_round || item.round || "",
+      source_exam: item.source_exam || "",
+      original_question_number: item.original_question_number || questionNumber,
       generated_exam_id: generatedExamId,
       template_slot: questionNumber,
       sentence_items: item.sentence_items,
       correct_order: item.correct_order,
+      order_choice_orders: item.order_choice_orders,
+      start_candidate_labels: item.start_candidate_labels,
       insert_sentence: item.insert_sentence || "",
       insert_positions: item.insert_positions,
+      insert_markers: item.insert_markers,
       correct_position: item.correct_position || ""
     };
   }
@@ -645,21 +651,28 @@
       shared_passage_total: groupNumbers.length,
       source_bank_id: setItem.item_id,
       source_set_id: set.set_id,
+      source_round: setItem.source_round || set.source_round || set.exam_round || set.round || "",
+      source_exam: setItem.source_exam || set.source_exam || "",
+      original_question_number: setItem.original_question_number || questionNumber,
       generated_exam_id: generatedExamId,
       template_slot: questionNumber,
       insert_sentence: setItem.insert_sentence || "",
       insert_positions: setItem.insert_positions,
+      insert_markers: setItem.insert_markers,
       correct_position: setItem.correct_position || ""
     };
 
     if (setItem.type === "sentence_order") {
       question.sentence_items = normalizeArray(setItem.sentence_items);
       question.correct_order = normalizeArray(setItem.correct_order);
+      question.order_choice_orders = setItem.order_choice_orders;
+      question.start_candidate_labels = normalizeArray(setItem.start_candidate_labels);
     }
 
     if (setItem.type === "sentence_insert") {
       question.insert_sentence = setItem.insert_sentence || "";
       question.insert_positions = normalizeArray(setItem.insert_positions);
+      question.insert_markers = normalizeArray(setItem.insert_markers);
       question.correct_position = setItem.correct_position || "";
     }
 
