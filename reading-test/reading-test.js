@@ -4493,13 +4493,13 @@ function getSentenceOrderPlacedTextStyle(text) {
   return "font-size:16px; letter-spacing:0; line-height:1.5; white-space:normal; word-break:keep-all; overflow-wrap:normal;";
 }
 function getSentenceOrderStartCandidateItems(question, sentenceItems) {
-  const correctOrder = getCorrectOrder(question, sentenceItems);
+  const optionOrders = getSentenceOrderOptionOrders(question, sentenceItems);
   const candidateLabels = [];
 
   function addLabel(label) {
-    const value = String(label || "").trim();
+    const value = normalizeSentenceOrderOptionLabel(label);
 
-    if (!value) {
+    if (!value || candidateLabels.includes(value)) {
       return;
     }
 
@@ -4507,10 +4507,20 @@ function getSentenceOrderStartCandidateItems(question, sentenceItems) {
       return item.label === value;
     });
 
-    if (existsInItems && !candidateLabels.includes(value)) {
+    if (existsInItems) {
       candidateLabels.push(value);
     }
   }
+
+  if (optionOrders.length > 0) {
+    optionOrders.forEach(function (candidateOrder) {
+      addLabel(candidateOrder[0]);
+    });
+
+    return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
+  }
+
+  const correctOrder = getCorrectOrder(question, sentenceItems);
 
   if (Array.isArray(question.start_candidate_labels)) {
     question.start_candidate_labels.forEach(addLabel);
@@ -4528,20 +4538,16 @@ function getSentenceOrderStartCandidateItems(question, sentenceItems) {
     }
   });
 
-  return candidateLabels.slice(0, 2).map(function (label) {
-    return sentenceItems.find(function (item) {
-      return item.label === label;
-    });
-  }).filter(Boolean);
+  return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
 }
 
 function getSentenceOrderSecondCandidateItems(question, sentenceItems, order) {
   const usedLabels = order.filter(Boolean);
-  const correctOrder = getCorrectOrder(question, sentenceItems);
+  const optionOrders = getSentenceOrderOptionOrders(question, sentenceItems);
   const candidateLabels = [];
 
   function addLabel(label) {
-    const value = String(label || "").trim();
+    const value = normalizeSentenceOrderOptionLabel(label);
 
     if (!value || usedLabels.includes(value) || candidateLabels.includes(value)) {
       return;
@@ -4556,6 +4562,19 @@ function getSentenceOrderSecondCandidateItems(question, sentenceItems, order) {
     }
   }
 
+  if (optionOrders.length > 0 && order[0]) {
+    optionOrders.forEach(function (candidateOrder) {
+      if (candidateOrder[0] === order[0]) {
+        addLabel(candidateOrder[1]);
+      }
+    });
+
+    if (candidateLabels.length > 0) {
+      return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
+    }
+  }
+
+  const correctOrder = getCorrectOrder(question, sentenceItems);
   addLabel(correctOrder[1]);
 
   sentenceItems.forEach(function (item) {
@@ -4564,11 +4583,7 @@ function getSentenceOrderSecondCandidateItems(question, sentenceItems, order) {
     }
   });
 
-  return candidateLabels.slice(0, 2).map(function (label) {
-    return sentenceItems.find(function (item) {
-      return item.label === label;
-    });
-  }).filter(Boolean);
+  return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
 }
 
 function getSentenceOrderVisibleItems(question, sentenceItems, order) {
@@ -4937,9 +4952,95 @@ function normalizeSentenceLabel(label) {
   return map[label] || label;
 }
 
+function normalizeSentenceOrderOptionLabel(label) {
+  const value = String(label || "").trim();
+  const koreanMatch = value.match(/[가-라]/);
+
+  if (koreanMatch) {
+    return `(${koreanMatch[0]})`;
+  }
+
+  return normalizeSentenceLabel(value);
+}
+
+function parseSentenceOrderChoiceOrder(optionText) {
+  const labels = String(optionText || "").match(/[가-라]/g) || [];
+
+  return labels.map(function (label) {
+    return `(${label})`;
+  });
+}
+
+function getSentenceOrderOptionOrders(question, sentenceItems) {
+  const validLabels = new Set(sentenceItems.map(function (item) {
+    return item.label;
+  }));
+  const expectedLength = sentenceItems.length;
+  const orders = [];
+  const seen = new Set();
+
+  function addOrder(rawOrder) {
+    if (!Array.isArray(rawOrder)) {
+      return;
+    }
+
+    const normalizedOrder = rawOrder
+      .map(normalizeSentenceOrderOptionLabel)
+      .filter(function (label) {
+        return validLabels.has(label);
+      });
+
+    if (normalizedOrder.length !== expectedLength) {
+      return;
+    }
+
+    const key = normalizedOrder.join("-");
+    if (seen.has(key)) {
+      return;
+    }
+
+    seen.add(key);
+    orders.push(normalizedOrder);
+  }
+
+  if (Array.isArray(question.order_choice_orders)) {
+    question.order_choice_orders.forEach(addOrder);
+  }
+
+  if (Array.isArray(question.options)) {
+    question.options.forEach(function (optionText) {
+      addOrder(parseSentenceOrderChoiceOrder(optionText));
+    });
+  }
+
+  return orders;
+}
+
+function findSentenceOrderItemsByLabels(sentenceItems, labels) {
+  return labels.map(function (label) {
+    return sentenceItems.find(function (item) {
+      return item.label === label;
+    });
+  }).filter(Boolean);
+}
+
 function getCorrectOrder(question, sentenceItems) {
   if (Array.isArray(question.correct_order) && question.correct_order.length > 0) {
-    return question.correct_order;
+    return question.correct_order.map(normalizeSentenceOrderOptionLabel);
+  }
+
+  const optionOrders = getSentenceOrderOptionOrders(question, sentenceItems);
+  const correctAnswerNumber = Number(
+    question.answer === undefined ? question.correct_answer : question.answer
+  );
+
+  if (
+    optionOrders.length > 0 &&
+    Number.isFinite(correctAnswerNumber) &&
+    correctAnswerNumber >= 1 &&
+    correctAnswerNumber <= optionOrders.length
+  ) {
+    return optionOrders[correctAnswerNumber - 1];
   }
 
   return sentenceItems.map((item) => item.label);
@@ -5046,6 +5147,17 @@ function completeSentenceOrderAfterTwoChoices(question, sentenceItems) {
   const order = getSentenceOrderState(question, sentenceItems);
 
   if (!order[0] || !order[1]) {
+    return;
+  }
+
+  const optionOrders = getSentenceOrderOptionOrders(question, sentenceItems);
+  const matchedOptionOrder = optionOrders.find(function (candidateOrder) {
+    return candidateOrder[0] === order[0] && candidateOrder[1] === order[1];
+  });
+
+  if (matchedOptionOrder) {
+    sentenceOrderAnswers[question.id] = matchedOptionOrder.slice(0, sentenceItems.length);
+    answers[question.id] = sentenceOrderAnswers[question.id].join("-");
     return;
   }
 
