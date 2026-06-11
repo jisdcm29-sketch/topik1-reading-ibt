@@ -2356,6 +2356,41 @@ function getDefaultSentenceItems(questionNumber) {
   ];
 }
 
+function normalizeOrderChoiceOrders(rawValue) {
+  if (Array.isArray(rawValue)) {
+    return rawValue;
+  }
+
+  if (rawValue && typeof rawValue === "object") {
+    return Object.keys(rawValue)
+      .sort(function (a, b) {
+        return Number(a) - Number(b);
+      })
+      .map(function (key) {
+        return rawValue[key];
+      })
+      .filter(Array.isArray);
+  }
+
+  return undefined;
+}
+
+function normalizeStringArrayAlias(primaryValue, fallbackValue1, fallbackValue2) {
+  if (Array.isArray(primaryValue)) {
+    return primaryValue;
+  }
+
+  if (Array.isArray(fallbackValue1)) {
+    return fallbackValue1;
+  }
+
+  if (Array.isArray(fallbackValue2)) {
+    return fallbackValue2;
+  }
+
+  return undefined;
+}
+
 function normalizeQuestions(data) {
   if (!Array.isArray(data)) {
     throw new Error("문항 데이터는 배열이어야 합니다.");
@@ -2369,6 +2404,13 @@ function normalizeQuestions(data) {
     const id =
       question.id ||
       `R${String(questionNumber).padStart(3, "0")}`;
+
+    const normalizedOrderChoiceOrders =
+      normalizeOrderChoiceOrders(
+        question.order_choice_orders ||
+        question.choice_orders ||
+        question.order_choices
+      );
 
     return {
       id,
@@ -2399,27 +2441,43 @@ function normalizeQuestions(data) {
       shared_passage_index: question.shared_passage_index || null,
       shared_passage_total: question.shared_passage_total || null,
       independent_under_same_instruction: Boolean(question.independent_under_same_instruction),
-      sentence_items: Array.isArray(question.sentence_items) ? question.sentence_items : undefined,
-      correct_order: Array.isArray(question.correct_order) ? question.correct_order : undefined,
+      sentence_items: normalizeStringArrayAlias(
+        question.sentence_items,
+        question.sentences,
+        question.order_sentences
+      ),
+      correct_order: normalizeStringArrayAlias(
+        question.correct_order,
+        question.correct_sequence,
+        question.answer_order
+      ),
+      order_choice_orders: normalizedOrderChoiceOrders,
+      start_candidate_labels: Array.isArray(question.start_candidate_labels)
+        ? question.start_candidate_labels
+        : undefined,
       insert_sentence:
         question.insert_sentence ||
         question.sentence_to_insert ||
         question.target_sentence ||
         "",
-      insert_positions: Array.isArray(question.insert_positions) ? question.insert_positions : undefined,
+      insert_positions: normalizeStringArrayAlias(
+        question.insert_positions,
+        question.insert_markers,
+        question.markers
+      ),
       correct_position:
-  question.correct_position ||
-  question.answer_position ||
-  "",
-source_bank_id: question.source_bank_id || "",
-source_set_id: question.source_set_id || "",
-generated_exam_id: question.generated_exam_id || "",
-template_slot:
-  question.template_slot === undefined ||
-  question.template_slot === null ||
-  question.template_slot === ""
-    ? questionNumber
-    : Number(question.template_slot)
+        question.correct_position ||
+        question.answer_position ||
+        "",
+      source_bank_id: question.source_bank_id || "",
+      source_set_id: question.source_set_id || "",
+      generated_exam_id: question.generated_exam_id || "",
+      template_slot:
+        question.template_slot === undefined ||
+        question.template_slot === null ||
+        question.template_slot === ""
+          ? questionNumber
+          : Number(question.template_slot)
     };
   });
 }
@@ -4336,15 +4394,21 @@ function buildCommonPassageContentHtml(question) {
     const positionLabels = getInsertPositionLabels(linkedInsertQuestion);
     const selectedOptionNumber = Number(answers[linkedInsertQuestion.id]) || null;
     const selectedLabel = selectedOptionNumber ? positionLabels[selectedOptionNumber - 1] : "";
+    const linkedInsertPassage = getSharedPassage(linkedInsertQuestion);
+    const displayPassage = linkedInsertPassage || sharedPassage;
 
-    if (selectedLabel) {
-      return buildSentenceInsertPassageForDisplayHtml(
-        sharedPassage || getSharedPassage(linkedInsertQuestion),
-        positionLabels,
-        selectedLabel,
-        getInsertSentence(linkedInsertQuestion)
-      );
-    }
+    /*
+      STEP41-1E:
+      59~60번처럼 한 세트 안에서 앞 문항이 삽입 위치를 결정하는 경우,
+      뒤 문항의 공통 지문도 앞 문항의 삽입 위치 선택 상태를 그대로 보여 준다.
+      선택 전에는 원문 위치 표지(㉠~㉣)를 유지해서 같은 세트 지문임을 알 수 있게 한다.
+    */
+    return buildSentenceInsertPassageForDisplayHtml(
+      displayPassage,
+      positionLabels,
+      selectedLabel,
+      getInsertSentence(linkedInsertQuestion)
+    );
   }
 
   const linkedBlankQuestion = findLinkedCommonPassageBlankChoiceQuestion(question);
@@ -4352,10 +4416,14 @@ function buildCommonPassageContentHtml(question) {
     const selectedOptionNumber = Number(answers[linkedBlankQuestion.id]) || null;
     const selectedText = selectedOptionNumber ? linkedBlankQuestion.options[selectedOptionNumber - 1] : "";
 
-    const linkedBlankHtml = buildBlankPassageHtml(
-      sharedPassage || getSharedPassage(linkedBlankQuestion),
-      selectedText
-    );
+    /*
+      STEP41-1E:
+      49~50, 51~52, 53~54, 55~56, 61~62, 65~66, 67~68, 69~70 같은 공통 세트에서는
+      뒤 문항이 이미 정답이 들어간 완성 지문을 가지고 있더라도,
+      학생 화면에서는 앞 문항의 빈칸 지문을 기준으로 선택한 답을 같은 위치에 반영한다.
+    */
+    const blankBasePassage = getSharedPassage(linkedBlankQuestion) || sharedPassage;
+    const linkedBlankHtml = buildBlankPassageHtml(blankBasePassage, selectedText);
 
     return selectedText
       ? ensureInsertedAnswerHighlightedHtml(linkedBlankHtml, selectedText)
@@ -4365,8 +4433,56 @@ function buildCommonPassageContentHtml(question) {
   return buildBlankPassageHtml(sharedPassage, "");
 }
 
+function getTopik1LinkedQuestionNumberPairs() {
+  return [
+    [49, 50],
+    [51, 52],
+    [53, 54],
+    [55, 56],
+    [59, 60],
+    [61, 62],
+    [63, 64],
+    [65, 66],
+    [67, 68],
+    [69, 70]
+  ];
+}
+
+function getQuestionNumberValue(question) {
+  const value = Number(question && question.question_number);
+  return Number.isFinite(value) ? value : null;
+}
+
+function getLinkedLeadQuestionNumberForCommonSet(question) {
+  const currentNumber = getQuestionNumberValue(question);
+
+  if (!currentNumber) {
+    return null;
+  }
+
+  for (const pair of getTopik1LinkedQuestionNumberPairs()) {
+    if (Number(pair[1]) === currentNumber) {
+      return Number(pair[0]);
+    }
+  }
+
+  return null;
+}
+
+function findQuestionByNumber(questionNumber) {
+  const targetNumber = Number(questionNumber);
+
+  if (!Number.isFinite(targetNumber)) {
+    return null;
+  }
+
+  return questions.find(function (item) {
+    return Number(item && item.question_number) === targetNumber;
+  }) || null;
+}
+
 function findLinkedCommonPassageBlankChoiceQuestion(question) {
-  if (!question || !question.passage_group_id) {
+  if (!question) {
     return null;
   }
 
@@ -4374,29 +4490,55 @@ function findLinkedCommonPassageBlankChoiceQuestion(question) {
     return question;
   }
 
-  return questions.find(function (item) {
-    return (
-      item &&
-      item.id !== question.id &&
-      item.passage_group_id === question.passage_group_id &&
-      isCommonPassageBlankChoice(item)
-    );
-  }) || null;
+  if (question.passage_group_id) {
+    const groupedBlankQuestion = questions.find(function (item) {
+      return (
+        item &&
+        item.id !== question.id &&
+        item.passage_group_id === question.passage_group_id &&
+        isCommonPassageBlankChoice(item)
+      );
+    });
+
+    if (groupedBlankQuestion) {
+      return groupedBlankQuestion;
+    }
+  }
+
+  const linkedLeadQuestionNumber = getLinkedLeadQuestionNumberForCommonSet(question);
+  const linkedLeadQuestion = findQuestionByNumber(linkedLeadQuestionNumber);
+
+  return isCommonPassageBlankChoice(linkedLeadQuestion)
+    ? linkedLeadQuestion
+    : null;
 }
 
 function findLinkedSentenceInsertQuestion(question) {
-  if (!question || !question.passage_group_id) {
+  if (!question) {
     return null;
   }
 
-  return questions.find(function (item) {
-    return (
-      item &&
-      item.id !== question.id &&
-      item.passage_group_id === question.passage_group_id &&
-      item.type === "sentence_insert"
-    );
-  }) || null;
+  if (question.passage_group_id) {
+    const groupedInsertQuestion = questions.find(function (item) {
+      return (
+        item &&
+        item.id !== question.id &&
+        item.passage_group_id === question.passage_group_id &&
+        item.type === "sentence_insert"
+      );
+    });
+
+    if (groupedInsertQuestion) {
+      return groupedInsertQuestion;
+    }
+  }
+
+  const linkedLeadQuestionNumber = getLinkedLeadQuestionNumberForCommonSet(question);
+  const linkedLeadQuestion = findQuestionByNumber(linkedLeadQuestionNumber);
+
+  return linkedLeadQuestion && linkedLeadQuestion.type === "sentence_insert"
+    ? linkedLeadQuestion
+    : null;
 }
 
 function buildSentenceInsertPassageForDisplayHtml(passage, positionLabels, selectedLabel, insertSentence) {
