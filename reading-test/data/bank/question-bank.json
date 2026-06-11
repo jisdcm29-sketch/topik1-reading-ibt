@@ -1,0 +1,4061 @@
+{
+  "bank_version": "1.1+100",
+  "bank_name": "TOPIK I Reading Question Bank",
+  "level": "TOPIK I",
+  "section": "reading",
+  "question_number_start": 31,
+  "question_number_end": 70,
+  "status": "merged_100",
+  "description": "TOPIK I 읽기 문제은행: 102회 + 103회 + 100회 병합본",
+  "source_file": "reading-questions.json",
+  "converted_at": "2026-05-23T09:16:59.390Z",
+  "total_bank_questions": 120,
+  "single_items": [
+    {
+      "id": "QB-R031-001",
+      "source": "current-reading-questions",
+      "original_question_number": 31,
+      "target_slots": [
+        31
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "topic_content",
+      "category": "주제·소재 파악",
+      "diagnostic_area": "짧은 글의 중심 소재 이해",
+      "instruction": "무엇에 대한 내용입니까?",
+      "question": "무엇에 대한 내용입니까?",
+      "passage": "저는 누나가 있습니다. 동생도 있습니다.",
+      "options": [
+        "나라",
+        "나이",
+        "날짜",
+        "가족"
+      ],
+      "correct_answer": 4,
+      "points": 2,
+      "description": "가족 구성원인 누나와 동생에 대한 내용입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R032-001",
+      "source": "current-reading-questions",
+      "original_question_number": 32,
+      "target_slots": [
+        32
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "topic_content",
+      "category": "주제·소재 파악",
+      "diagnostic_area": "짧은 글의 중심 소재 이해",
+      "instruction": "무엇에 대한 내용입니까?",
+      "question": "무엇에 대한 내용입니까?",
+      "passage": "지금은 저녁입니다. 일곱 시입니다.",
+      "options": [
+        "시간",
+        "직업",
+        "운동",
+        "휴일"
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "저녁, 일곱 시는 시간에 대한 표현입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R033-001",
+      "source": "current-reading-questions",
+      "original_question_number": 33,
+      "target_slots": [
+        33
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "topic_content",
+      "category": "주제·소재 파악",
+      "diagnostic_area": "짧은 글의 중심 소재 이해",
+      "instruction": "무엇에 대한 내용입니까?",
+      "question": "무엇에 대한 내용입니까?",
+      "passage": "저는 등산을 좋아합니다. 산에 자주 갑니다.",
+      "options": [
+        "쇼핑",
+        "교통",
+        "계절",
+        "취미"
+      ],
+      "correct_answer": 4,
+      "points": 2,
+      "description": "등산을 좋아하고 산에 자주 가는 것은 취미에 대한 내용입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R034-001",
+      "source": "current-reading-questions",
+      "original_question_number": 34,
+      "target_slots": [
+        34
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 어휘·표현 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "저는 의사입니다. (   )에서 일합니다.",
+      "options": [
+        "병원",
+        "서점",
+        "미용실",
+        "우체국"
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "의사는 병원에서 일합니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R035-001",
+      "source": "current-reading-questions",
+      "original_question_number": 35,
+      "target_slots": [
+        35
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 어휘·표현 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "저는 일이 많습니다. 그래서 조금 (   ).",
+      "options": [
+        "작습니다",
+        "비쌉니다",
+        "무겁습니다",
+        "피곤합니다"
+      ],
+      "correct_answer": 4,
+      "points": 2,
+      "description": "일이 많으면 피곤하다는 표현이 자연스럽습니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R036-001",
+      "source": "current-reading-questions",
+      "original_question_number": 36,
+      "target_slots": [
+        36
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 어휘·표현 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "친구를 만났습니다. 우리는 (   ) 공부를 했습니다.",
+      "options": [
+        "가장",
+        "아직",
+        "별로",
+        "같이"
+      ],
+      "correct_answer": 4,
+      "points": 2,
+      "description": "친구를 만나 함께 공부했으므로 '같이'가 알맞습니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R037-001",
+      "source": "current-reading-questions",
+      "original_question_number": 37,
+      "target_slots": [
+        37
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 조사 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "방이 덥습니다. 창문(   ) 엽니다.",
+      "options": [
+        "에",
+        "의",
+        "을",
+        "이"
+      ],
+      "correct_answer": 3,
+      "points": 3,
+      "description": "'창문을 엽니다'가 자연스러운 목적어 표현입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R038-001",
+      "source": "current-reading-questions",
+      "original_question_number": 38,
+      "target_slots": [
+        38
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 동사 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "선물을 삽니다. 친구에게 (   ).",
+      "options": [
+        "줍니다",
+        "듣습니다",
+        "다닙니다",
+        "가르칩니다"
+      ],
+      "correct_answer": 1,
+      "points": 3,
+      "description": "선물을 사서 친구에게 주는 상황입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R039-001",
+      "source": "current-reading-questions",
+      "original_question_number": 39,
+      "target_slots": [
+        39
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 동사 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "민수 씨하고 약속이 있습니다. 저는 민수 씨를 (   ).",
+      "options": [
+        "내립니다",
+        "넣습니다",
+        "구경합니다",
+        "기다립니다"
+      ],
+      "correct_answer": 4,
+      "points": 2,
+      "description": "약속이 있어서 사람을 기다리는 상황입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R040-001",
+      "source": "current-reading-questions",
+      "original_question_number": 40,
+      "target_slots": [
+        40
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "visual_not_matching",
+      "category": "자료 이해",
+      "diagnostic_area": "그림·표·자료 정보 파악",
+      "instruction": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "question": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "passage": "",
+      "options": [
+        "일요일은 맑습니다.",
+        "오늘은 비가 옵니다.",
+        "내일은 토요일입니다.",
+        "인주시의 날씨입니다."
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "그림에서는 오늘 10월 10일은 흐리고, 토요일은 비가 오며, 일요일은 맑습니다. 그래서 '오늘은 비가 옵니다'가 맞지 않습니다.",
+      "image_url": "./images/R040.png"
+    },
+    {
+      "id": "QB-R041-001",
+      "source": "current-reading-questions",
+      "original_question_number": 41,
+      "target_slots": [
+        41
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "visual_not_matching",
+      "category": "자료 이해",
+      "diagnostic_area": "초대장 정보 파악",
+      "instruction": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "question": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "passage": "",
+      "options": [
+        "주말에 파티를 합니다.",
+        "유미의 생일 파티입니다.",
+        "파티는 오전에 시작합니다.",
+        "호텔 삼 층에서 파티를 합니다."
+      ],
+      "correct_answer": 3,
+      "points": 3,
+      "description": "초대장의 날짜, 시간, 장소 정보를 읽고 맞지 않는 내용을 찾는 문항입니다.",
+      "image_url": "./images/R041.png"
+    },
+    {
+      "id": "QB-R042-001",
+      "source": "current-reading-questions",
+      "original_question_number": 42,
+      "target_slots": [
+        42
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "visual_not_matching",
+      "category": "자료 이해",
+      "diagnostic_area": "대화 메시지 정보 파악",
+      "instruction": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "question": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "passage": "",
+      "options": [
+        "지영 씨는 지금 집에 있습니다.",
+        "마이클 씨는 모임에 안 갔습니다.",
+        "지영 씨는 내일 학교에 갈 겁니다.",
+        "마이클 씨는 오늘 지영 씨를 만났습니다."
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "메신저 대화의 인물, 장소, 약속 정보를 읽고 맞지 않는 내용을 찾는 문항입니다.",
+      "image_url": "./images/R042.png"
+    },
+    {
+      "id": "QB-R043-001",
+      "source": "current-reading-questions",
+      "original_question_number": 43,
+      "target_slots": [
+        43
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "same_content",
+      "category": "내용 일치 파악",
+      "diagnostic_area": "짧은 글의 세부 내용 이해",
+      "instruction": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "question": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "passage": "저는 은행에서 일합니다. 은행에 외국인 손님이 많이 옵니다. 저는 그 손님들하고 영어로 이야기합니다.",
+      "options": [
+        "저는 영어를 할 수 없습니다.",
+        "저는 요즘 일을 하지 않습니다.",
+        "저는 은행에서 일을 하려고 합니다.",
+        "저는 은행에서 외국 사람을 많이 만납니다."
+      ],
+      "correct_answer": 4,
+      "points": 3,
+      "description": "직업, 장소, 만나는 사람에 대한 세부 정보를 확인하는 문항입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R044-001",
+      "source": "current-reading-questions",
+      "original_question_number": 44,
+      "target_slots": [
+        44
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "same_content",
+      "category": "내용 일치 파악",
+      "diagnostic_area": "짧은 글의 세부 내용 이해",
+      "instruction": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "question": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "passage": "오늘 집에서 비누를 만들었습니다. 비누에 레몬을 넣었습니다. 이 비누로 손을 씻었는데 냄새가 좋았습니다.",
+      "options": [
+        "이 비누에 레몬이 들어갔습니다.",
+        "이 비누는 냄새가 나지 않습니다.",
+        "저는 오늘 레몬 비누를 샀습니다.",
+        "저는 이 비누를 사용하지 않았습니다."
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "비누를 만든 일과 재료, 사용 경험을 확인하는 문항입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R045-001",
+      "source": "current-reading-questions",
+      "original_question_number": 45,
+      "target_slots": [
+        45
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "same_content",
+      "category": "내용 일치 파악",
+      "diagnostic_area": "짧은 글의 세부 내용 이해",
+      "instruction": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "question": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "passage": "고향에 계신 부모님이 과자를 보내 주셨습니다. 제가 좋아하는 고향 과자가 많이 있었습니다. 방 친구와 같이 과자를 먹었습니다.",
+      "options": [
+        "저는 부모님과 같이 삽니다.",
+        "저는 과자를 혼자 먹었습니다.",
+        "저는 부모님에게 과자를 받았습니다.",
+        "저는 고향의 과자를 좋아하지 않습니다."
+      ],
+      "correct_answer": 3,
+      "points": 3,
+      "description": "누가 과자를 보냈는지, 누구와 먹었는지를 확인하는 문항입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R046-001",
+      "source": "current-reading-questions",
+      "original_question_number": 46,
+      "target_slots": [
+        46
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "main_idea",
+      "category": "중심 내용 파악",
+      "diagnostic_area": "글의 중심 생각 이해",
+      "instruction": "다음을 읽고 중심 내용을 고르십시오.",
+      "question": "다음을 읽고 중심 내용을 고르십시오.",
+      "passage": "요즘 춤을 배우고 있습니다. 춤을 추는 것이 아주 재미있습니다. 그래서 매일 춤 연습을 합니다.",
+      "options": [
+        "저는 춤을 오래 배웠습니다.",
+        "저는 춤을 배우는 것이 즐겁습니다.",
+        "저는 요즘 춤을 출 시간이 없습니다.",
+        "저는 친구와 춤 연습을 하고 싶습니다."
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "춤을 배우는 즐거움과 매일 연습하는 이유를 파악하는 문항입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R047-001",
+      "source": "current-reading-questions",
+      "original_question_number": 47,
+      "target_slots": [
+        47
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "main_idea",
+      "category": "중심 내용 파악",
+      "diagnostic_area": "글의 중심 생각 이해",
+      "instruction": "다음을 읽고 중심 내용을 고르십시오.",
+      "question": "다음을 읽고 중심 내용을 고르십시오.",
+      "passage": "저는 주말마다 테니스를 칩니다. 지난주에는 비가 와서 테니스를 못 쳤습니다. 이번 주는 비가 안 오면 좋겠습니다.",
+      "options": [
+        "저는 테니스를 배우려고 합니다.",
+        "저는 테니스 보는 것을 좋아합니다.",
+        "저는 테니스를 잘 치면 좋겠습니다.",
+        "저는 이번 주말에 테니스를 치고 싶습니다."
+      ],
+      "correct_answer": 4,
+      "points": 3,
+      "description": "이번 주말에 테니스를 치고 싶은 마음을 파악하는 문항입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-R048-001",
+      "source": "current-reading-questions",
+      "original_question_number": 48,
+      "target_slots": [
+        48
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "main_idea",
+      "category": "중심 내용 파악",
+      "diagnostic_area": "글의 중심 생각 이해",
+      "instruction": "다음을 읽고 중심 내용을 고르십시오.",
+      "question": "다음을 읽고 중심 내용을 고르십시오.",
+      "passage": "얼마 전에 운동화를 샀습니다. 이 운동화는 가볍고 아주 편합니다. 저는 매일 이 운동화를 신고 다닙니다.",
+      "options": [
+        "저는 운동화를 사려고 합니다.",
+        "저는 이 운동화를 선물할 겁니다.",
+        "저는 이 운동화가 마음에 듭니다.",
+        "저는 운동화가 많으면 좋겠습니다."
+      ],
+      "correct_answer": 3,
+      "points": 2,
+      "description": "운동화에 대한 만족감과 사용 습관을 파악하는 문항입니다.",
+      "image_url": ""
+    },
+    {
+      "id": "QB-103-R031-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_exam": "103회",
+      "source_pdf_page": 10,
+      "original_question_number": 31,
+      "target_slots": [
+        31
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "topic_content",
+      "category": "주제·소재 파악",
+      "diagnostic_area": "짧은 글의 중심 소재 이해",
+      "instruction": "무엇에 대한 내용입니까?",
+      "question": "무엇에 대한 내용입니까?",
+      "passage": "저는 중국 사람입니다. 친구는 프랑스에서 왔습니다.",
+      "options": [
+        "나라",
+        "직업",
+        "가족",
+        "요일"
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "중국 사람, 프랑스에서 왔다는 표현은 나라에 대한 내용입니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB-103-R032-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_exam": "103회",
+      "source_pdf_page": 10,
+      "original_question_number": 32,
+      "target_slots": [
+        32
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "topic_content",
+      "category": "주제·소재 파악",
+      "diagnostic_area": "짧은 글의 중심 소재 이해",
+      "instruction": "무엇에 대한 내용입니까?",
+      "question": "무엇에 대한 내용입니까?",
+      "passage": "운동화가 많습니다. 구두는 없습니다.",
+      "options": [
+        "음식",
+        "신발",
+        "주말",
+        "날짜"
+      ],
+      "correct_answer": 2,
+      "points": 2,
+      "description": "운동화와 구두는 신발에 대한 표현입니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB-103-R033-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_exam": "103회",
+      "source_pdf_page": 10,
+      "original_question_number": 33,
+      "target_slots": [
+        33
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "topic_content",
+      "category": "주제·소재 파악",
+      "diagnostic_area": "짧은 글의 중심 소재 이해",
+      "instruction": "무엇에 대한 내용입니까?",
+      "question": "무엇에 대한 내용입니까?",
+      "passage": "눈이 옵니다. 많이 춥습니다.",
+      "options": [
+        "날씨",
+        "휴식",
+        "운동",
+        "나이"
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "눈이 오고 춥다는 내용은 날씨에 대한 내용입니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB-103-R034-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_exam": "103회",
+      "source_pdf_page": 11,
+      "original_question_number": 34,
+      "target_slots": [
+        34
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 동사 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "드라마를 (   ). 정말 재미있습니다.",
+      "options": [
+        "잡니다",
+        "봅니다",
+        "닫습니다",
+        "그립니다"
+      ],
+      "correct_answer": 2,
+      "points": 2,
+      "description": "드라마는 보는 대상이므로 '봅니다'가 알맞습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB-103-R035-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_exam": "103회",
+      "source_pdf_page": 11,
+      "original_question_number": 35,
+      "target_slots": [
+        35
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 장소 명사 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "(   )에 갑니다. 거기에서 산책을 합니다.",
+      "options": [
+        "공원",
+        "교실",
+        "빵집",
+        "약국"
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "산책을 하는 장소로는 공원이 자연스럽습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB-103-R036-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_exam": "103회",
+      "source_pdf_page": 11,
+      "original_question_number": 36,
+      "target_slots": [
+        36
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "소유 표현 조사 이해",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "이것은 제 연필이 아닙니다. 친구(   ) 연필입니다.",
+      "options": [
+        "도",
+        "의",
+        "만",
+        "가"
+      ],
+      "correct_answer": 2,
+      "points": 2,
+      "description": "친구의 연필처럼 소유를 나타낼 때 '의'를 씁니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB-103-R037-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_exam": "103회",
+      "source_pdf_page": 11,
+      "original_question_number": 37,
+      "target_slots": [
+        37
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "거리 표현 형용사 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "은행이 집에서 (   ). 걸어서 갑니다.",
+      "options": [
+        "많습니다",
+        "넓습니다",
+        "가깝습니다",
+        "조용합니다"
+      ],
+      "correct_answer": 3,
+      "points": 3,
+      "description": "걸어서 간다는 내용으로 보아 집에서 은행이 가깝습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB-103-R038-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_exam": "103회",
+      "source_pdf_page": 12,
+      "original_question_number": 38,
+      "target_slots": [
+        38
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "상황에 맞는 동사 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "한국어 수업 시간을 (   ). 친구에게 물어봅니다.",
+      "options": [
+        "만납니다",
+        "모릅니다",
+        "앉습니다",
+        "마십니다"
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "수업 시간을 몰라서 친구에게 물어보는 상황입니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB-103-R039-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_exam": "103회",
+      "source_pdf_page": 12,
+      "original_question_number": 39,
+      "target_slots": [
+        39
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "시간 부사 선택",
+      "instruction": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "오늘 아침에 약속이 있었습니다. (   ) 일어났습니다.",
+      "options": [
+        "일찍",
+        "가끔",
+        "매우",
+        "제일"
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "아침 약속이 있어서 일찍 일어난 상황입니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB103-R040-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_pdf_page": 12,
+      "original_question_number": 40,
+      "target_slots": [
+        40
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "visual_not_matching",
+      "category": "자료 이해",
+      "diagnostic_area": "교통표 정보 파악",
+      "instruction": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "question": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "passage": "",
+      "options": [
+        "대전에 갑니다.",
+        "일요일 버스표입니다.",
+        "서울에서 버스를 탑니다.",
+        "오후 한 시에 출발합니다."
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "표에는 2025.11.15.(토) 13:00, 서울 출발, 대전 도착, 인주버스가 표시되어 있습니다. 따라서 '일요일 버스표입니다'가 맞지 않습니다.",
+      "image_url": "./images/103_R040.png",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "needs_image_review": true,
+      "answer_source": "assistant_provisional",
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB103-R041-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_pdf_page": 13,
+      "original_question_number": 41,
+      "target_slots": [
+        41
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "visual_not_matching",
+      "category": "자료 이해",
+      "diagnostic_area": "온라인 게시글 정보 파악",
+      "instruction": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "question": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "passage": "",
+      "options": [
+        "우산을 줍니다.",
+        "작년에 샀습니다.",
+        "이만 원에 팝니다.",
+        "한 번 사용했습니다."
+      ],
+      "correct_answer": 3,
+      "points": 3,
+      "description": "게시글에는 가방 가격이 25,000원이라고 되어 있으므로 '이만 원에 팝니다'가 맞지 않습니다.",
+      "image_url": "./images/103_R041.png",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "needs_image_review": true,
+      "answer_source": "assistant_provisional",
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB103-R042-001",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_pdf_page": 13,
+      "original_question_number": 42,
+      "target_slots": [
+        42
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "visual_not_matching",
+      "category": "자료 이해",
+      "diagnostic_area": "메신저 대화 정보 파악",
+      "instruction": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "question": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "passage": "",
+      "options": [
+        "미카 씨는 내일 학교에 갑니다.",
+        "민수 씨는 세 시에 수업이 끝납니다.",
+        "미카 씨는 고향에서 과자를 가지고 왔습니다.",
+        "민수 씨는 미카 씨를 도서관 앞에서 볼 겁니다."
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "민수 씨는 내일 2시 반에 수업이 끝난다고 했습니다. 따라서 '세 시에 수업이 끝납니다'가 맞지 않습니다.",
+      "image_url": "./images/103_R042.png",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "needs_image_review": true,
+      "answer_source": "assistant_provisional",
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "DRAFT-103-R043",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "original_question_number": 43,
+      "target_slots": [
+        43
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "same_content",
+      "category": "내용 일치 파악",
+      "diagnostic_area": "짧은 글의 세부 내용 이해",
+      "instruction": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "question": "윗글의 내용과 같은 것을 고르십시오.",
+      "passage": "저는 매일 아침 동네 수영장에 갑니다. 거기에서 혼자 수영을 하고 회사에 갑니다. 회사 식당에서 아침을 먹습니다.",
+      "options": [
+        "저는 저녁에 수영장에 갑니다.",
+        "저는 동네 수영장에 다닙니다.",
+        "저는 친구와 같이 수영을 합니다.",
+        "저는 집에서 아침 식사를 합니다."
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "매일 아침 동네 수영장에 간다고 했으므로 2번이 내용과 같습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf_page": 14,
+      "source_printed_page": 13,
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "DRAFT-103-R044",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "original_question_number": 44,
+      "target_slots": [
+        44
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "same_content",
+      "category": "내용 일치 파악",
+      "diagnostic_area": "짧은 글의 세부 내용 이해",
+      "instruction": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "question": "윗글의 내용과 같은 것을 고르십시오.",
+      "passage": "저는 고향에서 고등학교를 졸업하고 한국에 왔습니다. 지금 한국어를 배우고 있습니다. 내년에 한국 대학교에 입학하고 싶습니다.",
+      "options": [
+        "저는 한국어를 공부합니다.",
+        "저는 대학교에 입학했습니다.",
+        "저는 지금 고향에 살고 있습니다.",
+        "저는 한국에서 고등학교를 졸업했습니다."
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "지금 한국어를 배우고 있다고 했으므로 1번이 내용과 같습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf_page": 14,
+      "source_printed_page": 13,
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "DRAFT-103-R045",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "original_question_number": 45,
+      "target_slots": [
+        45
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "same_content",
+      "category": "내용 일치 파악",
+      "diagnostic_area": "짧은 글의 세부 내용 이해",
+      "instruction": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "question": "윗글의 내용과 같은 것을 고르십시오.",
+      "passage": "저는 여자 친구와 자동차 회사에서 같이 일합니다. 우리는 내년에 결혼할 겁니다. 그래서 결혼 후에 같이 살 집을 찾고 있습니다.",
+      "options": [
+        "저는 자동차 회사 직원입니다.",
+        "저는 결혼하면 살 집이 있습니다.",
+        "여자 친구와 저는 회사가 다릅니다.",
+        "여자 친구와 저는 이번 달에 결혼합니다."
+      ],
+      "correct_answer": 1,
+      "points": 3,
+      "description": "여자 친구와 자동차 회사에서 같이 일한다고 했으므로 1번이 내용과 같습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf_page": 14,
+      "source_printed_page": 13,
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "DRAFT-103-R046",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "original_question_number": 46,
+      "target_slots": [
+        46
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "main_idea",
+      "category": "중심 내용 파악",
+      "diagnostic_area": "글의 중심 생각 이해",
+      "instruction": "다음을 읽고 중심 내용을 고르십시오.",
+      "question": "윗글의 중심 내용을 고르십시오.",
+      "passage": "저는 지난달에 안경을 샀습니다. 예쁘지만 무겁고 불편합니다. 가벼운 안경을 사러 안경 가게에 갈 겁니다.",
+      "options": [
+        "저는 예쁜 안경이 필요합니다.",
+        "저는 가벼운 안경을 살 겁니다.",
+        "저는 안경을 오랫동안 썼습니다.",
+        "저는 안경 가게가 생기면 좋겠습니다."
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "현재 안경이 무겁고 불편해서 가벼운 안경을 사려는 것이 중심 내용입니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf_page": 15,
+      "source_printed_page": 14,
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "DRAFT-103-R047",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "original_question_number": 47,
+      "target_slots": [
+        47
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "main_idea",
+      "category": "중심 내용 파악",
+      "diagnostic_area": "글의 중심 생각 이해",
+      "instruction": "다음을 읽고 중심 내용을 고르십시오.",
+      "question": "윗글의 중심 내용을 고르십시오.",
+      "passage": "저는 집 근처 카페에서 일하고 있습니다. 손님이 많아서 바쁘지만 재미있습니다. 사장님도 친절해서 좋습니다.",
+      "options": [
+        "저는 커피 마시는 것을 좋아합니다.",
+        "저는 카페에 손님이 많으면 좋겠습니다.",
+        "저는 이 카페에서 일하는 것이 좋습니다.",
+        "저는 이 카페 사장님을 만나고 싶습니다."
+      ],
+      "correct_answer": 3,
+      "points": 3,
+      "description": "카페 일이 바쁘지만 재미있고 사장님도 친절해서 좋다는 내용이므로 3번이 중심 내용입니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf_page": 15,
+      "source_printed_page": 14,
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "DRAFT-103-R048",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "original_question_number": 48,
+      "target_slots": [
+        48
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "type": "main_idea",
+      "category": "중심 내용 파악",
+      "diagnostic_area": "글의 중심 생각 이해",
+      "instruction": "다음을 읽고 중심 내용을 고르십시오.",
+      "question": "윗글의 중심 내용을 고르십시오.",
+      "passage": "우리 언니는 태권도 선수입니다. 언니는 태권도를 잘해서 상을 많이 받았습니다. 저도 상을 받고 싶어서 학원에서 열심히 태권도를 연습합니다.",
+      "options": [
+        "저는 태권도 연습이 힘듭니다.",
+        "저는 태권도 학원에 다닐 겁니다.",
+        "저는 언니에게 태권도를 배우려고 합니다.",
+        "저는 언니처럼 태권도를 잘하고 싶습니다."
+      ],
+      "correct_answer": 4,
+      "points": 2,
+      "description": "언니처럼 태권도를 잘해서 상을 받고 싶어 열심히 연습한다는 것이 중심 내용입니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "source_pdf_page": 15,
+      "source_printed_page": 14,
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "id": "QB100-R031-001",
+      "original_question_number": 31,
+      "target_slots": [
+        31
+      ],
+      "type": "topic_content",
+      "category": "주제·소재 파악",
+      "diagnostic_area": "짧은 글의 중심 소재 이해",
+      "instruction": "무엇에 대한 내용입니까? <보기>와 같이 알맞은 것을 고르십시오.",
+      "question": "무엇에 대한 내용입니까?",
+      "passage": "김밥이 맛있습니다. 라면도 맛있습니다.",
+      "options": [
+        "나라",
+        "음식",
+        "직업",
+        "시간"
+      ],
+      "correct_answer": 2,
+      "points": 2,
+      "description": "김밥과 라면은 음식이므로 음식에 대한 내용입니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R032-001",
+      "original_question_number": 32,
+      "target_slots": [
+        32
+      ],
+      "type": "topic_content",
+      "category": "주제·소재 파악",
+      "diagnostic_area": "짧은 글의 중심 소재 이해",
+      "instruction": "무엇에 대한 내용입니까? <보기>와 같이 알맞은 것을 고르십시오.",
+      "question": "무엇에 대한 내용입니까?",
+      "passage": "토요일에 산에 갑니다. 일요일에 쉽니다.",
+      "options": [
+        "이름",
+        "나이",
+        "계절",
+        "주말"
+      ],
+      "correct_answer": 4,
+      "points": 2,
+      "description": "토요일과 일요일은 주말이므로 주말에 대한 내용입니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R033-001",
+      "original_question_number": 33,
+      "target_slots": [
+        33
+      ],
+      "type": "topic_content",
+      "category": "주제·소재 파악",
+      "diagnostic_area": "짧은 글의 중심 소재 이해",
+      "instruction": "무엇에 대한 내용입니까? <보기>와 같이 알맞은 것을 고르십시오.",
+      "question": "무엇에 대한 내용입니까?",
+      "passage": "바지를 좋아합니다. 자주 입습니다.",
+      "options": [
+        "값",
+        "옷",
+        "장소",
+        "색깔"
+      ],
+      "correct_answer": 2,
+      "points": 2,
+      "description": "바지는 옷이고 자주 입는다고 했으므로 옷에 대한 내용입니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R034-001",
+      "original_question_number": 34,
+      "target_slots": [
+        34
+      ],
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 명사 선택",
+      "instruction": "<보기>와 같이 (     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "(     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "과일 가게입니다. (     )를 삽니다.",
+      "options": [
+        "사과",
+        "의자",
+        "시계",
+        "모자"
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "과일 가게에서는 과일인 사과를 사는 것이 자연스럽습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R035-001",
+      "original_question_number": 35,
+      "target_slots": [
+        35
+      ],
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 동사 선택",
+      "instruction": "<보기>와 같이 (     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "(     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "친구를 (     ). 같이 이야기합니다.",
+      "options": [
+        "줍니다",
+        "씁니다",
+        "만납니다",
+        "모릅니다"
+      ],
+      "correct_answer": 3,
+      "points": 2,
+      "description": "친구를 만나서 같이 이야기하는 흐름이 자연스럽습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R036-001",
+      "original_question_number": 36,
+      "target_slots": [
+        36
+      ],
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 조사 선택",
+      "instruction": "<보기>와 같이 (     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "(     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "저는 선생님입니다. 학생(     ) 아닙니다.",
+      "options": [
+        "이",
+        "을",
+        "과",
+        "만"
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "'학생이 아닙니다'가 자연스러운 부정 표현입니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R037-001",
+      "original_question_number": 37,
+      "target_slots": [
+        37
+      ],
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 형용사 선택",
+      "instruction": "<보기>와 같이 (     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "(     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "날씨가 (     ). 눈이 옵니다.",
+      "options": [
+        "많습니다",
+        "춥습니다",
+        "가깝습니다",
+        "깨끗합니다"
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "눈이 오는 날씨는 춥다고 표현하는 것이 자연스럽습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R038-001",
+      "original_question_number": 38,
+      "target_slots": [
+        38
+      ],
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 부사 선택",
+      "instruction": "<보기>와 같이 (     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "(     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "일을 많이 했습니다. (     ) 피곤합니다.",
+      "options": [
+        "아주",
+        "어서",
+        "먼저",
+        "별로"
+      ],
+      "correct_answer": 1,
+      "points": 3,
+      "description": "일을 많이 해서 매우 피곤한 상황이므로 '아주'가 자연스럽습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R039-001",
+      "original_question_number": 39,
+      "target_slots": [
+        39
+      ],
+      "type": "blank_choice",
+      "category": "빈칸 채우기",
+      "diagnostic_area": "문맥에 맞는 동사 선택",
+      "instruction": "<보기>와 같이 (     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "question": "(     )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+      "passage": "영화가 (     ). 집에 갑니다.",
+      "options": [
+        "끝났습니다",
+        "다녔습니다",
+        "나갔습니다",
+        "앉았습니다"
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "영화가 끝난 뒤 집에 가는 흐름이 자연스럽습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R040-001",
+      "original_question_number": 40,
+      "target_slots": [
+        40
+      ],
+      "type": "visual_not_matching",
+      "category": "자료 이해",
+      "diagnostic_area": "그림·표·자료 정보 파악",
+      "instruction": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "question": "맞지 않는 것을 고르십시오.",
+      "passage": "",
+      "options": [
+        "약입니다.",
+        "사천 원입니다.",
+        "밥을 먹고 먹습니다.",
+        "하루에 세 번 먹습니다."
+      ],
+      "correct_answer": 2,
+      "points": 3,
+      "description": "그림에는 감기약이고, 식사 후 하루 세 번 먹으며, 가격은 5,000원이라고 되어 있습니다. 따라서 '사천 원입니다'가 맞지 않습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "./images/100_R040.png",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "needs_image_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R041-001",
+      "original_question_number": 41,
+      "target_slots": [
+        41
+      ],
+      "type": "visual_not_matching",
+      "category": "자료 이해",
+      "diagnostic_area": "수업 안내 정보 파악",
+      "instruction": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "question": "맞지 않는 것을 고르십시오.",
+      "passage": "",
+      "options": [
+        "테니스 수업은 한 시간입니다.",
+        "오후에 테니스 수업이 있습니다.",
+        "수요일에 테니스 수업을 합니다.",
+        "인주체육관에서 테니스를 배웁니다."
+      ],
+      "correct_answer": 3,
+      "points": 3,
+      "description": "안내문에는 테니스 수업이 화요일과 목요일 15:00~16:00에 인주체육관에서 열린다고 되어 있습니다. 따라서 수요일에 수업을 한다는 내용이 맞지 않습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "./images/100_R041.png",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "needs_image_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R042-001",
+      "original_question_number": 42,
+      "target_slots": [
+        42
+      ],
+      "type": "visual_not_matching",
+      "category": "자료 이해",
+      "diagnostic_area": "대화 메시지 정보 파악",
+      "instruction": "다음을 읽고 맞지 않는 것을 고르십시오.",
+      "question": "맞지 않는 것을 고르십시오.",
+      "passage": "",
+      "options": [
+        "유나는 인주역에 있습니다.",
+        "유나는 수미를 기다립니다.",
+        "두 사람은 카페에서 밥을 먹습니다.",
+        "수미는 백화점 일 층으로 갈 겁니다."
+      ],
+      "correct_answer": 3,
+      "points": 3,
+      "description": "대화에서 유나는 백화점에 도착했고, 수미는 인주역에서 백화점 1층 카페로 갈 예정입니다. 두 사람이 카페에서 밥을 먹는다는 내용은 없으므로 3번이 맞지 않습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "./images/100_R042.png",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "needs_image_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R043-001",
+      "original_question_number": 43,
+      "target_slots": [
+        43
+      ],
+      "type": "same_content",
+      "category": "내용 일치 파악",
+      "diagnostic_area": "짧은 글의 세부 내용 이해",
+      "instruction": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "question": "내용이 같은 것을 고르십시오.",
+      "passage": "저는 형이 한 명 있습니다. 지금 한국에서 저와 같이 삽니다. 우리는 함께 한국어 공부도 하고 여행도 합니다.",
+      "options": [
+        "형은 한국에 없습니다.",
+        "저는 지금 혼자 삽니다.",
+        "저는 형이 두 명 있습니다.",
+        "우리는 같이 여행을 합니다."
+      ],
+      "correct_answer": 4,
+      "points": 3,
+      "description": "글에서 형과 함께 한국어 공부도 하고 여행도 한다고 했으므로 4번이 내용과 같습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R044-001",
+      "original_question_number": 44,
+      "target_slots": [
+        44
+      ],
+      "type": "same_content",
+      "category": "내용 일치 파악",
+      "diagnostic_area": "짧은 글의 세부 내용 이해",
+      "instruction": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "question": "내용이 같은 것을 고르십시오.",
+      "passage": "저는 회사 근처에서 춤을 배웁니다. 금요일 저녁에 춤을 배우러 가서 연습을 많이 합니다. 춤 연습이 조금 힘들지만 재미있습니다.",
+      "options": [
+        "저는 금요일에 춤을 춥니다.",
+        "저는 회사에서 춤을 배웁니다.",
+        "저는 춤 연습이 힘들지 않습니다.",
+        "저는 저녁에는 춤 연습을 안 합니다."
+      ],
+      "correct_answer": 1,
+      "points": 2,
+      "description": "금요일 저녁에 춤을 배우러 가서 연습을 많이 한다고 했으므로 1번이 내용과 같습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R045-001",
+      "original_question_number": 45,
+      "target_slots": [
+        45
+      ],
+      "type": "same_content",
+      "category": "내용 일치 파악",
+      "diagnostic_area": "짧은 글의 세부 내용 이해",
+      "instruction": "다음을 읽고 내용이 같은 것을 고르십시오.",
+      "question": "내용이 같은 것을 고르십시오.",
+      "passage": "어제는 제 생일이었습니다. 수미 씨는 케이크를 선물로 주고 민수 씨는 지갑을 줬습니다. 친구들에게 축하를 받아서 행복했습니다.",
+      "options": [
+        "제 생일은 다음 주에 있습니다.",
+        "수미 씨가 저에게 지갑을 줬습니다.",
+        "저는 민수 씨에게서 선물을 받았습니다.",
+        "저는 어제 친구의 생일을 축하했습니다."
+      ],
+      "correct_answer": 3,
+      "points": 3,
+      "description": "민수 씨가 지갑을 줬다고 했으므로 3번이 내용과 같습니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R046-001",
+      "original_question_number": 46,
+      "target_slots": [
+        46
+      ],
+      "type": "main_idea",
+      "category": "중심 내용 파악",
+      "diagnostic_area": "글의 중심 생각 이해",
+      "instruction": "다음을 읽고 중심 내용을 고르십시오.",
+      "question": "중심 내용을 고르십시오.",
+      "passage": "우리 집에는 피아노가 있습니다. 피아노를 치면 즐겁고 기분이 좋습니다. 그래서 저는 피아노를 자주 칩니다.",
+      "options": [
+        "저는 피아노를 배우려고 합니다.",
+        "저는 새 피아노를 사고 싶습니다.",
+        "저는 피아노 치는 것이 쉽습니다.",
+        "저는 피아노 치는 것을 좋아합니다."
+      ],
+      "correct_answer": 4,
+      "points": 3,
+      "description": "피아노를 치면 즐겁고 기분이 좋아서 자주 친다고 했으므로 피아노 치는 것을 좋아한다는 내용입니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R047-001",
+      "original_question_number": 47,
+      "target_slots": [
+        47
+      ],
+      "type": "main_idea",
+      "category": "중심 내용 파악",
+      "diagnostic_area": "글의 중심 생각 이해",
+      "instruction": "다음을 읽고 중심 내용을 고르십시오.",
+      "question": "중심 내용을 고르십시오.",
+      "passage": "제가 좋아하는 가수 유라 씨가 다음 주에 콘서트를 합니다. 저는 유라 씨의 노래를 직접 듣고 싶습니다. 그래서 이번 콘서트 표를 살 겁니다.",
+      "options": [
+        "저는 가수가 되려고 합니다.",
+        "저는 노래를 잘하면 좋겠습니다.",
+        "저는 유라 씨의 노래를 자주 듣습니다.",
+        "저는 유라 씨의 콘서트에 가고 싶습니다."
+      ],
+      "correct_answer": 4,
+      "points": 3,
+      "description": "좋아하는 가수의 노래를 직접 듣고 싶어서 콘서트 표를 살 것이라고 했으므로 콘서트에 가고 싶다는 내용입니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    },
+    {
+      "id": "QB100-R048-001",
+      "original_question_number": 48,
+      "target_slots": [
+        48
+      ],
+      "type": "main_idea",
+      "category": "중심 내용 파악",
+      "diagnostic_area": "글의 중심 생각 이해",
+      "instruction": "다음을 읽고 중심 내용을 고르십시오.",
+      "question": "중심 내용을 고르십시오.",
+      "passage": "우리 집 근처에 큰 마트가 하나 생겼습니다. 이 마트는 집에서 가까워서 편리합니다. 그리고 물건도 싸고 좋습니다.",
+      "options": [
+        "저는 마트에서 일하고 싶습니다.",
+        "저는 새로 생긴 마트가 마음에 듭니다.",
+        "저는 마트에서 물건을 사는 것이 좋습니다.",
+        "저는 집 근처에 마트가 있으면 좋겠습니다."
+      ],
+      "correct_answer": 2,
+      "points": 2,
+      "description": "새로 생긴 마트가 가깝고 편리하며 물건도 싸고 좋다고 했으므로 새 마트가 마음에 든다는 내용입니다.",
+      "level": "TOPIK I",
+      "section": "reading",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "exam_round": "100"
+    }
+  ],
+  "passage_sets": [
+    {
+      "set_id": "QB-G049_050-001",
+      "source": "current-reading-questions",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        49,
+        50
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[49~50] 다음을 읽고 물음에 답하십시오.",
+      "passage": "우리 가족은 오랫동안 외국에 살았습니다. 외국 미용실은 가격이 비쌌습니다. 그래서 우리 가족은 미용실에 가지 않았습니다. 남편과 아이의 머리는 제가 잘라 주었습니다. 처음에는 잘 못 (   ) 나중에는 잘 자르게 되었습니다. 지금 우리 가족은 한국에서 살고 있습니다. 저는 요즘도 가족들의 머리를 잘라 줍니다.",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-R049-001",
+          "target_slot": 49,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "문맥에 맞는 연결 표현 이해",
+          "question": "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "자르면",
+            "자르니까",
+            "잘랐거나",
+            "잘랐지만"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "처음에는 잘 못했지만 나중에는 잘하게 되었다는 대조 흐름을 이해하는 문항입니다."
+        },
+        {
+          "item_id": "QB-R050-001",
+          "target_slot": 50,
+          "type": "common_passage_question",
+          "category": "공통 지문 내용 일치",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "우리 가족은 한국에 돌아왔습니다.",
+            "외국의 미용실은 가격이 쌌습니다.",
+            "요즘은 아이의 머리를 잘라 주지 않습니다.",
+            "우리 가족은 외국에서 미용실에 자주 갔습니다."
+          ],
+          "correct_answer": 1,
+          "points": 2,
+          "description": "글에서 가족이 지금 한국에서 살고 있다는 정보를 확인하는 문항입니다."
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G051_052-001",
+      "source": "current-reading-questions",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        51,
+        52
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[51~52] 다음을 읽고 물음에 답하십시오.",
+      "passage": "인주시에서는 매년 가을에 떡볶이 축제를 합니다. 이 축제에서는 ‘매운 떡볶이 먹기 대회’가 열리는데 축제에 온 사람은 누구나 이 대회에 참가할 수 있습니다. (   ) 이 축제에서 한국의 유명한 떡볶이를 모두 먹어 볼 수 있습니다. 떡볶이 재료를 싸게 살 수도 있고 공연도 볼 수 있어서 이 축제를 찾는 사람이 많습니다.",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-R051-001",
+          "target_slot": 51,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 연결어",
+          "diagnostic_area": "문장 간 연결 관계 이해",
+          "question": "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "그리고",
+            "그래도",
+            "그렇지만",
+            "왜냐하면"
+          ],
+          "correct_answer": 1,
+          "points": 3,
+          "description": "대회 참가와 여러 활동을 이어서 설명하므로 ‘그리고’가 알맞습니다."
+        },
+        {
+          "item_id": "QB-R052-001",
+          "target_slot": 52,
+          "type": "common_passage_question",
+          "category": "공통 지문 주제 파악",
+          "diagnostic_area": "생활 정보 글의 핵심 내용 이해",
+          "question": "무엇에 대한 내용인지 맞는 것을 고르십시오.",
+          "options": [
+            "이 축제를 하는 장소",
+            "이 축제를 하는 날짜",
+            "이 축제에서 할 수 있는 일",
+            "이 축제에서 볼 수 있는 공연"
+          ],
+          "correct_answer": 3,
+          "points": 2,
+          "description": "떡볶이 축제에서 참가하고 먹고 사고 볼 수 있는 일을 설명하는 글입니다."
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G053_054-001",
+      "source": "current-reading-questions",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        53,
+        54
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[53~54] 다음을 읽고 물음에 답하십시오.",
+      "passage": "제 친구는 회사원인데 그림을 잘 그립니다. 오늘 친구가 첫 번째 전시회를 열었습니다. 저는 (   ) 그 친구의 전시회에 갔다 왔습니다. 전시회에는 꽃 그림이 많았습니다. 저는 장미꽃 그림을 하나 샀습니다. 오늘 이 그림을 제 방에 걸었습니다.",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-R053-001",
+          "target_slot": 53,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "시간 순서 표현 이해",
+          "question": "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "퇴근하러",
+            "퇴근한 지",
+            "퇴근하려면",
+            "퇴근한 후에"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "회사 일을 마친 뒤 전시회에 갔다는 의미이므로 ‘퇴근한 후에’가 알맞습니다."
+        },
+        {
+          "item_id": "QB-R054-001",
+          "target_slot": 54,
+          "type": "common_passage_question",
+          "category": "공통 지문 내용 일치",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "제 친구는 직업이 화가입니다.",
+            "저는 친구의 그림을 하나 샀습니다.",
+            "제 친구는 전시회를 여러 번 했습니다.",
+            "저는 장미꽃 그림을 회사에 가져갔습니다."
+          ],
+          "correct_answer": 2,
+          "points": 3,
+          "description": "글에 ‘저는 장미꽃 그림을 하나 샀습니다’라고 되어 있습니다."
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G055_056-001",
+      "source": "current-reading-questions",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        55,
+        56
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[55~56] 다음을 읽고 물음에 답하십시오.",
+      "passage": "인주시에는 유명한 ‘옷 거리’가 있습니다. 이곳은 가게마다 다른 종류의 옷을 팔아서 구경하는 재미가 있습니다. 여러 가게 중에서 인기가 많은 가게는 예전에 유행한 옷을 파는 가게와 특별한 디자인의 청바지를 파는 가게입니다. 다른 곳에서 팔지 않는 옷이 (   ). 그래서 자기만의 특별한 옷을 사고 싶어 하는 사람들이 많이 찾아옵니다.",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-R055-001",
+          "target_slot": 55,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "이유 표현과 문맥 이해",
+          "question": "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "많아도 됩니다",
+            "많아야 합니다",
+            "많기 때문입니다",
+            "많은 적이 있습니다"
+          ],
+          "correct_answer": 3,
+          "points": 2,
+          "description": "특별한 옷을 사고 싶은 사람들이 찾아오는 이유를 설명하므로 ‘많기 때문입니다’가 알맞습니다."
+        },
+        {
+          "item_id": "QB-R056-001",
+          "target_slot": 56,
+          "type": "common_passage_question",
+          "category": "공통 지문 내용 일치",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "이 거리에 청바지 가게가 생기지 않았습니다.",
+            "이 거리에서 예전에 유행한 옷을 살 수 있습니다.",
+            "이 거리는 사람들에게 많이 알려지지 않았습니다.",
+            "이 거리에 같은 종류의 옷을 파는 가게들이 모여 있습니다."
+          ],
+          "correct_answer": 2,
+          "points": 3,
+          "description": "글에서 예전에 유행한 옷을 파는 가게가 인기가 많다고 했습니다."
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G057-058-001",
+      "source": "current-reading-questions",
+      "set_type": "sentence_order_set",
+      "target_slots": [
+        57,
+        58
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[57~58] 다음을 순서에 맞게 배열하십시오.",
+      "passage": "",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-R057-001",
+          "target_slot": 57,
+          "type": "sentence_order",
+          "category": "문장 순서 배열",
+          "diagnostic_area": "사건의 시간 순서와 연결 관계 이해",
+          "question": "오른쪽의 문장을 왼쪽 순서 칸으로 끌어다 놓아 순서를 맞추십시오.",
+          "options": [
+            "(가)",
+            "(나)",
+            "(다)",
+            "(라)"
+          ],
+          "correct_answer": "(가)-(라)-(다)-(나)",
+          "points": 3,
+          "description": "방송국에 가서 기다리다가 좋아하는 배우를 보고 사진을 찍은 순서로 배열하는 문항입니다.",
+          "sentence_items": [
+            {
+              "label": "(가)",
+              "text": "저는 친구들과 함께 방송국을 구경하러 갔습니다."
+            },
+            {
+              "label": "(나)",
+              "text": "저는 뛰어가서 그 배우와 함께 사진을 찍었습니다."
+            },
+            {
+              "label": "(다)",
+              "text": "그때 제가 좋아하는 배우가 저쪽으로 지나갔습니다."
+            },
+            {
+              "label": "(라)",
+              "text": "우리는 방송국 일 층에서 안내 직원을 기다리고 있었습니다."
+            }
+          ],
+          "correct_order": [
+            "(가)",
+            "(라)",
+            "(다)",
+            "(나)"
+          ]
+        },
+        {
+          "item_id": "QB-R058-001",
+          "target_slot": 58,
+          "type": "sentence_order",
+          "category": "문장 순서 배열",
+          "diagnostic_area": "설명문의 논리적 순서와 지시어 연결 이해",
+          "question": "오른쪽의 문장을 왼쪽 순서 칸으로 끌어다 놓아 순서를 맞추십시오.",
+          "options": [
+            "(가)",
+            "(나)",
+            "(다)",
+            "(라)"
+          ],
+          "correct_answer": "(라)-(나)-(가)-(다)",
+          "points": 2,
+          "description": "식사 후에도 다시 먹고 싶을 때 실제로 배고픈지 확인하는 방법을 설명하는 순서로 배열하는 문항입니다.",
+          "sentence_items": [
+            {
+              "label": "(가)",
+              "text": "그것을 확인하는 방법은 아주 간단합니다."
+            },
+            {
+              "label": "(나)",
+              "text": "그럴 때는 정말 배가 고파서 그런 것인지 확인하는 게 좋습니다."
+            },
+            {
+              "label": "(다)",
+              "text": "싫어하는 음식을 생각해도 먹고 싶다면 정말 배가 고픈 것입니다."
+            },
+            {
+              "label": "(라)",
+              "text": "식사를 했는데도 금방 다시 먹고 싶은 생각이 들 때가 있습니다."
+            }
+          ],
+          "correct_order": [
+            "(라)",
+            "(나)",
+            "(가)",
+            "(다)"
+          ]
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G059_060-001",
+      "source": "current-reading-questions",
+      "set_type": "sentence_insert_common_passage_2_questions",
+      "target_slots": [
+        59,
+        60
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[59~60] 다음을 읽고 물음에 답하십시오.",
+      "passage": "얼마 전에 제가 초등학교 때 쓴 일기장을 보았습니다. ㉠ 거기에는 제가 선생님께 칭찬을 듣고 기뻐하는 이야기가 써 있었습니다. ㉡ 일기를 보고 갑자기 선생님이 생각나서 학교로 전화를 해 봤습니다. 선생님은 아직 그 초등학교에 계셨습니다. ㉢ 선생님을 만나서 초등학교 때의 이야기를 나누었습니다. ㉣",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-R059-001",
+          "target_slot": 59,
+          "type": "sentence_insert",
+          "category": "문장 삽입",
+          "diagnostic_area": "문맥 흐름과 문장 위치 이해",
+          "question": "다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "㉠",
+            "㉡",
+            "㉢",
+            "㉣"
+          ],
+          "correct_answer": 3,
+          "points": 2,
+          "description": "문장의 앞뒤 연결을 보고 선생님이 아직 학교에 계신다는 사실을 확인한 뒤 찾아가는 흐름을 파악하는 문항입니다.",
+          "insert_sentence": "반가운 마음에 저는 초등학교로 찾아갔습니다.",
+          "insert_positions": [
+            "㉠",
+            "㉡",
+            "㉢",
+            "㉣"
+          ],
+          "correct_position": "㉢"
+        },
+        {
+          "item_id": "QB-R060-001",
+          "target_slot": 60,
+          "type": "common_passage_question",
+          "category": "공통 지문 이해",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "저는 선생님을 만나러 갔습니다.",
+            "선생님이 저에게 전화를 하셨습니다.",
+            "선생님은 지금 다른 학교에 계십니다.",
+            "저는 초등학교 때의 일기장을 잃어버렸습니다."
+          ],
+          "correct_answer": 1,
+          "points": 3,
+          "description": "글에서 일기장을 본 뒤 초등학교에 전화하고 선생님을 만나러 간 내용을 확인하는 문항입니다."
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G061_062-001",
+      "source": "current-reading-questions",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        61,
+        62
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[61~62] 다음을 읽고 물음에 답하십시오.",
+      "passage": "저는 드라마를 만드는 사람과 함께 일을 합니다. 드라마에 잘 맞는 (   ) 일입니다. 이번에 시작하는 드라마는 바닷가 시골 마을 사람들의 이야기입니다. 그래서 부산과 제주도의 작은 바닷가 마을들을 여기저기 다녔습니다. 한 달이 걸려서 드라마에 딱 맞는 곳을 찾을 수 있었습니다. 이번 주말에 드라마 촬영이 시작됩니다. 이 드라마가 인기가 있으면 좋겠습니다.",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-R061-001",
+          "target_slot": 61,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "문맥에 맞는 명사구 선택",
+          "question": "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "장소를 찾는",
+            "배우를 찾는",
+            "옷을 만드는",
+            "음악을 만드는"
+          ],
+          "correct_answer": 1,
+          "points": 2,
+          "description": "드라마에 맞는 곳을 찾았다는 뒤 문맥으로 보아 '장소를 찾는'이 알맞습니다."
+        },
+        {
+          "item_id": "QB-R062-001",
+          "target_slot": 62,
+          "type": "common_passage_question",
+          "category": "공통 지문 이해",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "이 드라마는 이번 주말에 끝납니다.",
+            "이번 일을 위해서 부산과 제주도에 갔습니다.",
+            "이번에 도시 사람들의 이야기를 드라마로 찍습니다.",
+            "이번 일 때문에 일주일 동안 여기저기를 다녔습니다."
+          ],
+          "correct_answer": 2,
+          "points": 2,
+          "description": "글에 부산과 제주도의 작은 바닷가 마을들을 다녔다고 했으므로 2번이 맞습니다."
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G063_064-001",
+      "source": "current-reading-questions",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        63,
+        64
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[63~64] 다음을 읽고 물음에 답하십시오.",
+      "passage": "한국아파트 게시판\n\n안녕하세요, 관리실입니다.\n우리 아파트에서는 관리실 옆에 자전거 주차장을 하나 더 만들었습니다.\n아파트 입구, 계단 등에 둔 자전거는 새 주차장으로 옮겨 주시기 바랍니다.\n새 주차장은 11월 10일 월요일부터 이용하실 수 있습니다.\n주민 여러분의 많은 협조 부탁드립니다.\n\n한국아파트 관리실(02-1234-5678)",
+      "image_url": "./images/R063_064.png",
+      "items": [
+        {
+          "item_id": "QB-R063-001",
+          "target_slot": 63,
+          "type": "common_passage_question",
+          "category": "생활문 정보 파악",
+          "diagnostic_area": "공지문의 목적 파악",
+          "question": "왜 윗글을 썼는지 맞는 것을 고르십시오.",
+          "options": [
+            "자전거 주차장의 요금을 바꾸려고",
+            "자전거 주차장의 위치를 확인하려고",
+            "자전거 주차장에서 일할 직원을 찾으려고",
+            "자전거 주차장이 생기는 것을 안내하려고"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "새 자전거 주차장이 만들어졌고 이용 안내를 하고 있으므로 글의 목적은 새 주차장 안내입니다."
+        },
+        {
+          "item_id": "QB-R064-001",
+          "target_slot": 64,
+          "type": "common_passage_question",
+          "category": "생활문 정보 파악",
+          "diagnostic_area": "공지문의 세부 정보 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "새 주차장은 관리실 근처에 있습니다.",
+            "이 아파트에는 자전거 주차장이 없었습니다.",
+            "새 주차장은 십이월부터 이용할 수 있습니다.",
+            "아파트 입구에 있는 자전거는 옮기지 않아도 됩니다."
+          ],
+          "correct_answer": 1,
+          "points": 3,
+          "description": "글에 새 자전거 주차장을 관리실 옆에 만들었다고 했으므로 1번이 맞습니다."
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G065_066-001",
+      "source": "current-reading-questions",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        65,
+        66
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[65~66] 다음을 읽고 물음에 답하십시오.",
+      "passage": "토끼는 혼자서 생활하는 동물입니다. 보통 산에 사는데 무서운 동물을 만날 때가 많습니다. 그럴 때 토끼가 (   ) 방법에는 여러 가지가 있습니다. 토끼는 튼튼한 다리로 빠르고 멀리 뛸 수 있습니다. 또 먼 곳에 있는 동물도 냄새로 알 수 있습니다. 귀를 움직여서 소리가 나는 위치도 정확하게 찾습니다. 그래서 무서운 동물이 오는 것을 미리 알 수 있습니다.",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-R065-001",
+          "target_slot": 65,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "글의 흐름에 맞는 표현 선택",
+          "question": "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "잠을 자는",
+            "자기를 지키는",
+            "음식을 구하는",
+            "상처를 치료하는"
+          ],
+          "correct_answer": 2,
+          "points": 2,
+          "description": "빠르게 뛰고 냄새와 소리로 위험을 아는 내용이므로 '자기를 지키는' 방법이 알맞습니다."
+        },
+        {
+          "item_id": "QB-R066-001",
+          "target_slot": 66,
+          "type": "common_passage_question",
+          "category": "긴 지문 이해",
+          "diagnostic_area": "긴 글의 세부 정보 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "산에 사는 토끼는 모여서 생활합니다.",
+            "토끼는 냄새가 나는 것을 잘 못 느낍니다.",
+            "토끼는 소리가 나는 위치를 정확하게 압니다.",
+            "산에 사는 토끼는 빠른 속도로 뛸 수 없습니다."
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "글에 귀를 움직여서 소리가 나는 위치를 정확하게 찾는다고 했으므로 3번이 맞습니다."
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G067_068-001",
+      "source": "current-reading-questions",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        67,
+        68
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[67~68] 다음을 읽고 물음에 답하십시오.",
+      "passage": "인주도서관에는 '독서 로봇'이 있습니다. 아이들에게 책을 읽어 주는 로봇입니다. 아이들이 책을 펴서 한 장씩 보여 주면 로봇이 읽어 줍니다. 모양도 귀엽고 재미있는 목소리로 책을 읽어 줘서 한글을 모르는 아이들이 좋아합니다. 도서관을 방문한 아이는 누구나 이용할 수 있고, 인터넷으로 미리 신청하면 집에 빌려 갈 수도 있습니다. 이 로봇 덕분에 인주도서관에 (   ) 있습니다.",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-R067-001",
+          "target_slot": 67,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "글의 흐름에 맞는 표현 선택",
+          "question": "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "한글 책이 줄고",
+            "새 직원이 들어오고",
+            "아이들 손님이 늘고",
+            "높은 책장이 없어지고"
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "독서 로봇 때문에 한글을 모르는 아이들도 도서관을 좋아한다는 내용이므로 '아이들 손님이 늘고'가 알맞습니다."
+        },
+        {
+          "item_id": "QB-R068-001",
+          "target_slot": 68,
+          "type": "common_passage_question",
+          "category": "긴 지문 이해",
+          "diagnostic_area": "긴 글의 세부 정보 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "이 로봇은 아이들에게 책을 골라 줍니다.",
+            "이 로봇은 한글을 몰라도 이용할 수 있습니다.",
+            "이 로봇은 모양 때문에 아이들에게 인기가 없습니다.",
+            "이 로봇을 빌리려면 도서관에 가서 신청해야 합니다."
+          ],
+          "correct_answer": 2,
+          "points": 3,
+          "description": "글에 한글을 모르는 아이들이 이 로봇을 좋아한다고 했으므로 2번이 맞습니다."
+        }
+      ]
+    },
+    {
+      "set_id": "QB-G069_070-001",
+      "source": "current-reading-questions",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        69,
+        70
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[69~70] 다음을 읽고 물음에 답하십시오.",
+      "passage": "10년 넘게 키운 강아지가 하늘나라로 떠나서 이제 만날 수 없습니다. 저는 강아지와 함께한 시간을 기억하고 싶어서 휴대폰 게임을 만들었습니다. 저와 강아지가 함께 (   ) 게임입니다. 저는 주인공이 되어 강아지와 높은 산도 오르고 파도가 심한 바다도 건너고 나쁜 사람을 만나면 함께 싸우기도 합니다. 여행을 마치고 집으로 돌아오면 게임이 끝납니다. 저는 강아지가 보고 싶을 때마다 이 게임을 합니다.",
+      "image_url": "",
+      "items": [
+        {
+          "item_id": "QB-R069-001",
+          "target_slot": 69,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "글의 흐름에 맞는 표현 선택",
+          "question": "(   )에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "집을 짓는",
+            "여행을 떠나는",
+            "가족을 만나는",
+            "사람들을 돕는"
+          ],
+          "correct_answer": 2,
+          "points": 3,
+          "description": "뒤에 산을 오르고 바다를 건너며 여행을 마치고 돌아오는 내용이 나오므로 '여행을 떠나는'이 알맞습니다."
+        },
+        {
+          "item_id": "QB-R070-001",
+          "target_slot": 70,
+          "type": "common_passage_question",
+          "category": "긴 지문 이해",
+          "diagnostic_area": "긴 글의 추론 이해",
+          "question": "윗글의 내용으로 알 수 있는 것을 고르십시오.",
+          "options": [
+            "저는 강아지를 그리워하고 있습니다.",
+            "저는 강아지를 키우는 게임을 만들었습니다.",
+            "저는 오랫동안 이 게임을 하지 못했습니다.",
+            "저는 강아지와 매일 놀아 주는 것이 힘들었습니다."
+          ],
+          "correct_answer": 1,
+          "points": 3,
+          "description": "강아지가 보고 싶을 때마다 이 게임을 한다고 했으므로 글쓴이가 강아지를 그리워하고 있음을 알 수 있습니다."
+        }
+      ]
+    },
+    {
+      "set_id": "DRAFT-103-G049-050",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_pdf_pages": [
+        16
+      ],
+      "original_page_label": "15",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        49,
+        50
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[49~50] 다음을 읽고 물음에 답하십시오.",
+      "passage": "저는 어제 아침에 형과 인주산에 갔습니다. 인주산이 너무 높아서 올라갈 때 정말 ( ㉠  ). 하지만 형이 도와줘서 가장 높은 곳까지 올라갈 수 있었습니다. 산 위에서 보는 경치가 아름다워서 사진을 많이 찍었습니다. 등산 후에 형하고 같이 점심을 먹었습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "items": [
+        {
+          "item_id": "DRAFT-103-R049",
+          "target_slot": 49,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "문맥에 맞는 감정·상태 표현 이해",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "기뻤습니다",
+            "미안했습니다",
+            "힘들었습니다",
+            "깨끗했습니다"
+          ],
+          "correct_answer": 3,
+          "points": 2,
+          "description": "산이 너무 높아서 올라갈 때 느끼는 상태로 '힘들었습니다'가 자연스럽습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "DRAFT-103-R050",
+          "target_slot": 50,
+          "type": "common_passage_question",
+          "category": "공통 지문 내용 일치",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "인주산은 높지 않습니다.",
+            "저는 혼자 점심을 먹었습니다.",
+            "인주산에서 사진을 찍지 못했습니다.",
+            "산에 올라갈 때 형은 저를 도와줬습니다."
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "글에 형이 도와줘서 높은 곳까지 올라갈 수 있었다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "DRAFT-103-G051-052",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_pdf_pages": [
+        17
+      ],
+      "original_page_label": "16",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        51,
+        52
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[51~52] 다음을 읽고 물음에 답하십시오.",
+      "passage": "사람들은 보통 바나나를 먹고 껍질은 버립니다. (㉠) 바나나 껍질은 다양하게 사용할 수 있습니다. 바나나 껍질로 차를 만들어서 마실 수 있습니다. 껍질 안쪽으로 설거지하면 그릇이 깨끗해집니다. 그리고 껍질을 잘라서 화분에 넣으면 나무가 잘 자랍니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "items": [
+        {
+          "item_id": "DRAFT-103-R051",
+          "target_slot": 51,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 연결어",
+          "diagnostic_area": "문장 간 대조·전환 관계 이해",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "또한",
+            "그래서",
+            "그런데",
+            "왜냐하면"
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "바나나 껍질을 보통 버리지만 다양하게 사용할 수 있다는 전환 관계이므로 '그런데'가 알맞습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "DRAFT-103-R052",
+          "target_slot": 52,
+          "type": "common_passage_question",
+          "category": "공통 지문 주제 파악",
+          "diagnostic_area": "생활 정보 글의 핵심 내용 이해",
+          "question": "무엇에 대한 내용인지 맞는 것을 고르십시오.",
+          "options": [
+            "바나나가 들어간 음식",
+            "바나나 껍질을 버리는 곳",
+            "바나나를 먹으면 좋은 점",
+            "바나나 껍질로 할 수 있는 일"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "글 전체가 바나나 껍질을 활용하는 여러 방법을 설명합니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "DRAFT-103-G053-054",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_pdf_pages": [
+        18
+      ],
+      "original_page_label": "17",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        53,
+        54
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[53~54] 다음을 읽고 물음에 답하십시오.",
+      "passage": "우리 가족은 모두 바빠서 같이 모일 시간이 적습니다. 그래서 한 달에 한 번은 꼭 같이 식사하기로 했습니다. 이날은 가족 중에서 한 명이 음식을 준비해서 같이 먹습니다. 지난달에는 동생이 불고기를 ( ㉠  ) 정말 맛있었습니다. 이번 달에는 제가 음식을 준비하려고 합니다. 저는 요리를 잘 못해서 식당에서 음식을 사 올 겁니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "items": [
+        {
+          "item_id": "DRAFT-103-R053",
+          "target_slot": 53,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "문맥에 맞는 연결 어미 이해",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "만들려고",
+            "만들면서",
+            "만들었거나",
+            "만들었는데"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "동생이 불고기를 만들었고 그것이 맛있었다는 흐름이므로 '만들었는데'가 알맞습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "DRAFT-103-R054",
+          "target_slot": 54,
+          "type": "common_passage_question",
+          "category": "공통 지문 내용 일치",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "저는 요리를 아주 잘합니다.",
+            "이번 달에 동생이 음식을 준비합니다.",
+            "우리 가족 식사 모임은 한 달에 한 번 있습니다.",
+            "저는 지난달에 식당에서 맛있는 음식을 샀습니다."
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "글에 한 달에 한 번은 꼭 같이 식사하기로 했다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "DRAFT-103-G055-056",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_pdf_pages": [
+        19
+      ],
+      "original_page_label": "18",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        55,
+        56
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[55~56] 다음을 읽고 물음에 답하십시오.",
+      "passage": "인주도서관에는 책 배달 서비스가 있습니다. 이 서비스를 이용하려면 먼저 도서관에 가서 회원 카드를 만들어야 합니다. 홈페이지에서 신청하면 집에서 책을 ( ㉠  ). 이 책은 한 달 뒤에 돌려주면 됩니다. 배달 서비스는 무료여서 사람들에게 인기가 많습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "items": [
+        {
+          "item_id": "DRAFT-103-R055",
+          "target_slot": 55,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "문맥에 맞는 가능 표현 이해",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "받고 있습니다",
+            "받아 봤습니다",
+            "받았기 때문입니다",
+            "받을 수 있습니다"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "홈페이지에서 신청하면 집에서 책을 받을 수 있다는 서비스 설명입니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "DRAFT-103-R056",
+          "target_slot": 56,
+          "type": "common_passage_question",
+          "category": "공통 지문 내용 일치",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "이 서비스는 돈을 내지 않습니다.",
+            "이 서비스는 전화로 신청해야 합니다.",
+            "책을 빌리면 두 달 동안 읽어도 됩니다.",
+            "책을 빌릴 때 회원 카드가 없어도 됩니다."
+          ],
+          "correct_answer": 1,
+          "points": 3,
+          "description": "글에 배달 서비스는 무료라고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "DRAFT-103-G057-058",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_pdf_pages": [
+        20
+      ],
+      "original_page_label": "19",
+      "set_type": "sentence_order_set",
+      "target_slots": [
+        57,
+        58
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[57~58] 다음을 순서에 맞게 배열한 것을 고르십시오.",
+      "passage": "",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "items": [
+        {
+          "item_id": "DRAFT-103-R057",
+          "target_slot": 57,
+          "type": "sentence_order",
+          "category": "문장 순서 배열",
+          "diagnostic_area": "사건의 시간 순서와 연결 관계 이해",
+          "question": "다음을 순서에 맞게 배열한 것을 고르십시오.",
+          "options": [
+            "(나)-(가)-(다)-(라)",
+            "(나)-(라)-(가)-(다)",
+            "(다)-(가)-(나)-(라)",
+            "(다)-(라)-(가)-(나)"
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "콘서트에 간 뒤 노래를 처음 듣고, 집에 돌아와 다른 노래를 찾아본 뒤 앞으로 자주 들을 것 같다는 흐름입니다.",
+          "sentence_items": [
+            {
+              "label": "(가)",
+              "text": "그 가수의 노래를 처음 들었는데 정말 좋았습니다."
+            },
+            {
+              "label": "(나)",
+              "text": "집에 돌아와서 가수의 다른 노래들도 찾아봤습니다."
+            },
+            {
+              "label": "(다)",
+              "text": "어제 친구가 좋아하는 가수의 콘서트에 같이 갔습니다."
+            },
+            {
+              "label": "(라)",
+              "text": "찾은 노래들도 마음에 들어서 앞으로 자주 들을 것 같습니다."
+            }
+          ],
+          "correct_order": [
+            "(다)",
+            "(가)",
+            "(나)",
+            "(라)"
+          ],
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "DRAFT-103-R058",
+          "target_slot": 58,
+          "type": "sentence_order",
+          "category": "문장 순서 배열",
+          "diagnostic_area": "설명문의 논리적 순서와 지시어 연결 이해",
+          "question": "다음을 순서에 맞게 배열한 것을 고르십시오.",
+          "options": [
+            "(가)-(라)-(다)-(나)",
+            "(가)-(나)-(라)-(다)",
+            "(나)-(가)-(라)-(다)",
+            "(나)-(다)-(가)-(라)"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "사람들이 걱정으로 힘들 때가 많다는 일반 진술 뒤에 걱정 상자 방법을 소개하고, 걱정을 써 넣은 뒤 며칠 후 다시 읽는 순서입니다.",
+          "sentence_items": [
+            {
+              "label": "(가)",
+              "text": "상자에 걱정하는 내용을 써서 넣습니다."
+            },
+            {
+              "label": "(나)",
+              "text": "사람들은 걱정 때문에 힘들 때가 많습니다."
+            },
+            {
+              "label": "(다)",
+              "text": "그럴 때는 ‘걱정 상자’를 만들면 도움이 됩니다."
+            },
+            {
+              "label": "(라)",
+              "text": "며칠 후에 꺼내 읽어 보면 대부분 필요 없는 걱정일 겁니다."
+            }
+          ],
+          "correct_order": [
+            "(나)",
+            "(다)",
+            "(가)",
+            "(라)"
+          ],
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "DRAFT-103-G059-060",
+      "source": "TOPIK1_Reading_103회.pdf",
+      "source_pdf_pages": [
+        21
+      ],
+      "original_page_label": "20",
+      "set_type": "sentence_insert_common_passage_2_questions",
+      "target_slots": [
+        59,
+        60
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[59~60] 다음을 읽고 물음에 답하십시오.",
+      "passage": "저에게는 오래된 시계가 하나 있습니다. ㉠ 고등학교에 입학할 때 선물로 받은 것입니다. ㉡ 그 시계는 멋있지도 않고 가격이 비싼 것도 아닙니다. ㉢ 그렇지만 저에게 정말 소중한 시계라서 지금도 항상 차고 다닙니다. ㉣ 그 시계를 보면 아버지가 생각납니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "items": [
+        {
+          "item_id": "DRAFT-103-R059",
+          "target_slot": 59,
+          "type": "sentence_insert",
+          "category": "문장 삽입",
+          "diagnostic_area": "문맥 흐름과 문장 위치 이해",
+          "question": "다음 문장이 들어갈 곳으로 가장 알맞은 것을 고르십시오.",
+          "insert_sentence": "5년 전에 돌아가신 아버지께 마지막으로 받은 물건이기 때문입니다.",
+          "insert_positions": [
+            "㉠",
+            "㉡",
+            "㉢",
+            "㉣"
+          ],
+          "options": [
+            "㉠",
+            "㉡",
+            "㉢",
+            "㉣"
+          ],
+          "correct_answer": 4,
+          "correct_position": "㉣",
+          "points": 2,
+          "description": "시계가 소중한 이유를 설명한 뒤, 그 시계를 보면 아버지가 생각난다는 문장으로 이어지는 흐름이 자연스럽습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "DRAFT-103-R060",
+          "target_slot": 60,
+          "type": "common_passage_question",
+          "category": "공통 지문 이해",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "그 시계는 가격이 비쌉니다.",
+            "저는 그 시계를 지금도 사용합니다.",
+            "그 시계는 고등학교 졸업 선물입니다.",
+            "저는 요즘 아버지와 그 시계 이야기를 합니다."
+          ],
+          "correct_answer": 2,
+          "points": 3,
+          "description": "글에 지금도 항상 차고 다닌다고 되어 있으므로 시계를 지금도 사용한다는 내용이 맞습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "QB103-G061_062-DRAFT",
+      "source": "TOPIK1_Reading_103회",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        61,
+        62
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[61~62] 다음을 읽고 물음에 답하십시오.",
+      "passage": "저는 요즘 회사 일이 많아서 여행을 갈 시간이 없습니다. 그렇지만 가끔 혼자서 여행 계획을 세웁니다. 인터넷으로 여행지를 찾고 맛있는 식당도 고릅니다. 또 친구에게 그 식당을 알려 주기도 합니다. 이렇게 하면 ( ㉠  ) 기분이 들고 회사 일 때문에 생긴 스트레스도 없어집니다. 나중에 시간이 생기면 세운 계획 그대로 여행을 떠나려고 합니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "items": [
+        {
+          "item_id": "QB103-R061-DRAFT",
+          "target_slot": 61,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "문맥에 맞는 명사구 선택",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "여행을 하는",
+            "일을 하는",
+            "계획을 바꾸는",
+            "친구를 사귀는"
+          ],
+          "correct_answer": 1,
+          "points": 2,
+          "description": "실제로 여행을 가지 못하지만 여행 계획을 세우면 여행을 하는 기분이 든다는 흐름입니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "QB103-R062-DRAFT",
+          "target_slot": 62,
+          "type": "common_passage_question",
+          "category": "공통 지문 이해",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "저는 회사를 그만두었습니다.",
+            "저는 요즘 일이 별로 없습니다.",
+            "저는 친구와 같이 여행 계획을 세웁니다.",
+            "저는 인터넷에서 여행할 곳을 찾습니다."
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "글에 인터넷으로 여행지를 찾는다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "QB103-G063_064-DRAFT",
+      "source": "TOPIK1_Reading_103회",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        63,
+        64
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[63~64] 다음을 읽고 물음에 답하십시오.",
+      "passage": "한국대학교 공지사항 웹페이지",
+      "image_url": "./images/103_R063_064.png",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_image_review": true,
+      "items": [
+        {
+          "item_id": "QB103-R063-DRAFT",
+          "target_slot": 63,
+          "type": "common_passage_question",
+          "category": "생활문 정보 파악",
+          "diagnostic_area": "공지문의 목적 파악",
+          "question": "왜 윗글을 썼는지 맞는 것을 고르십시오.",
+          "options": [
+            "행사를 알리려고",
+            "행사를 취소하려고",
+            "행사 날짜를 바꾸려고",
+            "행사 내용을 물어보려고"
+          ],
+          "correct_answer": 1,
+          "points": 2,
+          "description": "유학생회에서 선배와의 만남 행사를 안내하는 글입니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "needs_image_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "QB103-R064-DRAFT",
+          "target_slot": 64,
+          "type": "common_passage_question",
+          "category": "생활문 정보 파악",
+          "diagnostic_area": "공지문의 세부 정보 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "이 행사에서 간식을 팝니다.",
+            "이 행사는 다섯 시부터 시작합니다.",
+            "이 행사에 일 학년은 올 수 없습니다.",
+            "이 행사에서 선배를 만날 수 있습니다."
+          ],
+          "correct_answer": 4,
+          "points": 3,
+          "description": "행사에서 선배를 만나 학교생활에 대해 물어볼 수 있다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "needs_image_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "QB103-G065_066-DRAFT",
+      "source": "TOPIK1_Reading_103회",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        65,
+        66
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[65~66] 다음을 읽고 물음에 답하십시오.",
+      "passage": "인주시에서는 10년 전부터 매년 김치 축제를 하고 있습니다. 여기에서 인주시 김치와 여러 도시의 김치를 모두 구경하고 맛볼 수 있습니다. 또 축제에서 파는 김치는 싸고 맛있습니다. 그래서 사람들이 ( ㉠  ) 많이 옵니다. 외국인들도 많이 찾습니다. 올해 축제에서는 유명한 요리사가 김치 피자 만드는 법을 가르쳐 줍니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "items": [
+        {
+          "item_id": "QB103-R065-DRAFT",
+          "target_slot": 65,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "글의 흐름에 맞는 표현 선택",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "김치를 사러",
+            "공연을 보러",
+            "선물을 받으러",
+            "요리사를 만나러"
+          ],
+          "correct_answer": 1,
+          "points": 2,
+          "description": "축제에서 파는 김치가 싸고 맛있어서 사람들이 김치를 사러 많이 온다는 흐름입니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "QB103-R066-DRAFT",
+          "target_slot": 66,
+          "type": "common_passage_question",
+          "category": "긴 지문 이해",
+          "diagnostic_area": "긴 글의 세부 정보 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "이 축제는 올해 처음 열립니다.",
+            "이 축제는 외국인들에게 인기가 없습니다.",
+            "이 축제에서 김치 피자 만드는 방법을 알려 줍니다.",
+            "이 축제에서 다른 도시의 김치는 맛볼 수 없습니다."
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "올해 축제에서 유명한 요리사가 김치 피자 만드는 법을 가르쳐 준다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "QB103-G067_068-DRAFT",
+      "source": "TOPIK1_Reading_103회",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        67,
+        68
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[67~68] 다음을 읽고 물음에 답하십시오.",
+      "passage": "'뒤로 걷기'는 몸 전체를 움직일 수 있는 운동입니다. 힘든 운동을 하기 어려운 노인들도 할 수 있습니다. 하지만 걸어가는 방향을 볼 수 없어서 ( ㉠  ). 뒤로 걷기를 하기 전에 먼저 벽을 잡고 연습하는 것이 필요합니다. 뒤로 걷기를 할 때 1분 동안 천천히 걷다가 1분 동안 빨리 걷습니다. 이렇게 10분 정도 하면 좋습니다. 뒤로 걷기는 운동장같이 넓고 사람들이 적은 곳에서 하는 것이 안전합니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "items": [
+        {
+          "item_id": "QB103-R067-DRAFT",
+          "target_slot": 67,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "글의 흐름에 맞는 표현 선택",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "넘어져도 됩니다",
+            "넘어지기 쉽습니다",
+            "넘어지지 않습니다",
+            "넘어진 적이 없습니다"
+          ],
+          "correct_answer": 2,
+          "points": 3,
+          "description": "방향을 볼 수 없기 때문에 넘어지기 쉽다는 내용이 자연스럽습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "QB103-R068-DRAFT",
+          "target_slot": 68,
+          "type": "common_passage_question",
+          "category": "긴 지문 이해",
+          "diagnostic_area": "긴 글의 세부 정보 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "이 운동은 나이가 많으면 할 수 없습니다.",
+            "이 운동은 사람이 많은 곳에서 하면 안전합니다.",
+            "뒤로 걷기를 연습할 때 벽이 있는 곳이 좋습니다.",
+            "뒤로 걷기는 계속 같은 속도로 걸어야 운동이 됩니다."
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "뒤로 걷기 전 먼저 벽을 잡고 연습하는 것이 필요하다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "QB103-G069_070-DRAFT",
+      "source": "TOPIK1_Reading_103회",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        69,
+        70
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[69~70] 다음을 읽고 물음에 답하십시오.",
+      "passage": "저는 유치원 선생님입니다. 오늘 점심을 먹은 후에 머리가 아팠습니다. 그래서 계속 이마를 만지면서 아이들 옆에 앉아 있었습니다. 아이들은 시끄럽게 떠들면서 그림을 그리고 있었습니다. 그때 한 아이가 저에게 가까이 와서 “선생님, 어디 아파요? 이 약을 드세요.”라고 말했습니다. 걱정하는 얼굴로 아이는 제 손에 작은 사탕 두 개를 놓고 갔습니다. 저는 그 사탕을 보고 아이의 ( ㉠  ) 아픈 것이 다 나은 것 같았습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "items": [
+        {
+          "item_id": "QB103-R069-DRAFT",
+          "target_slot": 69,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "글의 흐름에 맞는 표현 선택",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "가족이 생각나서",
+            "얼굴이 그리워서",
+            "예쁜 그림이 기억나서",
+            "따뜻한 마음이 느껴져서"
+          ],
+          "correct_answer": 4,
+          "points": 3,
+          "description": "아이의 걱정과 사탕을 보고 따뜻한 마음을 느꼈다는 흐름입니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        },
+        {
+          "item_id": "QB103-R070-DRAFT",
+          "target_slot": 70,
+          "type": "common_passage_question",
+          "category": "긴 지문 이해",
+          "diagnostic_area": "긴 글의 추론 이해",
+          "question": "윗글의 내용으로 알 수 있는 것을 고르십시오.",
+          "options": [
+            "아이들은 조용히 그림을 그렸습니다.",
+            "저는 점심을 먹기 전에 퇴근했습니다.",
+            "아이는 저를 걱정해서 사탕을 줬습니다.",
+            "저는 사탕을 보고 두통이 더 심해졌습니다."
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "아이가 선생님을 걱정하며 사탕을 약처럼 주었다는 것을 알 수 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional"
+        }
+      ],
+      "source_exam": "TOPIK I 103회",
+      "source_pdf": "TOPIK1_Reading_103회.pdf"
+    },
+    {
+      "set_id": "DRAFT-100-G049-050",
+      "source": "TOPIK1_Reading_100.pdf",
+      "source_pdf_pages": [
+        16
+      ],
+      "original_page_label": "15",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        49,
+        50
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[49~50] 다음을 읽고 물음에 답하십시오.",
+      "passage": "친구들과 여행을 갔습니다. 호텔에 도착했는데 그때부터 비가 계속 왔습니다. (   ) 그냥 호텔에서 놀기로 했습니다. 호텔 수영장에서 수영도 하고 방에서 이야기도 많이 했습니다. 호텔 안에서 시간을 보내는 것도 재미있었습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "items": [
+        {
+          "item_id": "DRAFT-100-R049",
+          "target_slot": 49,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "문맥에 맞는 연결 표현 이해",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "그래서",
+            "그리고",
+            "그렇지만",
+            "왜냐하면"
+          ],
+          "correct_answer": 1,
+          "points": 2,
+          "description": "비가 계속 와서 호텔에서 놀기로 했다는 결과 흐름이므로 '그래서'가 알맞습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100",
+          "source_exam": "TOPIK I Reading 100",
+          "source": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R050",
+          "target_slot": 50,
+          "type": "common_passage_question",
+          "category": "공통 지문 내용 일치",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "저는 혼자 여행을 다녀왔습니다.",
+            "저는 호텔에서 재미있게 놀았습니다.",
+            "저는 여행을 가서 수영을 못 했습니다.",
+            "제가 여행을 갔을 때 날씨가 맑았습니다."
+          ],
+          "correct_answer": 2,
+          "points": 2,
+          "description": "글에 호텔 수영장에서 수영도 하고 방에서 이야기도 하며 호텔 안에서 재미있게 시간을 보냈다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100",
+          "source_exam": "TOPIK I Reading 100",
+          "source": "100"
+        }
+      ],
+      "exam_round": "100",
+      "source_exam": "TOPIK I Reading 100"
+    },
+    {
+      "set_id": "DRAFT-100-G051-052",
+      "source": "TOPIK1_Reading_100.pdf",
+      "source_pdf_pages": [
+        17
+      ],
+      "original_page_label": "16",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        51,
+        52
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[51~52] 다음을 읽고 물음에 답하십시오.",
+      "passage": "인주대학교에서는 매년 가을에 외국인 학생들이 행사를 합니다. 이 행사에는 많은 나라의 학생들이 모입니다. 학생들은 함께 세계 여러 나라의 음식도 먹고 재미있는 놀이도 합니다. 같이 사진도 찍으면서 즐거운 시간을 보냅니다. 그래서 이 행사에 가면 다양한 나라의 (   ) 수 있습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "items": [
+        {
+          "item_id": "DRAFT-100-R051",
+          "target_slot": 51,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "문맥에 맞는 가능 표현 이해",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "책을 빌릴",
+            "친구를 사귈",
+            "학교에 다닐",
+            "선생님을 만날"
+          ],
+          "correct_answer": 2,
+          "points": 3,
+          "description": "여러 나라의 학생들이 모여 음식과 놀이를 함께하므로 다양한 나라의 친구를 사귈 수 있다는 흐름이 자연스럽습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100",
+          "source_exam": "TOPIK I Reading 100",
+          "source": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R052",
+          "target_slot": 52,
+          "type": "common_passage_question",
+          "category": "공통 지문 주제 파악",
+          "diagnostic_area": "생활 정보 글의 핵심 내용 이해",
+          "question": "무엇에 대한 내용인지 맞는 것을 고르십시오.",
+          "options": [
+            "행사를 하는 날짜",
+            "행사를 하는 장소",
+            "행사에 갈 수 있는 사람",
+            "행사에서 할 수 있는 일"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "세계 여러 나라의 음식을 먹고 놀이를 하고 사진을 찍는 등 행사에서 할 수 있는 일을 설명하고 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100",
+          "source_exam": "TOPIK I Reading 100",
+          "source": "100"
+        }
+      ],
+      "exam_round": "100",
+      "source_exam": "TOPIK I Reading 100"
+    },
+    {
+      "set_id": "DRAFT-100-G053-054",
+      "source": "TOPIK1_Reading_100.pdf",
+      "source_pdf_pages": [
+        18
+      ],
+      "original_page_label": "17",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        53,
+        54
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[53~54] 다음을 읽고 물음에 답하십시오.",
+      "passage": "저는 한국 요리를 배우러 한국에 왔습니다. 지금은 유명한 한식당에서 일하고 있습니다. 처음에는 간단한 요리만 했습니다. 그런데 이제는 갈비나 불고기처럼 만들기 (   ) 요리도 잘할 수 있습니다. 고향에 돌아가면 한식당을 열고 싶습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "items": [
+        {
+          "item_id": "DRAFT-100-R053",
+          "target_slot": 53,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "문맥에 맞는 형용사 선택",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "낮은",
+            "편한",
+            "어려운",
+            "뜨거운"
+          ],
+          "correct_answer": 3,
+          "points": 2,
+          "description": "처음에는 간단한 요리만 했지만 이제는 갈비나 불고기처럼 만들기 어려운 요리도 잘할 수 있다는 흐름입니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100",
+          "source_exam": "TOPIK I Reading 100",
+          "source": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R054",
+          "target_slot": 54,
+          "type": "common_passage_question",
+          "category": "공통 지문 내용 일치",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "저는 고향에서 일하고 있습니다.",
+            "저는 유명한 식당에서 일합니다.",
+            "저는 한국 요리를 안 해 봤습니다.",
+            "저는 한국에서 식당을 열려고 합니다."
+          ],
+          "correct_answer": 2,
+          "points": 3,
+          "description": "글에 지금 유명한 한식당에서 일하고 있다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100",
+          "source_exam": "TOPIK I Reading 100",
+          "source": "100"
+        }
+      ],
+      "exam_round": "100",
+      "source_exam": "TOPIK I Reading 100"
+    },
+    {
+      "set_id": "DRAFT-100-G055-056",
+      "source": "TOPIK1_Reading_100.pdf",
+      "source_pdf_pages": [
+        19
+      ],
+      "original_page_label": "18",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        55,
+        56
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[55~56] 다음을 읽고 물음에 답하십시오.",
+      "passage": "‘마음서점’은 작고 오래된 서점입니다. 이 서점의 주인은 손님의 고민을 듣고 책을 몇 권 골라 줍니다. 손님은 그중 마음에 드는 책을 사서 2층으로 올라갑니다. 2층에는 책을 (   ) 조용히 생각할 수 있는 곳이 있습니다. 그래서 고민이 있는 사람들이 이 서점을 많이 찾습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "items": [
+        {
+          "item_id": "DRAFT-100-R055",
+          "target_slot": 55,
+          "type": "common_passage_blank_choice",
+          "category": "공통 지문 빈칸",
+          "diagnostic_area": "문맥에 맞는 연결 어미 이해",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "읽게",
+            "읽으러",
+            "읽어도",
+            "읽으면서"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "2층에서 책을 읽으면서 조용히 생각할 수 있다는 동시 동작 표현이 자연스럽습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100",
+          "source_exam": "TOPIK I Reading 100",
+          "source": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R056",
+          "target_slot": 56,
+          "type": "common_passage_question",
+          "category": "공통 지문 내용 일치",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "이 서점은 이번에 새로 생겼습니다.",
+            "이 서점 2층에서 책을 살 수 있습니다.",
+            "이 서점에서는 주인이 책을 골라 줍니다.",
+            "이 서점은 찾아오는 사람이 별로 없습니다."
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "글에 서점 주인이 손님의 고민을 듣고 책을 몇 권 골라 준다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100",
+          "source_exam": "TOPIK I Reading 100",
+          "source": "100"
+        }
+      ],
+      "exam_round": "100",
+      "source_exam": "TOPIK I Reading 100"
+    },
+    {
+      "set_id": "DRAFT-100-G057-058",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "level": "TOPIK I",
+      "section": "reading",
+      "set_type": "sentence_order_set",
+      "target_slots": [
+        57,
+        58
+      ],
+      "instruction": "다음을 순서에 맞게 배열한 것을 고르십시오.",
+      "passage": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "items": [
+        {
+          "item_id": "DRAFT-100-R057",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 57,
+          "original_question_number": 57,
+          "type": "sentence_order",
+          "category": "문장 순서 배열",
+          "diagnostic_area": "사건의 시간 순서와 연결 관계 이해",
+          "instruction": "다음을 순서에 맞게 배열한 것을 고르십시오.",
+          "question": "다음을 순서에 맞게 배열한 것을 고르십시오.",
+          "passage": "",
+          "sentence_items": [
+            {
+              "label": "(가)",
+              "text": "그 자리에 앉으면 가게 주인이 잘 보입니다."
+            },
+            {
+              "label": "(나)",
+              "text": "저는 아침 일찍 버스를 타고 회사에 갑니다."
+            },
+            {
+              "label": "(다)",
+              "text": "버스를 타면 언제나 창문 옆자리에 앉습니다."
+            },
+            {
+              "label": "(라)",
+              "text": "그 창문을 보면서 하루가 기분 좋게 시작합니다."
+            }
+          ],
+          "options": [
+            "(나)-(가)-(라)-(다)",
+            "(나)-(다)-(가)-(라)",
+            "(다)-(나)-(라)-(가)",
+            "(다)-(라)-(가)-(나)"
+          ],
+          "correct_answer": 2,
+          "correct_order": [
+            "(나)",
+            "(다)",
+            "(가)",
+            "(라)"
+          ],
+          "points": 3,
+          "description": "아침 일찍 버스를 타고 회사에 가며, 버스에서 창문 옆자리에 앉고, 그 자리에서 가게 주인이 잘 보이며, 그 모습을 보면서 하루가 시작된다는 순서가 자연스럽습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R058",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 58,
+          "original_question_number": 58,
+          "type": "sentence_order",
+          "category": "문장 순서 배열",
+          "diagnostic_area": "설명문의 논리적 순서와 지시어 연결 이해",
+          "instruction": "다음을 순서에 맞게 배열한 것을 고르십시오.",
+          "question": "다음을 순서에 맞게 배열한 것을 고르십시오.",
+          "passage": "",
+          "sentence_items": [
+            {
+              "label": "(가)",
+              "text": "신발을 오전에 사는 사람들이 있습니다."
+            },
+            {
+              "label": "(나)",
+              "text": "하지만 신발은 오후 늦게 사는 것이 좋습니다."
+            },
+            {
+              "label": "(다)",
+              "text": "그래서 오후 늦게 신발을 사면 신을 때 아주 편합니다."
+            },
+            {
+              "label": "(라)",
+              "text": "보통 발이 다니면 오후에는 발이 아침보다 약간 커집니다."
+            }
+          ],
+          "options": [
+            "(가)-(나)-(라)-(다)",
+            "(가)-(다)-(나)-(라)",
+            "(라)-(나)-(다)-(가)",
+            "(라)-(가)-(나)-(다)"
+          ],
+          "correct_answer": 1,
+          "correct_order": [
+            "(가)",
+            "(나)",
+            "(라)",
+            "(다)"
+          ],
+          "points": 2,
+          "description": "오전에 신발을 사는 사람이 있다는 화제를 제시한 뒤, 오후 늦게 사는 것이 좋다고 설명하고, 그 이유와 결과를 이어 설명하는 순서가 자연스럽습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        }
+      ],
+      "exam_round": "100"
+    },
+    {
+      "set_id": "DRAFT-100-G059-060",
+      "source": "TOPIK1_Reading_100",
+      "source_exam": "TOPIK I 100회",
+      "source_pdf": "TOPIK1_Reading_100.pdf",
+      "level": "TOPIK I",
+      "section": "reading",
+      "set_type": "sentence_insert_common_passage",
+      "target_slots": [
+        59,
+        60
+      ],
+      "instruction": "다음을 읽고 물음에 답하십시오.",
+      "passage": "친구가 농장을 가서 친구의 강아지 ‘보리’를 며칠 돌봤습니다. ㉠ 처음 봤을 때 보리는 저를 별로 반기지 않았습니다. ㉡ 어느 날 몸이 안 좋아서 집에서 누워 있었습니다. ㉢ 그때 보리는 저를 걱정하는 것처럼 제 앞에 있어 주었습니다. ㉣ 그 후로 조금씩 보리를 좋아하게 돼서 요즘은 보리를 보러 친구 집에도 자주 갑니다.",
+      "insert_positions": [
+        "㉠",
+        "㉡",
+        "㉢",
+        "㉣"
+      ],
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "items": [
+        {
+          "item_id": "DRAFT-100-R059",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 59,
+          "original_question_number": 59,
+          "type": "sentence_insert",
+          "category": "문장 삽입",
+          "diagnostic_area": "문맥 흐름과 문장 위치 이해",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "다음 문장이 들어갈 곳으로 가장 알맞은 것을 고르십시오.",
+          "passage": "친구가 농장을 가서 친구의 강아지 ‘보리’를 며칠 돌봤습니다. ㉠ 처음 봤을 때 보리는 저를 별로 반기지 않았습니다. ㉡ 어느 날 몸이 안 좋아서 집에서 누워 있었습니다. ㉢ 그때 보리는 저를 걱정하는 것처럼 제 앞에 있어 주었습니다. ㉣ 그 후로 조금씩 보리를 좋아하게 돼서 요즘은 보리를 보러 친구 집에도 자주 갑니다.",
+          "insert_sentence": "그날 저는 보리가 정말 고마웠습니다.",
+          "insert_positions": [
+            "㉠",
+            "㉡",
+            "㉢",
+            "㉣"
+          ],
+          "options": [
+            "㉠",
+            "㉡",
+            "㉢",
+            "㉣"
+          ],
+          "correct_answer": 4,
+          "correct_position": "㉣",
+          "points": 2,
+          "description": "보리가 아픈 글쓴이를 걱정하듯 곁에 있어 준 뒤 고마움을 느끼고, 그 후 보리를 좋아하게 되었다는 흐름이 자연스럽습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R060",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 60,
+          "original_question_number": 60,
+          "type": "common_passage_question",
+          "category": "공통 지문 이해",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "passage": "친구가 농장을 가서 친구의 강아지 ‘보리’를 며칠 돌봤습니다. 처음 봤을 때 보리는 저를 별로 반기지 않았습니다. 어느 날 몸이 안 좋아서 집에서 누워 있었습니다. 그때 보리는 저를 걱정하는 것처럼 제 앞에 있어 주었습니다. 그날 저는 보리가 정말 고마웠습니다. 그 후로 조금씩 보리를 좋아하게 돼서 요즘은 보리를 보러 친구 집에도 자주 갑니다.",
+          "options": [
+            "저는 요즘 보리를 볼 수 없습니다.",
+            "보리는 제가 키우는 강아지입니다.",
+            "친구는 보리가 많이 걱정되었습니다.",
+            "저는 처음에는 보리를 별로 안 좋아했습니다."
+          ],
+          "correct_answer": 4,
+          "points": 3,
+          "description": "처음에는 보리가 글쓴이를 반기지 않았고, 이후 보리를 좋아하게 되었다는 흐름에서 처음에는 보리를 별로 좋아하지 않았음을 알 수 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        }
+      ],
+      "exam_round": "100"
+    },
+    {
+      "set_id": "DRAFT-100-G061-062",
+      "source": "TOPIK1_Reading_100.pdf",
+      "source_pdf_pages": [
+        22
+      ],
+      "original_page_label": "21",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        61,
+        62
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[61~62] 다음을 읽고 물음에 답하십시오.",
+      "passage": "우리 아버지는 차로 출퇴근을 합니다. 그런데 아버지는 얼마 전부터 눈이 조금 나빠지셨습니다. 그래서 저는 아버지가 (   ) 쓰실 안경을 하나 사 드렸습니다. 안경을 쓰니까 훨씬 잘 보인다고 아버지가 좋아하셨습니다. 아버지가 이 안경을 쓰고 계속 안전하게 운전하셨으면 좋겠습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "items": [
+        {
+          "item_id": "DRAFT-100-R061",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 61,
+          "original_question_number": 61,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "문맥에 맞는 시간 표현 선택",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "운전하고",
+            "운전하지만",
+            "운전할 때",
+            "운전한 후에"
+          ],
+          "correct_answer": 3,
+          "points": 2,
+          "description": "아버지가 운전할 때 쓸 안경을 사 드렸다는 의미가 자연스럽습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R062",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 62,
+          "original_question_number": 62,
+          "type": "common_passage_question",
+          "category": "공통 지문 이해",
+          "diagnostic_area": "공통 지문의 세부 내용 이해",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "아버지는 걸어서 출근을 합니다.",
+            "저는 아버지에게 안경을 선물했습니다.",
+            "아버지는 오래전부터 눈이 나빴습니다.",
+            "저는 아버지가 운전을 안 하면 좋겠습니다."
+          ],
+          "correct_answer": 2,
+          "points": 2,
+          "description": "글쓴이는 눈이 조금 나빠진 아버지를 위해 운전할 때 쓸 안경을 사 드렸습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        }
+      ],
+      "exam_round": "100",
+      "source_exam": "TOPIK I Reading 100"
+    },
+    {
+      "set_id": "DRAFT-100-G063-064",
+      "source": "TOPIK1_Reading_100.pdf",
+      "source_pdf_pages": [
+        23
+      ],
+      "original_page_label": "22",
+      "set_type": "common_visual_passage_2_questions",
+      "target_slots": [
+        63,
+        64
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[63~64] 다음을 읽고 물음에 답하십시오.",
+      "passage": "한국대학교 학생지원센터 묻고 답하기 글입니다. 한국학과 1학년 김민수입니다. 어제 학생증을 잃어버려서 새로 만들어야 하는데요. 방학 때는 보통 몇 시까지 일합니까? 내일 사무실에 도착하면 5시쯤 될 것 같은데 그래도 학생증을 만들 수 있을까요? 답을 기다리겠습니다.",
+      "image_url": "./images/100_R063_064.png",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "items": [
+        {
+          "item_id": "DRAFT-100-R063",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 63,
+          "original_question_number": 63,
+          "type": "common_passage_question",
+          "category": "생활문 정보 파악",
+          "diagnostic_area": "공지문의 목적 파악",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "왜 윗글을 썼는지 맞는 것을 고르십시오.",
+          "options": [
+            "잃어버린 물건을 찾으려고",
+            "사무실 위치를 확인하려고",
+            "학생증 만드는 곳을 알아보려고",
+            "사무실 문 닫는 시간을 물어보려고"
+          ],
+          "correct_answer": 4,
+          "points": 2,
+          "description": "글쓴이는 방학 때 사무실이 몇 시까지 일하는지, 5시쯤 가도 학생증을 만들 수 있는지 묻고 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "image_url": "./images/100_R063_064.png",
+          "needs_image_review": true,
+          "exam_round": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R064",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 64,
+          "original_question_number": 64,
+          "type": "common_passage_question",
+          "category": "생활문 정보 파악",
+          "diagnostic_area": "공지문의 세부 정보 이해",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "저는 한국학과 학생입니다.",
+            "저는 오늘 학생증을 만들었습니다.",
+            "저는 방학하기 전에 사무실에 갈 겁니다.",
+            "저는 내일 두 시에 사무실에 가려고 합니다."
+          ],
+          "correct_answer": 1,
+          "points": 3,
+          "description": "글쓴이는 자신을 한국학과 1학년 김민수라고 소개하고 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "image_url": "./images/100_R063_064.png",
+          "needs_image_review": true,
+          "exam_round": "100"
+        }
+      ],
+      "needs_image_review": true,
+      "exam_round": "100",
+      "source_exam": "TOPIK I Reading 100"
+    },
+    {
+      "set_id": "DRAFT-100-G065-066",
+      "source": "TOPIK1_Reading_100.pdf",
+      "source_pdf_pages": [
+        24
+      ],
+      "original_page_label": "23",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        65,
+        66
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[65~66] 다음을 읽고 물음에 답하십시오.",
+      "passage": "집으로 꽃을 보내 주는 서비스가 있습니다. 인터넷으로 신청하면 한 달에 한 번 집에서 꽃을 (   ). 그 계절에 많이 피는 꽃을 보내 주기 때문에 매달 집 분위기를 바꾸기 좋습니다. 그리고 꽃의 이름과 꽃을 오래 볼 수 있는 방법도 카드에 써서 보내 줍니다. 가격도 별로 비싸지 않아서 인기가 많습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "items": [
+        {
+          "item_id": "DRAFT-100-R065",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 65,
+          "original_question_number": 65,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "글의 흐름에 맞는 표현 선택",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "받지 않습니다",
+            "받기 때문입니다",
+            "받을 수 있습니다",
+            "받은 적이 없습니다"
+          ],
+          "correct_answer": 3,
+          "points": 2,
+          "description": "인터넷으로 신청하면 집에서 꽃을 받을 수 있다는 서비스 설명입니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R066",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 66,
+          "original_question_number": 66,
+          "type": "common_passage_question",
+          "category": "긴 지문 이해",
+          "diagnostic_area": "긴 글의 세부 정보 이해",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "이 서비스는 가격이 비쌉니다.",
+            "이 서비스는 전화로 신청해야 합니다.",
+            "이 서비스에서는 꽃 이름을 알려 줍니다.",
+            "이 서비스에서는 매일 집으로 꽃을 보냅니다."
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "글에 꽃의 이름과 꽃을 오래 볼 수 있는 방법을 카드에 써서 보내 준다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        }
+      ],
+      "exam_round": "100",
+      "source_exam": "TOPIK I Reading 100"
+    },
+    {
+      "set_id": "DRAFT-100-G067-068",
+      "source": "TOPIK1_Reading_100.pdf",
+      "source_pdf_pages": [
+        25
+      ],
+      "original_page_label": "24",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        67,
+        68
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[67~68] 다음을 읽고 물음에 답하십시오.",
+      "passage": "1970년 이전까지 세계 축구 대회에서는 갈색 공을 사용했습니다. 그런데 옛날 흑백텔레비전에서는 갈색 공이 잘 안 보였습니다. 그래서 텔레비전으로도 (   ) 하기 위해 갈색을 흰색으로 바꾸고 무늬도 넣었습니다. 이렇게 하니까 흑백텔레비전에서도 축구공을 잘 볼 수 있었습니다. 컬러텔레비전이 나온 후에는 다양한 디자인과 색깔의 공을 사용하게 되었습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "items": [
+        {
+          "item_id": "DRAFT-100-R067",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 67,
+          "original_question_number": 67,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "글의 흐름에 맞는 표현 선택",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "공이 잘 보이게",
+            "얼굴을 쉽게 찾게",
+            "선수를 많이 알게",
+            "소리가 크게 들리게"
+          ],
+          "correct_answer": 1,
+          "points": 3,
+          "description": "흑백텔레비전에서 갈색 공이 잘 안 보여서 공이 잘 보이게 하려고 흰색으로 바꾸고 무늬를 넣었다는 흐름입니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R068",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 68,
+          "original_question_number": 68,
+          "type": "common_passage_question",
+          "category": "긴 지문 이해",
+          "diagnostic_area": "긴 글의 세부 정보 이해",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "윗글의 내용과 같은 것을 고르십시오.",
+          "options": [
+            "갈색 공은 흑백텔레비전에서 잘 보이지 않았습니다.",
+            "지금 쓰는 축구공은 1970년 이전과 같은 색깔입니다.",
+            "축구 대회가 처음 열렸을 때는 흰색 공을 사용했습니다.",
+            "컬러텔레비전이 나온 후 공에 무늬를 넣기 시작했습니다."
+          ],
+          "correct_answer": 1,
+          "points": 3,
+          "description": "글에 옛날 흑백텔레비전에서는 갈색 공이 잘 안 보였다고 되어 있습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        }
+      ],
+      "exam_round": "100",
+      "source_exam": "TOPIK I Reading 100"
+    },
+    {
+      "set_id": "DRAFT-100-G069-070",
+      "source": "TOPIK1_Reading_100.pdf",
+      "source_pdf_pages": [
+        26
+      ],
+      "original_page_label": "25",
+      "set_type": "common_passage_2_questions",
+      "target_slots": [
+        69,
+        70
+      ],
+      "level": "TOPIK I",
+      "section": "reading",
+      "instruction": "[69~70] 다음을 읽고 물음에 답하십시오.",
+      "passage": "어제 아이와 집 근처 시장에 갔습니다. 시장은 사람도 많고 복잡했습니다. 우리는 생선을 사려고 생선 가게들이 있는 쪽으로 갔습니다. 아이는 생선 가게를 재미있어했지만 저는 생선 냄새가 싫었습니다. 빨리 생선을 사고 밖으로 나가고 싶었습니다. 그때 아이가 생선을 구경하다가 말했습니다. “엄마, 여기 오니까 바다 냄새가 나요!” 그 말을 들으니까 (   ) 웃음이 났습니다. 덕분에 기분 좋게 생선을 사고 집으로 돌아왔습니다.",
+      "image_url": "",
+      "needs_review": true,
+      "needs_text_review": true,
+      "needs_answer_review": true,
+      "answer_source": "assistant_provisional",
+      "items": [
+        {
+          "item_id": "DRAFT-100-R069",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 69,
+          "original_question_number": 69,
+          "type": "common_passage_question",
+          "category": "빈칸 채우기",
+          "diagnostic_area": "글의 흐름에 맞는 표현 선택",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "㉠에 들어갈 말로 가장 알맞은 것을 고르십시오.",
+          "options": [
+            "생선이 아주 맛있어서",
+            "아이의 생각이 귀여워서",
+            "빨리 집에 갈 수 있어서",
+            "바다 여행이 재미있어서"
+          ],
+          "correct_answer": 2,
+          "points": 3,
+          "description": "생선 냄새를 바다 냄새라고 말한 아이의 생각이 귀엽게 느껴져 웃음이 났다는 흐름입니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        },
+        {
+          "item_id": "DRAFT-100-R070",
+          "source": "TOPIK1_Reading_100",
+          "source_exam": "TOPIK I 100회",
+          "source_pdf": "TOPIK1_Reading_100.pdf",
+          "target_slot": 70,
+          "original_question_number": 70,
+          "type": "common_passage_question",
+          "category": "긴 지문 이해",
+          "diagnostic_area": "긴 글의 추론 이해",
+          "instruction": "다음을 읽고 물음에 답하십시오.",
+          "question": "윗글의 내용으로 알 수 있는 것을 고르십시오.",
+          "options": [
+            "집 근처 시장은 어제 조용했습니다.",
+            "저는 냄새 때문에 생선을 안 샀습니다.",
+            "저는 아이 덕분에 기분이 좋아졌습니다.",
+            "아이는 시장에서 나가고 싶어 했습니다."
+          ],
+          "correct_answer": 3,
+          "points": 3,
+          "description": "처음에는 생선 냄새가 싫었지만 아이의 말 덕분에 웃고 기분 좋게 생선을 샀습니다.",
+          "needs_review": true,
+          "needs_text_review": true,
+          "needs_answer_review": true,
+          "answer_source": "assistant_provisional",
+          "exam_round": "100"
+        }
+      ],
+      "exam_round": "100",
+      "source_exam": "TOPIK I Reading 100"
+    }
+  ],
+  "last_merged_source": "TOPIK1_Reading_103회",
+  "last_merged_at": "2026-05-23T10:54:43.315Z",
+  "slot_candidate_counts": {
+    "31": 2,
+    "32": 2,
+    "33": 2,
+    "34": 2,
+    "35": 2,
+    "36": 2,
+    "37": 2,
+    "38": 2,
+    "39": 2,
+    "40": 2,
+    "41": 2,
+    "42": 2,
+    "43": 2,
+    "44": 2,
+    "45": 2,
+    "46": 2,
+    "47": 2,
+    "48": 2,
+    "49": 2,
+    "50": 2,
+    "51": 2,
+    "52": 2,
+    "53": 2,
+    "54": 2,
+    "55": 2,
+    "56": 2,
+    "57": 2,
+    "58": 2,
+    "59": 2,
+    "60": 2,
+    "61": 2,
+    "62": 2,
+    "63": 2,
+    "64": 2,
+    "65": 2,
+    "66": 2,
+    "67": 2,
+    "68": 2,
+    "69": 2,
+    "70": 2
+  },
+  "merge_history": [
+    {
+      "merged_at": "2026-05-23T10:54:43.315Z",
+      "source_exam": "TOPIK I 103회",
+      "source_file": "bank-import-draft-103-complete.json",
+      "added_single_items": 18,
+      "added_passage_sets": 11,
+      "added_passage_set_items": 22,
+      "answer_key_status": "assistant_provisional_no_official_answer_key",
+      "needs_review": true
+    },
+    {
+      "merged_at": "2026-05-23T17:02:36.946Z",
+      "merge_source": "bank-import-draft-100-complete.json",
+      "output_file": "question-bank-merged-100.json",
+      "before_count": {
+        "single_items": 36,
+        "passage_sets": 22,
+        "passage_set_items": 44,
+        "total_questions": 80
+      },
+      "import_count": {
+        "single_items": 18,
+        "passage_sets": 11,
+        "passage_set_items": 22,
+        "total_questions": 40
+      },
+      "after_count": {
+        "single_items": 54,
+        "passage_sets": 33,
+        "passage_set_items": 66,
+        "total_questions": 120
+      },
+      "added_single_items": 18,
+      "added_passage_sets": 11,
+      "skipped_single_items": 0,
+      "skipped_passage_sets": 0
+    }
+  ],
+  "updated_at": "2026-06-04T00:00:00+09:00"
+}
