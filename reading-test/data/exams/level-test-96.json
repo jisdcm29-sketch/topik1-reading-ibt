@@ -1,6 +1,6 @@
 {
-  "exam_version": "STEP40-1-round-96-leveltest-text-applied-v1",
-  "exam_id": "leveltest-96",
+  "exam_version": "STEP42-1-leveltest-96-data-contract-fixed-v1",
+  "exam_id": "TOPIK1-READING-96-LEVELTEST",
   "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
   "test_level": "TOPIK I",
   "level": "TOPIK I",
@@ -16,33 +16,30 @@
   "time_limit_minutes": 30,
   "total_possible_points": 51,
   "is_image_based_draft": false,
-  "leveltest_connection": {
-    "source_full_exam": "reading-96.json",
-    "sampling_rule": "TOPIK I 31~70번 대표 20문항",
-    "selected_question_numbers": [
-      31,
-      33,
-      34,
-      37,
-      40,
-      43,
-      46,
-      48,
-      49,
-      50,
-      57,
-      58,
-      59,
-      60,
-      63,
-      64,
-      67,
-      68,
-      69,
-      70
-    ]
-  },
-  "description": "제96회 TOPIK I 읽기 대표 20문항 레벨테스트입니다.",
+  "is_full_40_question_set": false,
+  "leveltest_slots": [
+    31,
+    33,
+    34,
+    37,
+    40,
+    43,
+    46,
+    48,
+    49,
+    50,
+    57,
+    58,
+    59,
+    60,
+    63,
+    64,
+    67,
+    68,
+    69,
+    70
+  ],
+  "description": "제96회 TOPIK I 읽기 20문항 레벨테스트입니다. STEP42-1: 57~58 문장 순서 배열 데이터 계약, 59~60 문장 삽입 공통 지문 동기화 필드를 보강했습니다.",
   "questions": [
     {
       "id": "FIXED-96-R031-QB96-R031-001",
@@ -76,7 +73,8 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96"
     },
     {
       "id": "FIXED-96-R033-QB96-R033-001",
@@ -110,7 +108,8 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96"
     },
     {
       "id": "FIXED-96-R034-QB96-R034-001",
@@ -144,7 +143,8 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96"
     },
     {
       "id": "FIXED-96-R037-QB96-R037-001",
@@ -178,7 +178,8 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96"
     },
     {
       "id": "FIXED-96-R040-QB96-R040-001",
@@ -212,7 +213,8 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96"
     },
     {
       "id": "FIXED-96-R043-QB96-R043-001",
@@ -246,7 +248,8 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96"
     },
     {
       "id": "FIXED-96-R046-QB96-R046-001",
@@ -280,7 +283,8 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96"
     },
     {
       "id": "FIXED-96-R048-QB96-R048-001",
@@ -314,7 +318,8 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96"
     },
     {
       "id": "FIXED-96-R049-QB96-R049-001",
@@ -348,7 +353,14 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "passage_group_id": "R096-G049-050",
+      "passage_group_title": "[49~50] 공통 지문",
+      "passage_group_numbers": [
+        49,
+        50
+      ]
     },
     {
       "id": "FIXED-96-R050-QB96-R050-001",
@@ -382,7 +394,14 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "passage_group_id": "R096-G049-050",
+      "passage_group_title": "[49~50] 공통 지문",
+      "passage_group_numbers": [
+        49,
+        50
+      ]
     },
     {
       "id": "FIXED-96-R057-QB96-R057-001",
@@ -416,7 +435,44 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "correct_order": [
+        "나",
+        "라",
+        "가",
+        "다"
+      ],
+      "order_choice_orders": {
+        "1": [
+          "나",
+          "가",
+          "다",
+          "라"
+        ],
+        "2": [
+          "나",
+          "라",
+          "가",
+          "다"
+        ],
+        "3": [
+          "라",
+          "나",
+          "다",
+          "가"
+        ],
+        "4": [
+          "라",
+          "다",
+          "가",
+          "나"
+        ]
+      },
+      "start_candidate_labels": [
+        "나",
+        "라"
+      ]
     },
     {
       "id": "FIXED-96-R058-QB96-R058-001",
@@ -450,7 +506,44 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "correct_order": [
+        "가",
+        "다",
+        "나",
+        "라"
+      ],
+      "order_choice_orders": {
+        "1": [
+          "가",
+          "다",
+          "나",
+          "라"
+        ],
+        "2": [
+          "가",
+          "라",
+          "다",
+          "나"
+        ],
+        "3": [
+          "라",
+          "가",
+          "나",
+          "다"
+        ],
+        "4": [
+          "라",
+          "나",
+          "다",
+          "가"
+        ]
+      },
+      "start_candidate_labels": [
+        "가",
+        "라"
+      ]
     },
     {
       "id": "FIXED-96-R059-QB96-R059-001",
@@ -484,7 +577,29 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "passage_group_id": "R096-G059-060",
+      "passage_group_title": "[59~60] 공통 지문",
+      "passage_group_numbers": [
+        59,
+        60
+      ],
+      "insert_sentence": "어느 날 친구가 저에게 연극 동아리를 소개해 주었습니다.",
+      "insert_positions": [
+        "㉠",
+        "㉡",
+        "㉢",
+        "㉣"
+      ],
+      "insert_markers": [
+        "㉠",
+        "㉡",
+        "㉢",
+        "㉣"
+      ],
+      "correct_position": "㉠",
+      "interaction_mode": "sentence_insert"
     },
     {
       "id": "FIXED-96-R060-QB96-R060-001",
@@ -518,7 +633,15 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "passage_group_id": "R096-G059-060",
+      "passage_group_title": "[59~60] 공통 지문",
+      "passage_group_numbers": [
+        59,
+        60
+      ],
+      "interaction_mode": "common_passage_followup"
     },
     {
       "id": "FIXED-96-R063-QB96-R063-001",
@@ -552,7 +675,14 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "passage_group_id": "R096-G063-064",
+      "passage_group_title": "[63~64] 공통 지문",
+      "passage_group_numbers": [
+        63,
+        64
+      ]
     },
     {
       "id": "FIXED-96-R064-QB96-R064-001",
@@ -586,7 +716,14 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "passage_group_id": "R096-G063-064",
+      "passage_group_title": "[63~64] 공통 지문",
+      "passage_group_numbers": [
+        63,
+        64
+      ]
     },
     {
       "id": "FIXED-96-R067-QB96-R067-001",
@@ -620,7 +757,14 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "passage_group_id": "R096-G067-068",
+      "passage_group_title": "[67~68] 공통 지문",
+      "passage_group_numbers": [
+        67,
+        68
+      ]
     },
     {
       "id": "FIXED-96-R068-QB96-R068-001",
@@ -654,7 +798,14 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "passage_group_id": "R096-G067-068",
+      "passage_group_title": "[67~68] 공통 지문",
+      "passage_group_numbers": [
+        67,
+        68
+      ]
     },
     {
       "id": "FIXED-96-R069-QB96-R069-001",
@@ -688,7 +839,14 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "passage_group_id": "R096-G069-070",
+      "passage_group_title": "[69~70] 공통 지문",
+      "passage_group_numbers": [
+        69,
+        70
+      ]
     },
     {
       "id": "FIXED-96-R070-QB96-R070-001",
@@ -722,7 +880,14 @@
       "source_visible_page": null,
       "needs_review": false,
       "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
-      "exam_type": "leveltest"
+      "exam_type": "leveltest",
+      "generated_exam_id": "TOPIK1-READING-FILE-leveltest-96",
+      "passage_group_id": "R096-G069-070",
+      "passage_group_title": "[69~70] 공통 지문",
+      "passage_group_numbers": [
+        69,
+        70
+      ]
     }
   ]
 }

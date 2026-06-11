@@ -1,5 +1,5 @@
 {
-  "exam_version": "STEP40-1-round-96-text-applied-v1",
+  "exam_version": "STEP42-round-96-data-contract-guard-v1",
   "exam_id": "reading-96",
   "generated_exam_id": "TOPIK1-READING-FILE-full-96",
   "test_level": "TOPIK I",
@@ -16,7 +16,7 @@
   "time_limit_minutes": 60,
   "total_possible_points": 100,
   "is_image_based_draft": false,
-  "description": "제96회 TOPIK I 읽기 31~70번 실제 문항 적용본입니다. 40~42번과 63~64번은 images 폴더의 96_R040.png, 96_R041.png, 96_R042.png, 96_R063_064.png를 사용합니다.",
+  "description": "제96회 TOPIK I 읽기 31~70번 실제 문항 적용본입니다. 40~42번과 63~64번은 images 폴더의 96_R040.png, 96_R041.png, 96_R042.png, 96_R063_064.png를 사용합니다. / STEP42: 57~58 order_choice_orders, 59 insert_sentence, common passage_group_id added for data contract validation.",
   "questions": [
     {
       "id": "FIXED-96-R031-QB96-R031-001",
@@ -643,7 +643,13 @@
       "source_pdf_page": 16,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-049-050",
+      "passage_group_title": "[49~50] 공통 지문",
+      "passage_group_numbers": [
+        49,
+        50
+      ]
     },
     {
       "id": "FIXED-96-R050-QB96-R050-001",
@@ -676,7 +682,13 @@
       "source_pdf_page": 16,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-049-050",
+      "passage_group_title": "[49~50] 공통 지문",
+      "passage_group_numbers": [
+        49,
+        50
+      ]
     },
     {
       "id": "FIXED-96-R051-QB96-R051-001",
@@ -709,7 +721,13 @@
       "source_pdf_page": 17,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-051-052",
+      "passage_group_title": "[51~52] 공통 지문",
+      "passage_group_numbers": [
+        51,
+        52
+      ]
     },
     {
       "id": "FIXED-96-R052-QB96-R052-001",
@@ -742,7 +760,13 @@
       "source_pdf_page": 17,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-051-052",
+      "passage_group_title": "[51~52] 공통 지문",
+      "passage_group_numbers": [
+        51,
+        52
+      ]
     },
     {
       "id": "FIXED-96-R053-QB96-R053-001",
@@ -775,7 +799,13 @@
       "source_pdf_page": 18,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-053-054",
+      "passage_group_title": "[53~54] 공통 지문",
+      "passage_group_numbers": [
+        53,
+        54
+      ]
     },
     {
       "id": "FIXED-96-R054-QB96-R054-001",
@@ -808,7 +838,13 @@
       "source_pdf_page": 18,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-053-054",
+      "passage_group_title": "[53~54] 공통 지문",
+      "passage_group_numbers": [
+        53,
+        54
+      ]
     },
     {
       "id": "FIXED-96-R055-QB96-R055-001",
@@ -841,7 +877,13 @@
       "source_pdf_page": 19,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-055-056",
+      "passage_group_title": "[55~56] 공통 지문",
+      "passage_group_numbers": [
+        55,
+        56
+      ]
     },
     {
       "id": "FIXED-96-R056-QB96-R056-001",
@@ -874,7 +916,13 @@
       "source_pdf_page": 19,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-055-056",
+      "passage_group_title": "[55~56] 공통 지문",
+      "passage_group_numbers": [
+        55,
+        56
+      ]
     },
     {
       "id": "FIXED-96-R057-QB96-R057-001",
@@ -907,7 +955,44 @@
       "source_pdf_page": 20,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "correct_order": [
+        "나",
+        "라",
+        "가",
+        "다"
+      ],
+      "order_choice_orders": {
+        "1": [
+          "나",
+          "가",
+          "다",
+          "라"
+        ],
+        "2": [
+          "나",
+          "라",
+          "가",
+          "다"
+        ],
+        "3": [
+          "라",
+          "나",
+          "다",
+          "가"
+        ],
+        "4": [
+          "라",
+          "다",
+          "가",
+          "나"
+        ]
+      },
+      "start_candidate_labels": [
+        "나",
+        "라"
+      ],
+      "interaction_mode": "sentence_order_choice"
     },
     {
       "id": "FIXED-96-R058-QB96-R058-001",
@@ -940,7 +1025,44 @@
       "source_pdf_page": 20,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "correct_order": [
+        "가",
+        "다",
+        "나",
+        "라"
+      ],
+      "order_choice_orders": {
+        "1": [
+          "가",
+          "다",
+          "나",
+          "라"
+        ],
+        "2": [
+          "가",
+          "라",
+          "다",
+          "나"
+        ],
+        "3": [
+          "라",
+          "가",
+          "나",
+          "다"
+        ],
+        "4": [
+          "라",
+          "나",
+          "다",
+          "가"
+        ]
+      },
+      "start_candidate_labels": [
+        "가",
+        "라"
+      ],
+      "interaction_mode": "sentence_order_choice"
     },
     {
       "id": "FIXED-96-R059-QB96-R059-001",
@@ -973,7 +1095,28 @@
       "source_pdf_page": 21,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-059-060",
+      "passage_group_title": "[59~60] 공통 지문",
+      "passage_group_numbers": [
+        59,
+        60
+      ],
+      "insert_sentence": "어느 날 친구가 저에게 연극 동아리를 소개해 주었습니다.",
+      "insert_positions": [
+        "㉠",
+        "㉡",
+        "㉢",
+        "㉣"
+      ],
+      "insert_markers": [
+        "㉠",
+        "㉡",
+        "㉢",
+        "㉣"
+      ],
+      "correct_position": "㉠",
+      "interaction_mode": "sentence_insert"
     },
     {
       "id": "FIXED-96-R060-QB96-R060-001",
@@ -1006,7 +1149,14 @@
       "source_pdf_page": 21,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-059-060",
+      "passage_group_title": "[59~60] 공통 지문",
+      "passage_group_numbers": [
+        59,
+        60
+      ],
+      "interaction_mode": "common_passage_followup"
     },
     {
       "id": "FIXED-96-R061-QB96-R061-001",
@@ -1039,7 +1189,13 @@
       "source_pdf_page": 22,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-061-062",
+      "passage_group_title": "[61~62] 공통 지문",
+      "passage_group_numbers": [
+        61,
+        62
+      ]
     },
     {
       "id": "FIXED-96-R062-QB96-R062-001",
@@ -1072,7 +1228,13 @@
       "source_pdf_page": 22,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-061-062",
+      "passage_group_title": "[61~62] 공통 지문",
+      "passage_group_numbers": [
+        61,
+        62
+      ]
     },
     {
       "id": "FIXED-96-R063-QB96-R063-001",
@@ -1105,7 +1267,13 @@
       "source_pdf_page": 23,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-063-064",
+      "passage_group_title": "[63~64] 공통 지문",
+      "passage_group_numbers": [
+        63,
+        64
+      ]
     },
     {
       "id": "FIXED-96-R064-QB96-R064-001",
@@ -1138,7 +1306,13 @@
       "source_pdf_page": 23,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-063-064",
+      "passage_group_title": "[63~64] 공통 지문",
+      "passage_group_numbers": [
+        63,
+        64
+      ]
     },
     {
       "id": "FIXED-96-R065-QB96-R065-001",
@@ -1171,7 +1345,13 @@
       "source_pdf_page": 24,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-065-066",
+      "passage_group_title": "[65~66] 공통 지문",
+      "passage_group_numbers": [
+        65,
+        66
+      ]
     },
     {
       "id": "FIXED-96-R066-QB96-R066-001",
@@ -1204,7 +1384,13 @@
       "source_pdf_page": 24,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-065-066",
+      "passage_group_title": "[65~66] 공통 지문",
+      "passage_group_numbers": [
+        65,
+        66
+      ]
     },
     {
       "id": "FIXED-96-R067-QB96-R067-001",
@@ -1237,7 +1423,13 @@
       "source_pdf_page": 25,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-067-068",
+      "passage_group_title": "[67~68] 공통 지문",
+      "passage_group_numbers": [
+        67,
+        68
+      ]
     },
     {
       "id": "FIXED-96-R068-QB96-R068-001",
@@ -1270,7 +1462,13 @@
       "source_pdf_page": 25,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-067-068",
+      "passage_group_title": "[67~68] 공통 지문",
+      "passage_group_numbers": [
+        67,
+        68
+      ]
     },
     {
       "id": "FIXED-96-R069-QB96-R069-001",
@@ -1303,7 +1501,13 @@
       "source_pdf_page": 26,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-069-070",
+      "passage_group_title": "[69~70] 공통 지문",
+      "passage_group_numbers": [
+        69,
+        70
+      ]
     },
     {
       "id": "FIXED-96-R070-QB96-R070-001",
@@ -1336,7 +1540,13 @@
       "source_pdf_page": 26,
       "source_visible_page": null,
       "needs_review": false,
-      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다."
+      "review_note": "96회 PDF 원문 이미지와 정답표를 기준으로 텍스트형 문항으로 입력했습니다. 40~42번과 63~64번은 이미지 자료를 함께 사용합니다.",
+      "passage_group_id": "R96-069-070",
+      "passage_group_title": "[69~70] 공통 지문",
+      "passage_group_numbers": [
+        69,
+        70
+      ]
     }
   ]
 }
