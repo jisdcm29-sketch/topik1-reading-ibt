@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>TOPIK I Reading IBT Simulation</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --topik-blue: #0877f2;
+      --topik-blue-dark: #0058c8;
+      --topik-blue-soft: #e9f3ff;
+      --nav-blue-soft: #dff0ff;
+      --page-bg: #f2f4f7;
+      --paper-bg: #ffffff;
+      --line: #e3e6ea;
+      --line-dark: #cbd3dd;
+      --text: #202124;
+      --muted: #5f6368;
+      --red: #d93025;
+      --green: #188038;
+      --orange: #e88900;
+      --shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans KR", "Malgun Gothic", sans-serif;
+      background: var(--page-bg);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    select {
+      font-family: inherit;
+    }
+
+    button {
+      user-select: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* 시작 화면 */
+    .start-page {
+      min-height: 100vh;
+      padding: 40px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: var(--page-bg);
+    }
+
+    .start-card {
+      width: min(920px, 100%);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
+
+    .start-title {
+      margin: 0 0 12px;
+      color: #003f8f;
+      font-size: 32px;
+      letter-spacing: -0.5px;
+    }
+
+    .start-subtitle {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .notice-box {
+      margin: 24px 0;
+      padding: 18px;
+      border-radius: 12px;
+      background: var(--topik-blue-soft);
+      border: 1px solid #b9d8ff;
+      line-height: 1.75;
+    }
+
+    .notice-box strong {
+      color: #003f8f;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 22px 0 8px;
+    }
+
+    .form-row label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .form-row input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--line-dark);
+      border-radius: 10px;
+      font-size: 16px;
+      background: #fff;
+    }
+
+    .form-row input:focus {
+      outline: 3px solid rgba(8, 119, 242, 0.18);
+      border-color: var(--topik-blue);
+    }
+
+    .message {
+      min-height: 24px;
+      margin-top: 10px;
+      color: var(--red);
+      font-weight: 800;
+    }
+
+    .button {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      background: var(--topik-blue);
+      color: #fff;
+    }
+
+    .button:hover {
+      filter: brightness(0.95);
+    }
+
+    .button.secondary {
+      background: #ffffff;
+      color: var(--topik-blue);
+      border: 2px solid var(--topik-blue);
+    }
+
+    .button.gray {
+      background: #ffffff;
+      color: #555;
+      border: 1px solid var(--line-dark);
+    }
+
+    .button.warning {
+      background: var(--orange);
+      color: #111827;
+    }
+
+    .button.danger {
+      background: var(--red);
+    }
+
+    .button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: none;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-top: 18px;
+    }
+
+    /* 시험 화면 */
+    .exam-page {
+      min-height: 100vh;
+      padding-bottom: 92px;
+      background: var(--page-bg);
+    }
+
+    .topik-header {
+      min-height: 76px;
+      background: var(--topik-blue);
+      color: #ffffff;
+      display: grid;
+      grid-template-columns: 280px 1fr 280px;
+      align-items: center;
+      padding: 0 28px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+      gap: 12px;
+    }
+
+    .candidate-box {
+      line-height: 1.3;
+    }
+
+    .candidate-label {
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    .candidate-name {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+    }
+
+    .candidate-phone {
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0.95;
+    }
+
+    .exam-title {
+      text-align: center;
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+    }
+
+    .timer-pill {
+      justify-self: end;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: #ffffff;
+      color: var(--topik-blue);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .timer-pill .time {
+      color: #1f2a44;
+      font-size: 22px;
+      letter-spacing: 0.5px;
+    }
+
+    .timer-pill.warning {
+      background: #fff3df;
+      color: #a85d00;
+    }
+
+    .timer-pill.danger {
+      background: #ffecec;
+      color: var(--red);
+    }
+
+     .exam-shell {
+      width: min(1360px, calc(100% - 64px));
+      margin: 18px auto 0;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      min-height: calc(100vh - 178px);
+      overflow: hidden;
+    }
+
+    .exam-paper {
+      padding: 32px 38px 40px;
+      min-height: calc(100vh - 178px);
+      overflow-y: auto;
+    }
+
+    .section-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-title {
+      margin: 0;
+      color: #002a72;
+      font-size: 30px;
+      font-weight: 900;
+    }
+
+    .answer-count {
+      min-width: 82px;
+      text-align: center;
+      padding: 9px 16px;
+      color: var(--topik-blue);
+      border: 2px solid var(--topik-blue);
+      border-radius: 8px;
+      font-weight: 900;
+      font-size: 17px;
+      background: #ffffff;
+    }
+
+    .question-instruction {
+      margin: 30px 0 24px;
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1.7;
+      color: #222;
+    }
+
+    .question-stage {
+      min-height: 360px;
+      border: 1px solid var(--line);
+      background: #fbfbfb;
+      padding: 0;
+    }
+
+    .view-tab {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 62px;
+      height: 38px;
+      background: #555;
+      color: #ffffff;
+      font-weight: 900;
+      margin: -1px 0 0 -1px;
+    }
+
+    .blank-box {
+      margin: 0;
+      padding: 32px 22px 38px;
+      min-height: 360px;
+      background: #ffffff;
+    }
+
+    .blank-sentence {
+      min-height: 96px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      font-size: 22px;
+      line-height: 2.05;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .blank-select {
+      min-width: 260px;
+      height: 48px;
+      padding: 0 12px;
+      font-size: 20px;
+      border: 1px solid #999;
+      background: #ffffff;
+    }
+
+    .reading-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(390px, 0.92fr);
+      gap: 20px;
+      min-height: 480px;
+      background: #ffffff;
+      padding: 20px;
+    }
+
+    .passage-panel,
+    .question-panel {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      overflow: hidden;
+      min-height: 480px;
+    }
+
+    .panel-label {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 900;
+      color: #003f8f;
+      background: #fafcff;
+      font-size: 17px;
+    }
+
+    .passage-content {
+      padding: 24px;
+      font-size: 20px;
+      line-height: 2;
+      white-space: pre-line;
+      min-height: 400px;
+      overflow-y: auto;
+      max-height: 600px;
+    }
+
+    .image-area {
+      padding: 20px 24px 0;
+    }
+
+    .image-area img {
+      max-width: 100%;
+      max-height: 560px;
+    }
+
+    .question-content {
+      padding: 24px;
+    }
+
+    .question-text {
+      margin: 0 0 20px;
+      font-size: 21px;
+      font-weight: 900;
+      line-height: 1.7;
+    }
+
+    .options-area {
+      display: grid;
+      gap: 14px;
+    }
+
+    .option-button {
+      width: 100%;
+      min-height: 56px;
+      padding: 14px 18px;
+      border: 1px solid #bfc8d5;
+      border-radius: 9px;
+      background: #ffffff;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 19px;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .option-button:hover {
+      background: var(--topik-blue-soft);
+      border-color: var(--topik-blue);
+    }
+
+    .option-button.selected {
+      background: #dcecff;
+      border-color: var(--topik-blue);
+      box-shadow: inset 0 0 0 1px var(--topik-blue);
+      font-weight: 900;
+    }
+
+    .review-badge {
+      display: none !important;
+    }
+
+    /* 하단 네비게이션 */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      min-height: 82px;
+      background: var(--nav-blue-soft);
+      border-top: 2px solid #8fc6ff;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      padding: 12px 14%;
+      gap: 20px;
+    }
+
+    .nav-left {
+      justify-self: start;
+    }
+
+    .nav-center {
+      justify-self: center;
+    }
+
+    .nav-right {
+      justify-self: end;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-button {
+      min-width: 172px;
+      height: 42px;
+      border-radius: 9px;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      background: #ffffff;
+      color: var(--topik-blue);
+      border: 2px solid var(--topik-blue);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .nav-button:hover {
+      background: #f4faff;
+    }
+
+    .nav-button:disabled {
+      color: #9bbce6;
+      border-color: #b9d8ff;
+      background: #eef7ff;
+      cursor: not-allowed;
+    }
+
+    .nav-button.danger {
+      background: var(--red);
+      border-color: var(--red);
+      color: #ffffff;
+      min-width: 94px;
+    }
+
+    .nav-button.warning {
+      background: #ffffff;
+      border-color: var(--orange);
+      color: #9a5b00;
+      min-width: 120px;
+    }
+
+    /*
+      화면 단순화:
+      - 검토 표시 기능은 화면에서 제거한다.
+      - 제출 버튼은 기본적으로 숨긴 뒤, 하단 스크립트가 70번에서만 보이게 한다.
+      - 기존 reading-test.js가 id를 찾을 수 있도록 요소 자체는 남긴다.
+    */
+    #reviewButton,
+    #reviewTextInline,
+    #submitFromListButton,
+    .legend-item.review-legend-item {
+      display: none !important;
+    }
+
+    #submitButton {
+      display: none;
+    }
+
+    /* 전체 문제 팝업 */
+    .question-list-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.36);
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .question-list-panel {
+      width: min(760px, 100%);
+      max-height: min(720px, 92vh);
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .question-list-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      background: #fbfcfe;
+    }
+
+    .question-list-header h2 {
+      margin: 0 0 4px;
+      color: #003f8f;
+      font-size: 22px;
+    }
+
+    .question-list-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .question-list-body {
+      padding: 16px 18px;
+      overflow-y: auto;
+    }
+
+    .list-status {
+      margin-bottom: 14px;
+      padding: 12px;
+      background: var(--topik-blue-soft);
+      border: 1px solid #b9d8ff;
+      border-radius: 12px;
+      color: #003f8f;
+      font-weight: 900;
+    }
+
+    .legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1px solid var(--line-dark);
+      background: #fff;
+    }
+
+    .legend-dot.current {
+      background: var(--topik-blue);
+      border-color: var(--topik-blue);
+    }
+
+    .legend-dot.answered {
+      background: #e7f6ec;
+      border-color: var(--green);
+    }
+
+    .legend-dot.review {
+      display: none !important;
+    }
+
+    .progress-area {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 8px;
+    }
+
+    .progress-dot {
+      width: 100%;
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--line-dark);
+      background: #ffffff;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .progress-dot.current {
+      background: var(--topik-blue);
+      color: #fff;
+      border-color: var(--topik-blue);
+    }
+
+    .progress-dot.answered {
+      background: #e7f6ec;
+      border-color: var(--green);
+      color: #0b5f37;
+    }
+
+    .progress-dot.review {
+      background: #ffffff;
+      border-color: var(--line-dark);
+      color: var(--text);
+    }
+
+    .progress-dot.current.answered,
+    .progress-dot.current.review {
+      background: var(--topik-blue);
+      color: #fff;
+      border-color: var(--topik-blue);
+    }
+
+    .question-list-footer {
+      padding: 12px 18px;
+      border-top: 1px solid var(--line);
+      background: #fbfcfe;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .submit-warning {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #ffecec;
+      border: 1px solid #ffc4c4;
+      color: #7f1d1d;
+      font-size: 13px;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    /* 결과 */
+    .result-page {
+      min-height: 100vh;
+      background: var(--page-bg);
+      padding: 24px 16px;
+    }
+
+    .result-card {
+      width: min(960px, 100%);
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .result-card h1 {
+      margin: 0 0 8px;
+      color: #003f8f;
+      font-size: 30px;
+    }
+
+    .result-message {
+      margin: 18px 0;
+      padding: 18px;
+      border-radius: 14px;
+      background: var(--topik-blue-soft);
+      border: 1px solid #b9d8ff;
+      line-height: 1.8;
+      color: #10386b;
+      font-weight: 800;
+    }
+
+    .result-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .summary-card {
+      padding: 16px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #003f8f;
+    }
+
+    .download-buttons {
+      margin-top: 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topik-header {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 8px;
+        padding: 12px;
+        text-align: center;
+      }
+
+      .timer-pill {
+        justify-self: center;
+      }
+
+      .exam-shell {
+        width: calc(100% - 20px);
+      }
+
+      .exam-paper {
+        padding: 20px;
+      }
+
+      .reading-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .bottom-nav {
+        grid-template-columns: 1fr;
+        height: auto;
+        padding: 10px;
+        gap: 8px;
+      }
+
+      .nav-left,
+      .nav-center,
+      .nav-right {
+        justify-self: center;
+      }
+
+      .progress-area {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
+      .result-summary {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .start-card,
+      .result-card {
+        padding: 20px;
+      }
+
+      .start-title {
+        font-size: 26px;
+      }
+
+      .blank-sentence {
+        font-size: 17px;
+      }
+
+      .blank-select {
+        width: 100%;
+      }
+    }
+
+    .inserted-answer-highlight {
+      color: #0047b3 !important;
+      -webkit-text-fill-color: #0047b3 !important;
+      font-weight: 900 !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: inline !important;
+      line-height: inherit !important;
+      vertical-align: baseline !important;
+    }
+    /*
+      전체 문항 공통 화면 맞춤 조정
+      - 하단 이전 / 전체 문제 / 다음 버튼은 고정 유지
+      - 상단 응시자 / 남은 시간 영역은 화면에 계속 보이도록 유지
+      - 31~70번 모든 문항의 세로 여백을 줄여 본문 공간을 확보
+      - reading-test.js의 일부 inline 높이값은 CSS !important로 덮어쓴다
+    */
+
+    .exam-page {
+      min-height: 100vh !important;
+      padding-bottom: 72px !important;
+      overflow: hidden !important;
+    }
+
+    .topik-header {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 30 !important;
+      min-height: 64px !important;
+      padding: 0 28px !important;
+    }
+
+    .candidate-label {
+      font-size: 12px !important;
+    }
+
+    .candidate-name {
+      font-size: 18px !important;
+    }
+
+    .candidate-phone {
+      font-size: 12px !important;
+    }
+
+    .exam-title {
+      font-size: 24px !important;
+      line-height: 1.25 !important;
+    }
+
+    .timer-pill {
+      padding: 7px 13px !important;
+      font-size: 14px !important;
+    }
+
+    .timer-pill .time {
+      font-size: 21px !important;
+    }
+
+    .exam-shell {
+      width: min(1370px, calc(100% - 64px)) !important;
+      height: calc(100vh - 64px - 72px - 18px) !important;
+      min-height: 0 !important;
+      margin: 10px auto 0 !important;
+      overflow: hidden !important;
+    }
+
+    .exam-paper {
+      height: 100% !important;
+      min-height: 0 !important;
+      padding: 20px 30px 22px !important;
+      overflow-y: auto !important;
+      scrollbar-gutter: stable;
+    }
+
+    .section-row {
+      padding-bottom: 14px !important;
+    }
+
+    .section-title {
+      font-size: 28px !important;
+      line-height: 1.2 !important;
+    }
+
+    .answer-count {
+      min-width: 78px !important;
+      padding: 7px 14px !important;
+      font-size: 16px !important;
+    }
+
+    .question-instruction {
+      margin: 16px 0 12px !important;
+      font-size: 22px !important;
+      line-height: 1.45 !important;
+    }
+
+    .question-stage {
+      min-height: 0 !important;
+    }
+
+    .question-stage > div:not(.view-tab) {
+      padding: 12px 14px 14px !important;
+      min-height: 0 !important;
+    }
+
+    .view-tab {
+      min-width: 58px !important;
+      height: 32px !important;
+    }
+
+    .reading-layout {
+      gap: 14px !important;
+      padding: 0 !important;
+      min-height: 0 !important;
+    }
+
+    .passage-panel,
+    .question-panel {
+      min-height: 0 !important;
+    }
+
+    .panel-label {
+      padding: 10px 14px !important;
+      font-size: 16px !important;
+    }
+
+    .passage-content {
+      padding: 18px 20px !important;
+      font-size: 19px !important;
+      line-height: 1.78 !important;
+      min-height: 0 !important;
+      max-height: none !important;
+    }
+
+    .question-content {
+      padding: 18px 20px !important;
+    }
+
+    .panel-question-number {
+      margin-bottom: 8px !important;
+    }
+
+    .question-text {
+      margin: 0 0 14px !important;
+      font-size: 20px !important;
+      line-height: 1.55 !important;
+    }
+
+    .options-area {
+      gap: 10px !important;
+    }
+
+    .option-button {
+      min-height: 48px !important;
+      padding: 10px 15px !important;
+      font-size: 18px !important;
+      line-height: 1.45 !important;
+    }
+
+    .image-area {
+      padding: 14px 18px 8px !important;
+    }
+
+    .question-stage img {
+      max-width: 100% !important;
+      max-height: min(460px, calc(100vh - 350px)) !important;
+      object-fit: contain !important;
+    }
+
+    .blank-box {
+      padding: 18px 18px 22px !important;
+      min-height: 0 !important;
+    }
+
+    .blank-sentence {
+      min-height: 70px !important;
+      padding: 16px 18px !important;
+      font-size: 20px !important;
+      line-height: 1.8 !important;
+    }
+
+    .blank-select {
+      height: 42px !important;
+      font-size: 18px !important;
+    }
+
+    .small-note {
+      display: none !important;
+    }
+
+    .bottom-nav {
+      min-height: 70px !important;
+      padding: 10px 14% !important;
+    }
+
+    .nav-button {
+      height: 38px !important;
+      font-size: 16px !important;
+    }
+  /*
+      시작 화면 균형 조정 v4
+      - 첫 로그인 화면만 조정
+      - 시험 실행 화면은 건드리지 않음
+      - 한 화면 안에 모두 보이되, 아래 빈 공간이 너무 크지 않도록 중앙 배치
+      - v3보다 덜 압축해서 답답하지 않게 보이도록 조정
+    */
+
+    #startScreen {
+      min-height: 100vh !important;
+      padding: 0 !important;
+      overflow-y: auto !important;
+      background: #ffffff !important;
+    }
+
+    #startScreen > section {
+      min-height: 100vh !important;
+      padding: 0 !important;
+      background: #ffffff !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    #startScreen > section > header {
+      flex: 0 0 auto !important;
+      padding: 22px 16px !important;
+      font-size: 32px !important;
+      line-height: 1.25 !important;
+      letter-spacing: -0.4px !important;
+    }
+
+    #startScreen > section > div {
+      flex: 1 1 auto !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      padding: 18px 16px 46px !important;
+    }
+
+    #startScreen > section > div > div {
+      width: min(560px, 92vw) !important;
+      margin: 0 auto !important;
+    }
+
+    #startScreen > section > div > div > div:first-child {
+      margin-bottom: 18px !important;
+    }
+
+    #startScreen > section > div > div > div:first-child > div:first-child {
+      font-size: 28px !important;
+      line-height: 1.25 !important;
+      margin-bottom: 6px !important;
+    }
+
+    #startScreen > section > div > div > div:first-child > div:last-child {
+      font-size: 15px !important;
+      line-height: 1.45 !important;
+    }
+
+    #startScreen .form-row {
+      margin-bottom: 13px !important;
+    }
+
+    #startScreen .form-row label {
+      margin-bottom: 6px !important;
+      font-size: 16px !important;
+      line-height: 1.25 !important;
+    }
+
+    #authPasswordInput,
+    #studentNameInput,
+    #studentPhoneInput {
+      height: 44px !important;
+      min-height: 44px !important;
+      padding-top: 7px !important;
+      padding-bottom: 7px !important;
+      font-size: 16px !important;
+      border-radius: 10px !important;
+    }
+
+    #authCheckButton {
+      height: 44px !important;
+      min-height: 44px !important;
+      padding-top: 7px !important;
+      padding-bottom: 7px !important;
+      font-size: 16px !important;
+      border-radius: 10px !important;
+    }
+
+    #authMessage,
+    #startMessage {
+      min-height: 18px !important;
+      margin: 7px 0 !important;
+      font-size: 14px !important;
+      line-height: 1.35 !important;
+    }
+
+    #examSelectBox {
+      margin: 12px 0 16px !important;
+      padding: 16px 16px !important;
+      border-radius: 12px !important;
+    }
+
+    #examSelectBox label {
+      margin-bottom: 8px !important;
+      font-size: 16px !important;
+      line-height: 1.25 !important;
+    }
+
+    #examModeSelect {
+      height: 44px !important;
+      min-height: 44px !important;
+      padding-top: 6px !important;
+      padding-bottom: 6px !important;
+      font-size: 16px !important;
+      border-radius: 10px !important;
+    }
+
+    #examSelectBox > div {
+      margin-top: 8px !important;
+      font-size: 13px !important;
+      line-height: 1.45 !important;
+    }
+
+    #newExamButton {
+      height: 44px !important;
+      min-height: 44px !important;
+      margin: 11px 0 0 !important;
+      padding-top: 7px !important;
+      padding-bottom: 7px !important;
+      font-size: 16px !important;
+      border-radius: 10px !important;
+    }
+
+    #newExamMessage {
+      min-height: 20px !important;
+      max-height: 24px !important;
+      margin: 8px 0 0 !important;
+      font-size: 13px !important;
+      line-height: 1.35 !important;
+      overflow: hidden !important;
+      text-align: center !important;
+      white-space: nowrap !important;
+      text-overflow: ellipsis !important;
+    }
+
+    #startButton {
+      height: 50px !important;
+      min-height: 50px !important;
+      margin-top: 18px !important;
+      padding-top: 9px !important;
+      padding-bottom: 9px !important;
+      font-size: 17px !important;
+      border-radius: 10px !important;
+    }
+
+    @media (max-height: 860px) {
+      #startScreen > section > header {
+        padding: 18px 16px !important;
+        font-size: 30px !important;
+      }
+
+      #startScreen > section > div {
+        align-items: center !important;
+        padding-top: 14px !important;
+        padding-bottom: 34px !important;
+      }
+
+      #startScreen > section > div > div {
+        width: min(540px, 92vw) !important;
+      }
+
+      #startScreen > section > div > div > div:first-child {
+        margin-bottom: 14px !important;
+      }
+
+      #startScreen > section > div > div > div:first-child > div:first-child {
+        font-size: 26px !important;
+      }
+
+      #startScreen .form-row {
+        margin-bottom: 11px !important;
+      }
+
+      #examSelectBox {
+        margin-top: 10px !important;
+        margin-bottom: 13px !important;
+        padding: 14px 15px !important;
+      }
+
+      #authPasswordInput,
+      #studentNameInput,
+      #studentPhoneInput,
+      #authCheckButton,
+      #examModeSelect,
+      #newExamButton {
+        height: 42px !important;
+        min-height: 42px !important;
+      }
+
+      #startButton {
+        height: 48px !important;
+        min-height: 48px !important;
+        margin-top: 15px !important;
+      }
+    }
+
+    @media (max-height: 760px) {
+      #startScreen > section > header {
+        padding: 13px 16px !important;
+        font-size: 28px !important;
+      }
+
+      #startScreen > section > div {
+        padding-top: 10px !important;
+        padding-bottom: 18px !important;
+      }
+
+      #startScreen > section > div > div > div:first-child {
+        margin-bottom: 10px !important;
+      }
+
+      #startScreen > section > div > div > div:first-child > div:first-child {
+        font-size: 24px !important;
+      }
+
+      #startScreen .form-row {
+        margin-bottom: 8px !important;
+      }
+
+      #examSelectBox {
+        margin-top: 7px !important;
+        margin-bottom: 9px !important;
+        padding: 11px 13px !important;
+      }
+
+      #examSelectBox > div {
+        font-size: 12px !important;
+        line-height: 1.3 !important;
+      }
+
+      #authPasswordInput,
+      #studentNameInput,
+      #studentPhoneInput,
+      #authCheckButton,
+      #examModeSelect,
+      #newExamButton {
+        height: 38px !important;
+        min-height: 38px !important;
+      }
+
+      #newExamMessage {
+        min-height: 17px !important;
+        max-height: 20px !important;
+        margin-top: 5px !important;
+      }
+
+      #startButton {
+        height: 42px !important;
+        min-height: 42px !important;
+        margin-top: 8px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 시작 화면 -->
+  <main
+    id="startScreen"
+    class="start-page"
+    style="
+      min-height:100vh;
+      width:100%;
+      padding:0;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      background:#ffffff;
+    "
+  >
+    <section
+      class="start-card"
+      style="
+        width:100%;
+        min-height:100vh;
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+        padding:0;
+        background:#ffffff;
+        display:flex;
+        flex-direction:column;
+      "
+    >
+      <header
+        style="
+          width:100%;
+          background:#0877f2;
+          color:#ffffff;
+          text-align:center;
+          padding:28px 16px;
+          font-size:34px;
+          font-weight:900;
+          letter-spacing:-0.5px;
+        "
+      >
+        TOPIK I IBT 읽기 시험
+      </header>
+
+      <div
+        style="
+          flex:1;
+          display:flex;
+          justify-content:center;
+          align-items:flex-start;
+          padding:38px 16px 56px;
+        "
+      >
+        <div
+          style="
+            width:min(520px, 92vw);
+          "
+        >
+          <div
+            style="
+              text-align:center;
+              margin-bottom:30px;
+            "
+          >
+            <div
+              style="
+                color:#003f8f;
+                font-size:28px;
+                font-weight:900;
+                margin-bottom:8px;
+              "
+            >
+              응시자 로그인
+            </div>
+
+            <div
+              style="
+                color:#5f6368;
+                font-size:16px;
+                line-height:1.6;
+              "
+            >
+              인증 후 이름과 전화번호를 입력하세요.
+            </div>
+          </div>
+
+          <div class="form-row" style="margin-bottom:18px;">
+            <label for="authPasswordInput" style="font-size:17px; font-weight:900;">
+              인증 비밀번호
+            </label>
+
+            <div
+              style="
+                display:grid;
+                grid-template-columns:minmax(0, 1fr) 130px;
+                gap:8px;
+                align-items:center;
+              "
+            >
+              <input
+                id="authPasswordInput"
+                type="password"
+                placeholder="인증 비밀번호 입력"
+                autocomplete="off"
+                style="
+                  height:50px;
+                  font-size:16px;
+                  border-radius:10px;
+                "
+              />
+
+              <button
+                id="authCheckButton"
+                class="button"
+                type="button"
+                style="
+                  height:50px;
+                  font-size:16px;
+                  border-radius:10px;
+                  white-space:nowrap;
+                "
+              >
+                인증 확인
+              </button>
+            </div>
+          </div>
+
+          <div id="authMessage" class="message" style="text-align:center;"></div>
+
+          <div
+            id="examSelectBox"
+            style="
+              margin:14px 0 18px;
+              padding:16px;
+              border:1px solid #cfe2ff;
+              border-radius:12px;
+              background:#f8fbff;
+            "
+          >
+            <label
+              for="examModeSelect"
+              style="
+                display:block;
+                margin-bottom:8px;
+                color:#111827;
+                font-size:16px;
+                font-weight:900;
+              "
+            >
+              시험지 선택
+            </label>
+
+            <select
+              id="examModeSelect"
+              style="
+                width:100%;
+                height:44px;
+                border:1px solid #b8c7d9;
+                border-radius:10px;
+                padding:0 12px;
+                font-size:16px;
+                background:#ffffff;
+              "
+            >
+              <option value="random">랜덤 출제: 102회 + 103회 + 100회 혼합</option>
+              <option value="round-102">102회 고정 출제</option>
+              <option value="round-103">103회 고정 출제</option>
+              <option value="round-100">100회 고정 출제</option>
+            </select>
+
+            <div
+              style="
+                margin-top:8px;
+                color:#5f6b7a;
+                font-size:13px;
+                line-height:1.6;
+              "
+            >
+              검수 때는 회차 고정, 실제 시험에는 랜덤 출제를 사용하세요.
+              선택 후 반드시 새 문제 만들기를 누르세요.
+            </div>
+
+            <button
+              id="newExamButton"
+              class="button secondary"
+              type="button"
+              disabled
+              style="
+                width:100%;
+                height:48px;
+                font-size:17px;
+                margin:14px 0 0;
+                border-radius:10px;
+              "
+            >
+              새 문제 만들기
+            </button>
+
+            <div
+              id="newExamMessage"
+              style="
+                min-height:22px;
+                margin:10px 0 0;
+                text-align:center;
+                color:#5f6368;
+                font-size:14px;
+                font-weight:800;
+                line-height:1.5;
+              "
+            >
+              인증 후 새 문제 세트를 만들 수 있습니다.
+            </div>
+          </div>
+
+          <div class="form-row" style="margin-bottom:18px;">
+            <label for="studentNameInput" style="font-size:17px; font-weight:900;">
+              응시자 이름
+            </label>
+            <input
+              id="studentNameInput"
+              type="text"
+              placeholder="예: 홍길동"
+              autocomplete="name"
+              disabled
+              style="
+                height:50px;
+                font-size:16px;
+                border-radius:10px;
+              "
+            />
+          </div>
+
+          <div class="form-row" style="margin-bottom:18px;">
+            <label for="studentPhoneInput" style="font-size:17px; font-weight:900;">
+              전화번호
+            </label>
+            <input
+              id="studentPhoneInput"
+              type="tel"
+              placeholder="예: 01012345678"
+              autocomplete="tel"
+              disabled
+              style="
+                height:50px;
+                font-size:16px;
+                border-radius:10px;
+              "
+            />
+          </div>
+
+          <div id="startMessage" class="message" style="text-align:center;"></div>
+
+          <button
+            id="startButton"
+            class="button"
+            type="button"
+            disabled
+            style="
+              width:100%;
+              height:56px;
+              font-size:18px;
+              border-radius:10px;
+              margin-top:6px;
+            "
+          >
+            시험 시작
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <script>
+    /*
+      TOPIK I Reading Simple Auth
+      - 내부 테스트용 인증 잠금장치
+      - 정식 외부 보안 로그인은 서버가 필요함
+      - 비밀번호 변경 위치: READING_AUTH_PASSWORD
+    */
+    (function () {
+      "use strict";
+
+      const READING_AUTH_PASSWORD = "topik1";
+
+      const authPasswordInput = document.getElementById("authPasswordInput");
+      const authCheckButton = document.getElementById("authCheckButton");
+      const authMessage = document.getElementById("authMessage");
+      const studentNameInput = document.getElementById("studentNameInput");
+      const studentPhoneInput = document.getElementById("studentPhoneInput");
+      const startButton = document.getElementById("startButton");
+      const newExamButton = document.getElementById("newExamButton");
+      const newExamMessage = document.getElementById("newExamMessage");
+
+      function setCandidateInputsEnabled(enabled) {
+        if (studentNameInput) {
+          studentNameInput.disabled = !enabled;
+        }
+
+        if (studentPhoneInput) {
+          studentPhoneInput.disabled = !enabled;
+        }
+
+        if (startButton) {
+  startButton.disabled = !enabled;
+}
+
+if (newExamButton) {
+  newExamButton.disabled = !enabled;
+}
+
+if (newExamMessage && !enabled) {
+  newExamMessage.textContent = "인증 후 사용 가능합니다.";
+  newExamMessage.style.color = "#5f6368";
+}
+      }
+
+      function setAuthMessage(text, color) {
+        if (!authMessage) {
+          return;
+        }
+
+        authMessage.style.color = color;
+        authMessage.textContent = text;
+      }
+
+      function checkPassword() {
+        const inputPassword = authPasswordInput.value.trim();
+
+        if (!inputPassword) {
+          setAuthMessage("인증 비밀번호를 입력하세요.", "#d93025");
+          authPasswordInput.focus();
+          setCandidateInputsEnabled(false);
+          return;
+        }
+
+        if (inputPassword !== READING_AUTH_PASSWORD) {
+          setAuthMessage("인증 비밀번호가 맞지 않습니다.", "#d93025");
+          authPasswordInput.select();
+          setCandidateInputsEnabled(false);
+          return;
+        }
+
+        setAuthMessage("인증되었습니다.", "#188038");
+
+        authPasswordInput.disabled = true;
+        authCheckButton.disabled = true;
+        setCandidateInputsEnabled(true);
+
+       if (newExamMessage) {
+  newExamMessage.textContent = "새 문제 만들기 후 시험을 시작하세요.";
+  newExamMessage.style.color = "#188038";
+}
+
+studentNameInput.focus();
+      }
+
+      setCandidateInputsEnabled(false);
+
+      authCheckButton.addEventListener("click", checkPassword);
+
+      authPasswordInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          checkPassword();
+        }
+      });
+    })();
+  </script>
+
+
+
+  <!-- 시험 화면 -->
+  <main id="testScreen" class="exam-page hidden">
+    <header class="topik-header">
+      <div class="candidate-box">
+        <div class="candidate-label">응시자</div>
+        <div id="studentNameDisplay" class="candidate-name"></div>
+        <div id="studentPhoneDisplay" class="candidate-phone"></div>
+      </div>
+
+      <div class="exam-title">한국어능력시험(TOPIK) IBT 체험 - TOPIK I</div>
+
+      <div id="timerCard" class="timer-pill">
+        <span>◷ 남은 시험 시간</span>
+        <span id="timerDisplay" class="time">60:00</span>
+      </div>
+    </header>
+
+    <section class="exam-shell">
+      <div class="exam-paper">
+        <div class="section-row">
+          <h1 class="section-title">[읽기]</h1>
+          <div id="answerStatusText" class="answer-count">0 / 40</div>
+        </div>
+
+        <div id="questionInstruction" class="question-instruction"></div>
+
+        <div id="questionStage" class="question-stage"></div>
+
+        <div class="small-note">
+          <span id="reviewTextInline"></span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="bottom-nav">
+      <div class="nav-left">
+        <button id="prevButton" class="nav-button" type="button">‹ 이전</button>
+      </div>
+
+      <div
+  class="nav-center"
+  style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;"
+>
+  <button id="questionListButton" class="nav-button" type="button">▦ 전체 문제</button>
+
+  <button
+    id="wrongReviewBackButton"
+    class="nav-button"
+    type="button"
+    style="display:none;"
+    aria-hidden="true"
+  >
+    진단 보고서로 돌아가기
+  </button>
+</div>
+
+      <div class="nav-right">
+        <!-- 기존 reading-test.js 오류 방지를 위해 id는 유지하지만 화면에는 보이지 않게 처리 -->
+        <button id="reviewButton" class="nav-button warning" type="button">검토 표시</button>
+        <button id="nextButton" class="nav-button" type="button">다음 ›</button>
+        <button id="submitButton" class="nav-button danger" type="button">제출</button>
+      </div>
+    </footer>
+  </main>
+
+  <!-- 전체 문제 팝업 -->
+  <div id="questionListBackdrop" class="question-list-backdrop hidden">
+    <section class="question-list-panel" role="dialog" aria-modal="true" aria-labelledby="questionListTitle">
+      <div class="question-list-header">
+        <div>
+          <h2 id="questionListTitle">전체 문제</h2>
+          <p>문항 번호를 선택하면 해당 문항으로 이동합니다.</p>
+        </div>
+        <button id="closeQuestionListButton" class="button gray" type="button">닫기</button>
+      </div>
+
+      <div class="question-list-body">
+        <div id="sidebarStatusText" class="list-status">총 40문항 중 0문항 답안 선택</div>
+
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot current"></span>현재 문항</div>
+          <div class="legend-item"><span class="legend-dot answered"></span>답안 선택</div>
+          <div class="legend-item"><span class="legend-dot"></span>미응답</div>
+          <div class="legend-item review-legend-item"><span class="legend-dot review"></span>검토 표시</div>
+        </div>
+
+        <div id="progressArea" class="progress-area"></div>
+      </div>
+
+      <div class="question-list-footer">
+        <div class="submit-warning">
+          제출은 70번 문제 화면에서만 가능합니다. 제출 전 미응답 문항을 확인하세요.
+          미응답 문항은 오답 처리됩니다.
+        </div>
+
+        <!-- 기존 reading-test.js 오류 방지를 위해 id는 유지하지만 화면에는 보이지 않게 처리 -->
+        <button id="submitFromListButton" class="button danger" type="button">제출</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- 시험 모드 결과 화면 -->
+  <main id="resultScreen" class="result-page hidden">
+    <section class="result-card">
+  <h1>시험 제출 완료</h1>
+
+  <p class="start-subtitle">
+    읽기 시험이 제출되었습니다. 진단 보고서 화면에서 결과를 확인하세요.
+  </p>
+
+  <div id="resultSummary" class="result-summary"></div>
+
+<div class="download-buttons">
+  <button
+    id="openDiagnosisButton"
+    class="button"
+    type="button"
+    onclick="window.location.href='../reading-diagnosis/index.html?auto=1';"
+  >
+    진단 보고서 보기
+  </button>
+</div>
+  <div class="download-buttons" style="display: none;" aria-hidden="true">
+    <button id="downloadJsonButton" class="button">reading-result.json 다운로드</button>
+    <button id="downloadTxtButton" class="button secondary">reading-result.txt 다운로드</button>
+  </div>
+
+  <p class="small-note" style="display: none;" aria-hidden="true">
+    다운로드된 파일명을 reading-result.json, reading-result.txt로 저장하면 됩니다.
+  </p>
+</section>
+  </main>
+
+  <script src="./question-generator.js?v=browser-random-v1"></script>
+  <script src="./reading-test.js?v=start-screen-fit-v4"></script>
+
+  <script>
+    /*
+      TOPIK I Reading UI Control
+      version: reading-ui-simple-submit-v1
+
+      역할:
+      - 검토 표시 버튼과 검토 표시 안내를 화면에서 제거한다.
+      - 전체 문제 팝업의 검토 표시 범례와 제출 버튼을 숨긴다.
+      - 제출 버튼은 70번 문제 화면에서만 표시한다.
+      - reading-test.js의 기존 채점, 저장, 진단 연결 로직은 수정하지 않는다.
+    */
+    (function () {
+      "use strict";
+
+      const LAST_QUESTION_NUMBER = 70;
+
+      function hideReviewUi() {
+        const reviewButton = document.getElementById("reviewButton");
+        const reviewTextInline = document.getElementById("reviewTextInline");
+        const submitFromListButton = document.getElementById("submitFromListButton");
+
+        if (reviewButton) {
+          reviewButton.style.display = "none";
+          reviewButton.setAttribute("aria-hidden", "true");
+          reviewButton.tabIndex = -1;
+        }
+
+        if (reviewTextInline) {
+          reviewTextInline.textContent = "";
+          reviewTextInline.style.display = "none";
+          reviewTextInline.setAttribute("aria-hidden", "true");
+        }
+
+        if (submitFromListButton) {
+          submitFromListButton.style.display = "none";
+          submitFromListButton.setAttribute("aria-hidden", "true");
+          submitFromListButton.tabIndex = -1;
+        }
+
+        document.querySelectorAll(".legend-item").forEach(function (item) {
+          if (item.textContent && item.textContent.includes("검토 표시")) {
+            item.style.display = "none";
+            item.setAttribute("aria-hidden", "true");
+          }
+        });
+
+        document.querySelectorAll(".review-badge").forEach(function (badge) {
+          badge.style.display = "none";
+          badge.setAttribute("aria-hidden", "true");
+        });
+      }
+
+      function getCurrentQuestionNumber() {
+        const questionStage = document.getElementById("questionStage");
+        const questionInstruction = document.getElementById("questionInstruction");
+
+        const stageText = questionStage ? questionStage.textContent || "" : "";
+        const instructionText = questionInstruction ? questionInstruction.textContent || "" : "";
+
+        const stageProblemMatch = stageText.match(/(\d{2})\s*번\s*문제/);
+        if (stageProblemMatch) {
+          return Number(stageProblemMatch[1]);
+        }
+
+        const singleInstructionMatch = instructionText.match(/\[(\d{2})\]/);
+        if (singleInstructionMatch) {
+          return Number(singleInstructionMatch[1]);
+        }
+
+        const rangeInstructionMatch = instructionText.match(/\[(\d{2})\s*~\s*(\d{2})\]/);
+        if (rangeInstructionMatch && stageText.includes("70번")) {
+          return LAST_QUESTION_NUMBER;
+        }
+
+        return null;
+      }
+
+      function isWrongReviewUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("mode") === "wrong-review";
+      }
+
+      function getLastVisibleQuestionNumber() {
+        const progressButtons = Array.from(
+          document.querySelectorAll("#progressArea .progress-dot")
+        );
+
+        const numbers = progressButtons
+          .map(function (button) {
+            return Number(button.textContent);
+          })
+          .filter(Number.isFinite);
+
+        if (numbers.length === 0) {
+          return LAST_QUESTION_NUMBER;
+        }
+
+        return Math.max.apply(null, numbers);
+      }
+
+      function updateSubmitButtonVisibility() {
+        const submitButton = document.getElementById("submitButton");
+
+        if (!submitButton) {
+          return;
+        }
+
+        const currentQuestionNumber = getCurrentQuestionNumber();
+        const targetLastQuestionNumber = isWrongReviewUrl()
+          ? getLastVisibleQuestionNumber()
+          : LAST_QUESTION_NUMBER;
+
+        if (currentQuestionNumber === targetLastQuestionNumber) {
+          submitButton.style.display = "inline-flex";
+          submitButton.removeAttribute("aria-hidden");
+          submitButton.tabIndex = 0;
+        } else {
+          submitButton.style.display = "none";
+          submitButton.setAttribute("aria-hidden", "true");
+          submitButton.tabIndex = -1;
+        }
+      }
+
+      function updateUi() {
+        hideReviewUi();
+        updateSubmitButtonVisibility();
+      }
+
+      function installUiWatcher() {
+        const questionStage = document.getElementById("questionStage");
+        const questionInstruction = document.getElementById("questionInstruction");
+        const progressArea = document.getElementById("progressArea");
+
+        const observer = new MutationObserver(function () {
+          window.requestAnimationFrame(updateUi);
+        });
+
+        if (questionStage) {
+          observer.observe(questionStage, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+            attributes: true
+          });
+        }
+
+        if (questionInstruction) {
+          observer.observe(questionInstruction, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+            attributes: true
+          });
+        }
+
+        if (progressArea) {
+          observer.observe(progressArea, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+            attributes: true
+          });
+        }
+
+        document.addEventListener(
+          "click",
+          function () {
+            window.setTimeout(updateUi, 0);
+            window.setTimeout(updateUi, 80);
+          },
+          true
+        );
+
+        document.addEventListener(
+          "keydown",
+          function () {
+            window.setTimeout(updateUi, 0);
+            window.setTimeout(updateUi, 80);
+          },
+          true
+        );
+
+        updateUi();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", installUiWatcher);
+      } else {
+        installUiWatcher();
+      }
+    })();
+  </script>
+</body>
+</html>
