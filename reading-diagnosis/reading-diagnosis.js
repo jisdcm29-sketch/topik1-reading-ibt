@@ -1,6 +1,6 @@
 "use strict";
 
-console.log("TOPIK I Reading Diagnosis loaded: topik2-style-leveltest-report-student-wording-step37-4a-v1");
+console.log("TOPIK I Reading Diagnosis loaded: step42-topik1-reading-zone-label-fix-v1");
 
 const AUTO_DIAGNOSIS_STORAGE_KEY = "topik1_latest_reading_result";
 const LEVEL_TEST_DIAGNOSIS_STORAGE_KEY = "topik1_latest_leveltest_result";
@@ -224,7 +224,7 @@ function getTopik1ReadingLevel(score) {
       next_target_score: 40,
       next_target_label: "1급 가능권 진입",
       message: "기초 어휘와 짧은 문장 이해부터 다시 안정화해야 합니다.",
-      study_focus: "31~42번 기초 어휘·문법, 짧은 글, 자료형 문항부터 우선 보완하세요."
+      study_focus: "31~42번 주제·소재 파악, 빈칸·어휘·문법, 자료형 문항부터 우선 보완하세요."
     };
   }
 
@@ -273,37 +273,37 @@ function getAnalysisQuestionNumber(item) {
 const TOPIK1_READING_TYPE_DEFINITIONS = [
   {
     id: "T01",
-    label: "빈칸·어휘·문법",
-    focus: "문맥에 맞는 어휘, 조사, 연결 표현 선택",
+    label: "주제·소재 파악",
+    focus: "짧은 글의 중심 소재와 주제 파악",
     start: 31,
-    end: 34
+    end: 33
   },
   {
     id: "T02",
-    label: "짧은 글 내용 파악",
-    focus: "짧은 글의 주제, 소재, 내용 일치·불일치 파악",
-    start: 35,
-    end: 38
+    label: "빈칸·어휘·문법",
+    focus: "문맥에 맞는 어휘, 조사, 동사, 형용사 선택",
+    start: 34,
+    end: 39
   },
   {
     id: "T03",
     label: "자료·그림 정보",
     focus: "그림, 표, 안내 자료의 핵심 정보 이해",
-    start: 39,
+    start: 40,
     end: 42
   },
   {
     id: "T04",
-    label: "문장 순서·흐름",
-    focus: "문장 배열, 시간 흐름, 지시어와 연결 관계 파악",
+    label: "짧은 글 내용 일치",
+    focus: "짧은 글의 세부 내용 일치 파악",
     start: 43,
-    end: 46
+    end: 45
   },
   {
     id: "T05",
-    label: "중심 내용·세부 정보",
-    focus: "글의 중심 생각과 구체적 정보 이해",
-    start: 47,
+    label: "중심 내용 파악",
+    focus: "글의 중심 생각과 핵심 내용 이해",
+    start: 46,
     end: 48
   },
   {
@@ -351,10 +351,12 @@ function inferTopik1ReadingTypeId(item) {
   if (/생활문|공지문|안내문/.test(text)) return "T06";
   if (/긴 지문|추론/.test(text)) return "T08";
   if (/공통 지문/.test(text)) return "T06";
-  if (/중심|주제|소재/.test(text)) return "T05";
-  if (/빈칸|어휘|문법|조사|연결|표현/.test(text)) return "T01";
+  if (/중심/.test(text)) return "T05";
+  if (/주제|소재/.test(text)) return "T01";
+  if (/내용 일치|세부 내용|짧은 글/.test(text)) return "T04";
+  if (/빈칸|어휘|문법|조사|연결|표현/.test(text)) return "T02";
 
-  return "T02";
+  return "T04";
 }
 
 function getTopik1TypeDefinition(typeId) {
@@ -758,37 +760,37 @@ function prescriptionForDiagnosticArea(stat, problemItems) {
 function prescriptionForZone(stat) {
   const range = stat.range || "";
 
-  if (range === "31~34번") {
+  if (range === "31~33번") {
     return {
-      title: "31~34번 빈칸·어휘·문법 구간 처방",
-      body: "기초 문항에서 오답이나 미응답이 있으면 기본 어휘와 문장 구조가 불안정할 수 있습니다. 빈칸 앞뒤 문장을 소리 내어 읽고, 보기 4개를 하나씩 넣어 자연스러운 표현을 고르는 훈련이 필요합니다."
+      title: "31~33번 주제·소재 파악 구간 처방",
+      body: "짧은 글에서 무엇에 대한 내용인지 빠르게 잡는 구간입니다. 사람, 장소, 물건, 날씨, 직업처럼 반복되는 핵심 명사를 먼저 찾고 선택지의 주제어와 비교하세요."
     };
   }
 
-  if (range === "35~38번") {
+  if (range === "34~39번") {
     return {
-      title: "35~38번 짧은 글 내용 파악 구간 처방",
-      body: "짧은 글에서는 첫 문장과 마지막 문장의 핵심어를 잡는 것이 중요합니다. 글이 무엇에 대한 내용인지 먼저 말한 뒤 선택지를 비교하세요."
+      title: "34~39번 빈칸·어휘·문법 구간 처방",
+      body: "빈칸 앞뒤 문장의 의미 관계를 먼저 확인하세요. 보기 4개를 하나씩 넣어 문장이 자연스러운지 읽어 보고, 조사·동사·형용사·연결 표현이 문맥에 맞는지 비교하는 훈련이 필요합니다."
     };
   }
 
-  if (range === "39~42번") {
+  if (range === "40~42번") {
     return {
-      title: "39~42번 자료·그림 정보 구간 처방",
+      title: "40~42번 자료·그림 정보 구간 처방",
       body: "자료형 문항은 글을 모두 해석하기보다 날짜, 시간, 장소, 대상, 조건을 빠르게 찾는 능력이 중요합니다. 보기 하나마다 자료에서 근거를 확인하는 방식으로 복습하세요."
     };
   }
 
-  if (range === "43~46번") {
+  if (range === "43~45번") {
     return {
-      title: "43~46번 문장 순서·흐름 구간 처방",
-      body: "이 구간은 글의 흐름을 보는 능력을 평가합니다. 접속어, 지시어, 반복 명사, 원인·결과 관계를 표시하면서 문장 간 연결을 확인하세요."
+      title: "43~45번 짧은 글 내용 일치 구간 처방",
+      body: "짧은 글의 세부 내용을 보기와 비교하는 구간입니다. 선택지의 핵심어가 지문에 그대로 있는지, 반대로 바뀌었는지, 없는 정보가 추가되었는지 확인하세요."
     };
   }
 
-  if (range === "47~48번") {
+  if (range === "46~48번") {
     return {
-      title: "47~48번 중심 내용·세부 정보 구간 처방",
+      title: "46~48번 중심 내용 파악 구간 처방",
       body: "중심 내용 문항은 선택지보다 글의 핵심어를 먼저 찾아야 합니다. 반복되는 말과 글쓴이의 생각이 드러난 문장을 중심으로 복습하세요."
     };
   }
