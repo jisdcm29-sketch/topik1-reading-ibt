@@ -281,6 +281,9 @@ if ($practiceIndexText) {
   Test-TextPattern "practice-print/index.html includes student answer sheet styles." $practiceIndexText "student-answer-sheet" | Out-Null
   Test-TextPattern "practice-print/index.html includes compact sentence-order print styles." $practiceIndexText "sentence-order-set" | Out-Null
   Test-TextPattern "practice-print/index.html loads practice-print.js." $practiceIndexText "practice-print\.js" | Out-Null
+  Test-TextPattern "practice-print/index.html includes PDF print setting notice." $practiceIndexText "printSettingNote|PDF 저장 안내" | Out-Null
+  Test-TextPattern "practice-print/index.html hides screen-only helpers in print CSS." $practiceIndexText "(?s)@media print.*?\.screen-only" | Out-Null
+  Test-TextPattern "practice-print/index.html has is-printing print cleanup rules." $practiceIndexText "body\.is-printing|body::before" | Out-Null
   Test-TextPattern "practice-print/index.html includes table-based student answer sheet CSS." $practiceIndexText "student-answer-table" | Out-Null
   Test-TextPattern "practice-print/index.html starts student answer sheet on a new page." $practiceIndexText "student-answer-sheet\s*\{[\s\S]*?page-break-before\s*:\s*always" | Out-Null
   Test-TextPattern "practice-print/index.html includes 40-question answer group CSS." $practiceIndexText "student-answer-group" | Out-Null
@@ -311,6 +314,9 @@ if ($practiceJsText) {
   Test-TextPattern "practice-print.js renders answer sheet range labels such as 1~40번." $practiceJsText "makePrintRangeLabel" | Out-Null
   Test-TextPattern "practice-print.js renders two-column answer tables." $practiceJsText "student-answer-columns" | Out-Null
   Test-TextPattern "practice-print.js recovers sentence-order items from passage/group_passage when sentence_items is missing." $practiceJsText "getFallbackSentenceItemsFromText|getSentenceOrderItems" | Out-Null
+  Test-TextPattern "practice-print.js shows browser print header/footer notice." $practiceJsText "showBrowserPrintNotice|머리글과 바닥글" | Out-Null
+  Test-TextPattern "practice-print.js uses a TOPIK I print notice sessionStorage key." $practiceJsText "topik1_practice_print_browser_print_notice_seen" | Out-Null
+  Test-TextPattern "practice-print.js adds is-printing class while printing." $practiceJsText "is-printing" | Out-Null
 }
 
 # 6. JavaScript syntax check when Node.js is available
@@ -399,5 +405,5 @@ if ($Strict -and $script:WarningCount -gt 0) {
   exit 1
 }
 
-Write-Host "Result: PASS - STEP46-9 practice-print final student answer sheet is ready." -ForegroundColor Green
+Write-Host "Result: PASS - STEP46-10 practice-print clean PDF print guard is ready." -ForegroundColor Green
 exit 0
