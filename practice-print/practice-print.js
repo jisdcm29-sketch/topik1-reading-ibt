@@ -2,7 +2,7 @@
 
 /*
   TOPIK I Reading Practice Print Tool
-  version: step46-8-topik1-practice-print-answer-sheet-and-order-v1
+  version: step46-10-topik1-practice-print-clean-pdf-v1
 
   역할:
   - 실제 업로드된 고정 시험지 exam-manifest.json/data/exams/reading-*.json을 우선 읽는다.
@@ -10,6 +10,7 @@
   - 읽기 31~70번 표시 번호 기준으로 유형별 문제지를 만든다.
   - 학생용 문제지, 문제지+정답표, 교사용 정답표만 인쇄한다.
   - 학생 답안 기록표와 57~58번 문장 순서 표시를 학생 배포용으로 정리한다.
+  - PDF 저장 시 브라우저 머리글/바닥글 해제를 안내하고 인쇄 전용 화면 요소를 정리한다.
   - 시험 실행, 채점, 진단 보고서 로직은 포함하지 않는다.
 */
 
@@ -1585,6 +1586,37 @@
     updatePrintButtons(true);
   }
 
+
+  function showBrowserPrintNotice() {
+    const message = [
+      "PDF 저장 전 Chrome/Edge 인쇄 설정을 확인해 주세요.",
+      "",
+      "1. [머리글과 바닥글]을 반드시 끄세요.",
+      "2. [배경 그래픽]은 켜세요.",
+      "3. 대상은 [PDF로 저장]을 선택하세요.",
+      "",
+      "브라우저 머리글/바닥글이 켜져 있으면 날짜, URL, 페이지 번호가 문제지에 함께 인쇄됩니다."
+    ].join("\n");
+
+    try {
+      if (window.sessionStorage && window.sessionStorage.getItem("topik1_practice_print_browser_print_notice_seen") === "1") {
+        return;
+      }
+    } catch (error) {
+      // sessionStorage를 사용할 수 없는 환경에서는 안내창을 그대로 표시합니다.
+    }
+
+    window.alert(message);
+
+    try {
+      if (window.sessionStorage) {
+        window.sessionStorage.setItem("topik1_practice_print_browser_print_notice_seen", "1");
+      }
+    } catch (error) {
+      // 안내 확인 기록 실패는 인쇄 기능에 영향을 주지 않습니다.
+    }
+  }
+
   function printWithMode(mode) {
     if (!state.selectedRecords.length) {
       generatePreview();
@@ -1594,14 +1626,16 @@
       return;
     }
 
-    document.body.classList.remove("print-student", "print-with-answers", "print-answer-only");
-    document.body.classList.add(mode);
+    showBrowserPrintNotice();
+
+    document.body.classList.remove("print-student", "print-with-answers", "print-answer-only", "is-printing");
+    document.body.classList.add(mode, "is-printing");
 
     window.setTimeout(function () {
       window.print();
 
       window.setTimeout(function () {
-        document.body.classList.remove("print-student", "print-with-answers", "print-answer-only");
+        document.body.classList.remove("print-student", "print-with-answers", "print-answer-only", "is-printing");
       }, 250);
     }, 50);
   }

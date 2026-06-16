@@ -223,6 +223,24 @@
       margin-bottom: 16px;
     }
 
+
+    .print-setting-note {
+      padding: 12px;
+      border-radius: 12px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #14532d;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .print-setting-note strong {
+      color: #003f8f;
+      font-weight: 900;
+    }
+
     .print-title {
       margin: 0 0 6px;
       color: #003f8f;
@@ -585,8 +603,41 @@
         background: #fff;
       }
 
+      html,
+      body {
+        overflow: visible !important;
+      }
+
+      body.is-printing {
+        background: #fff !important;
+      }
+
+      body::before,
+      body::after,
+      .layout::before,
+      .layout::after,
+      .preview-panel::before,
+      .preview-panel::after,
+      .problem-section::before,
+      .problem-section::after,
+      .answer-section::before,
+      .answer-section::after,
+      .student-answer-sheet::before,
+      .student-answer-sheet::after {
+        content: none !important;
+        display: none !important;
+      }
+
+
       .top-bar,
-      .control-panel {
+      .control-panel,
+      .screen-only,
+      .no-print,
+      .print-setting-note,
+      .notice,
+      .status-box,
+      .button-stack,
+      .back-link {
         display: none !important;
       }
 
@@ -594,6 +645,7 @@
         display: block;
         width: 100%;
         margin: 0;
+        overflow: visible !important;
       }
 
       .preview-panel {
@@ -601,11 +653,13 @@
         box-shadow: none;
         padding: 0;
         min-height: auto;
+        overflow: visible !important;
       }
 
       .problem-card {
         border-radius: 0;
         margin-bottom: 14px;
+        overflow: hidden;
       }
 
       .problem-header {
@@ -716,6 +770,12 @@
       <div class="notice">
         이 도구는 시험 실행 기능이 아닙니다. 기존 문제은행을 읽어 교사용 문제지와 정답표를 출력합니다.
         TOPIK I 읽기 원본 번호는 31번~70번 기준으로 표시됩니다.
+      </div>
+
+      <div class="print-setting-note screen-only" id="printSettingNote">
+        <strong>PDF 저장 안내</strong><br />
+        Chrome/Edge 인쇄 창에서 <strong>머리글과 바닥글은 끄고</strong>, <strong>배경 그래픽은 켜기</strong>로 저장하세요.
+        머리글과 바닥글이 켜져 있으면 날짜, URL, 페이지 번호가 문제지에 함께 들어갑니다.
       </div>
 
       <div class="field-group">
