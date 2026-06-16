@@ -2,10 +2,11 @@
 
 /*
   TOPIK I Reading Practice Print Tool
-  version: step46-4-topik1-image-passage-duplicate-hide-v1
+  version: step46-5-topik1-practice-print-actual-exam-rounds-v1
 
   역할:
-  - 기존 TOPIK I question-bank.json을 읽는다.
+  - 실제 업로드된 고정 시험지 exam-manifest.json/data/exams/reading-*.json을 우선 읽는다.
+  - 고정 시험지 로드가 어려울 때만 question-bank.json을 예비 자료로 사용한다.
   - 읽기 31~70번 표시 번호 기준으로 유형별 문제지를 만든다.
   - 학생용 문제지, 문제지+정답표, 교사용 정답표만 인쇄한다.
   - 시험 실행, 채점, 진단 보고서 로직은 포함하지 않는다.
@@ -13,12 +14,15 @@
 
 (function () {
   const QUESTION_BANK_URL = "../reading-test/data/bank/question-bank.json";
+  const EXAM_MANIFEST_URL = "../reading-test/data/exam-manifest.json";
   const CIRCLED = ["", "①", "②", "③", "④"];
 
   const state = {
     bank: null,
+    manifest: null,
     records: [],
-    selectedRecords: []
+    selectedRecords: [],
+    examLoadWarnings: []
   };
 
   const elements = {};
@@ -181,6 +185,24 @@
     ].join(" ");
 
     return normalizeRoundValue(textCandidates);
+  }
+
+
+  function isPseudoQuestionNumberRound(roundValue) {
+    const text = normalizeText(roundValue);
+    const numeric = Number(text);
+
+    return Boolean(
+      /^\d{2,3}$/.test(text) &&
+      Number.isFinite(numeric) &&
+      numeric >= 31 &&
+      numeric <= 70
+    );
+  }
+
+  function isUsableRound(roundValue) {
+    const text = normalizeText(roundValue);
+    return Boolean(text && text !== "unknown" && !isPseudoQuestionNumberRound(text));
   }
 
   function normalizeImageUrl(url) {
@@ -385,9 +407,9 @@
   function flattenBank(bank) {
     const records = [];
 
-    normalizeArray(bank.single_items).forEach(function (item, index) {
+    normalizeArray(bank.single_items).forEach(function (item) {
       const fallbackRound = getSourceRoundFromObject(item) || "";
-      const record = buildSingleRecord(item, fallbackRound || String(Math.floor(index / 18) + 1));
+      const record = buildSingleRecord(item, fallbackRound);
       if (record) {
         records.push(record);
       }
@@ -439,14 +461,353 @@
     return copy;
   }
 
-  async function loadBank() {
-    const response = await fetch(QUESTION_BANK_URL, { cache: "no-store" });
+  async function fetchJson(url) {
+    const response = await fetch(url, { cache: "no-store" });
 
     if (!response.ok) {
-      throw new Error(`문제은행을 불러오지 못했습니다. 상태 코드: ${response.status}`);
+      throw new Error(`파일을 불러오지 못했습니다. 경로: ${url}, 상태 코드: ${response.status}`);
     }
 
     return response.json();
+  }
+
+  async function loadBank() {
+    return fetchJson(QUESTION_BANK_URL);
+  }
+
+  async function loadManifest() {
+    return fetchJson(EXAM_MANIFEST_URL);
+  }
+
+  function getManifestEntries(manifest) {
+    if (Array.isArray(manifest)) {
+      return manifest;
+    }
+
+    if (manifest && Array.isArray(manifest.exams)) {
+      return manifest.exams;
+    }
+
+    if (manifest && Array.isArray(manifest.items)) {
+      return manifest.items;
+    }
+
+    if (manifest && Array.isArray(manifest.exam_list)) {
+      return manifest.exam_list;
+    }
+
+    return [];
+  }
+
+  function getRoundFromManifestEntry(entry) {
+    return normalizeRoundValue(
+      entry && (
+        entry.round ||
+        entry.source_round ||
+        entry.generated_exam_round ||
+        entry.value ||
+        entry.id ||
+        entry.label ||
+        entry.file
+      )
+    );
+  }
+
+  function normalizeExamFileUrl(fileValue) {
+    const raw = normalizeText(fileValue).replace(/\\/g, "/");
+
+    if (!raw) {
+      return "";
+    }
+
+    if (/^(https?:|data:|blob:)/i.test(raw)) {
+      return raw;
+    }
+
+    const clean = raw.replace(/^\.\//, "");
+
+    if (clean.startsWith("../reading-test/")) {
+      return clean;
+    }
+
+    if (clean.startsWith("reading-test/")) {
+      return "../" + clean;
+    }
+
+    if (clean.startsWith("/reading-test/")) {
+      return ".." + clean;
+    }
+
+    if (clean.startsWith("data/")) {
+      return "../reading-test/" + clean;
+    }
+
+    if (clean.startsWith("exams/")) {
+      return "../reading-test/data/" + clean;
+    }
+
+    if (/^(reading|level-test)-\d+\.json$/i.test(clean)) {
+      return "../reading-test/data/exams/" + clean;
+    }
+
+    return "../reading-test/data/exams/" + clean;
+  }
+
+  function isFullReadingExamEntry(entry) {
+    if (!entry || entry.enabled === false || entry.student_visible === false) {
+      return false;
+    }
+
+    const file = normalizeText(entry.file || entry.path || entry.url || "");
+    const label = normalizeText(entry.label || entry.name || entry.title || "");
+    const idText = normalizeText(entry.id || entry.value || "");
+
+    if (/level[-_ ]?test/i.test(file + " " + label + " " + idText)) {
+      return false;
+    }
+
+    if (/random|랜덤/i.test(label + " " + idText)) {
+      return false;
+    }
+
+    if (file && !/reading-\d+\.json$/i.test(file)) {
+      return false;
+    }
+
+    const round = getRoundFromManifestEntry(entry);
+    if (!isUsableRound(round)) {
+      return false;
+    }
+
+    const examType = normalizeText(entry.exam_type || entry.type || "");
+    const mode = normalizeText(entry.mode || entry.selection_type || "");
+
+    return Boolean(
+      /reading-\d+\.json$/i.test(file) ||
+      examType === "full" ||
+      mode === "round" ||
+      label.includes("40문항") ||
+      label.includes("실전시험")
+    );
+  }
+
+  function getQuestionArrayFromExamData(examData) {
+    if (Array.isArray(examData)) {
+      return examData;
+    }
+
+    if (examData && Array.isArray(examData.items)) {
+      return examData.items;
+    }
+
+    if (examData && Array.isArray(examData.questions)) {
+      return examData.questions;
+    }
+
+    if (examData && Array.isArray(examData.data)) {
+      return examData.data;
+    }
+
+    return [];
+  }
+
+  function getPairRangeStart(displayNumber) {
+    const n = Number(displayNumber);
+
+    if (!Number.isFinite(n)) {
+      return null;
+    }
+
+    const pairStarts = [49, 51, 53, 55, 57, 59, 61, 63, 65, 67, 69];
+
+    for (let i = 0; i < pairStarts.length; i += 1) {
+      const startNumber = pairStarts[i];
+      if (n === startNumber || n === startNumber + 1) {
+        return startNumber;
+      }
+    }
+
+    return null;
+  }
+
+  function getSetInstructionFallback(startNumber) {
+    if (startNumber === 57) {
+      return "[57~58] 다음을 순서에 맞게 배열한 것을 고르십시오.";
+    }
+
+    return `[${startNumber}~${startNumber + 1}] 다음을 읽고 물음에 답하십시오.`;
+  }
+
+  function buildExamRecord(item, sourceRound, examMeta, index) {
+    const displayNumber = getDisplayNumber(item);
+
+    if (!Number.isFinite(displayNumber)) {
+      return null;
+    }
+
+    const pairStart = getPairRangeStart(displayNumber);
+    const explicitGroupId = normalizeText(
+      item.passage_group_id ||
+      item.group_id ||
+      item.set_id ||
+      item.source_set_id ||
+      ""
+    );
+    const groupId = explicitGroupId || (pairStart ? `round-${sourceRound}-${pairStart}-${pairStart + 1}` : "");
+    const groupInstruction = normalizeText(
+      item.group_instruction ||
+      item.set_instruction ||
+      item.passage_group_title ||
+      item.group_title ||
+      ""
+    ) || (pairStart ? getSetInstructionFallback(pairStart) : "");
+
+    const sharedPassage = normalizeText(
+      item.shared_passage ||
+      item.group_passage ||
+      item.common_passage ||
+      ""
+    );
+    const itemPassage = normalizeText(item.passage || "");
+    const groupPassage = groupId ? (sharedPassage || itemPassage) : "";
+    const singlePassage = groupId ? "" : (itemPassage || sharedPassage);
+
+    const imageUrl = normalizeImageUrl(
+      item.image_url ||
+      item.image ||
+      item.image_path ||
+      item.passage_image ||
+      ""
+    );
+    const groupImageUrl = groupId ? imageUrl : "";
+
+    return {
+      record_id: item.id || item.item_id || `reading-${sourceRound}-${displayNumber}-${index + 1}`,
+      group_id: groupId,
+      kind: groupId ? "exam-set-item" : "exam-single",
+      source_round: sourceRound,
+      display_number: displayNumber,
+      instruction: item.instruction || "",
+      group_instruction: groupInstruction,
+      group_title: item.group_title || item.passage_group_title || groupInstruction,
+      passage: singlePassage,
+      group_passage: groupPassage,
+      question: item.question || "",
+      options: normalizeArray(item.options),
+      correct_answer: getCorrectAnswer(item),
+      type: item.type || "",
+      set_type: item.set_type || "",
+      category: item.category || "",
+      diagnostic_area: item.diagnostic_area || "",
+      points: Number(item.points) || 0,
+      image_url: imageUrl,
+      group_image_url: groupImageUrl,
+      sentence_items: item.sentence_items,
+      correct_order: item.correct_order,
+      order_choice_orders: item.order_choice_orders,
+      start_candidate_labels: item.start_candidate_labels,
+      insert_sentence: item.insert_sentence || "",
+      insert_positions: item.insert_positions,
+      insert_markers: item.insert_markers,
+      correct_position: item.correct_position || "",
+      source_exam_label: examMeta && examMeta.label,
+      raw: item
+    };
+  }
+
+  function propagateGroupFields(records) {
+    const groups = new Map();
+
+    records.forEach(function (record) {
+      if (!record.group_id) {
+        return;
+      }
+
+      if (!groups.has(record.group_id)) {
+        groups.set(record.group_id, []);
+      }
+
+      groups.get(record.group_id).push(record);
+    });
+
+    groups.forEach(function (items) {
+      const passageRecord = items.find(function (record) { return normalizeText(record.group_passage); });
+      const imageRecord = items.find(function (record) { return normalizeImageUrl(record.group_image_url); });
+      const instructionRecord = items.find(function (record) { return normalizeText(record.group_instruction); });
+      const passage = passageRecord ? passageRecord.group_passage : "";
+      const imageUrl = imageRecord ? imageRecord.group_image_url : "";
+      const instruction = instructionRecord ? instructionRecord.group_instruction : "";
+
+      items.forEach(function (record) {
+        if (passage && !record.group_passage) {
+          record.group_passage = passage;
+        }
+
+        if (imageUrl && !record.group_image_url) {
+          record.group_image_url = imageUrl;
+        }
+
+        if (instruction && !record.group_instruction) {
+          record.group_instruction = instruction;
+        }
+      });
+    });
+
+    return records;
+  }
+
+  function flattenExamData(examData, sourceRound, examMeta) {
+    const questions = getQuestionArrayFromExamData(examData);
+
+    return propagateGroupFields(questions.map(function (item, index) {
+      return buildExamRecord(item, sourceRound, examMeta, index);
+    }).filter(Boolean)).filter(function (record) {
+      return record.display_number >= 31 && record.display_number <= 70;
+    });
+  }
+
+  async function loadExamRecordsFromManifest() {
+    const result = {
+      manifest: null,
+      records: [],
+      warnings: []
+    };
+
+    try {
+      result.manifest = await loadManifest();
+    } catch (error) {
+      result.warnings.push("exam-manifest.json을 불러오지 못해 question-bank.json 예비 자료를 사용합니다.");
+      return result;
+    }
+
+    const entries = getManifestEntries(result.manifest).filter(isFullReadingExamEntry);
+
+    for (let i = 0; i < entries.length; i += 1) {
+      const entry = entries[i];
+      const round = getRoundFromManifestEntry(entry);
+      const file = entry.file || entry.path || entry.url || `reading-${round}.json`;
+      const url = normalizeExamFileUrl(file);
+
+      try {
+        const examData = await fetchJson(url);
+        const records = flattenExamData(examData, round, {
+          label: entry.label || `${round}회 40문항 실전시험`,
+          url
+        });
+
+        if (records.length) {
+          result.records = result.records.concat(records);
+        } else {
+          result.warnings.push(`${round}회 시험지에서 출력 가능한 31~70번 문항을 찾지 못했습니다.`);
+        }
+      } catch (error) {
+        console.warn(error);
+        result.warnings.push(`${round}회 시험지 파일을 불러오지 못했습니다: ${url}`);
+      }
+    }
+
+    result.records = result.records.sort(compareBySourceThenNumber);
+    return result;
   }
 
   function setStatus(message, isError) {
@@ -464,7 +825,7 @@
     const rounds = Array.from(new Set(
       state.records
         .map(function (record) { return record.source_round; })
-        .filter(function (round) { return round && round !== "unknown"; })
+        .filter(isUsableRound)
     ));
 
     return rounds.sort(function (a, b) {
@@ -487,7 +848,7 @@
     }
 
     if (!rounds.length) {
-      elements.roundList.innerHTML = "<div>문제은행에서 회차 정보를 찾지 못했습니다. 전체 문항을 사용합니다.</div>";
+      elements.roundList.innerHTML = "<div>실제 업로드된 시험지 회차 정보를 찾지 못했습니다. 전체 문항을 사용합니다.</div>";
       return;
     }
 
@@ -637,7 +998,7 @@
       ? "source-info"
       : "source-info hide-source";
 
-    const roundText = record.source_round && record.source_round !== "unknown"
+    const roundText = isUsableRound(record.source_round)
       ? `${record.source_round}회`
       : "회차 미상";
 
@@ -898,7 +1259,7 @@
 
   function renderAnswerSection(records, title) {
     const rows = records.map(function (record, index) {
-      const roundText = record.source_round && record.source_round !== "unknown"
+      const roundText = isUsableRound(record.source_round)
         ? `${record.source_round}회`
         : "미상";
 
@@ -1097,18 +1458,36 @@
 
     try {
       state.bank = await loadBank();
-      state.records = flattenBank(state.bank);
+
+      const examResult = await loadExamRecordsFromManifest();
+      state.manifest = examResult.manifest;
+      state.examLoadWarnings = examResult.warnings;
+
+      if (examResult.records.length) {
+        state.records = examResult.records;
+      } else {
+        state.records = flattenBank(state.bank).filter(function (record) {
+          return !isPseudoQuestionNumberRound(record.source_round);
+        });
+      }
 
       renderRoundList();
 
       const rounds = getAvailableRounds();
-      setStatus(`문제은행을 불러왔습니다. 사용 가능 문항 ${state.records.length}개, 회차 ${rounds.length}개입니다.`, false);
+      const sourceLabel = examResult.records.length
+        ? "실제 업로드된 고정 시험지"
+        : "문제은행 예비 자료";
+      const warningText = state.examLoadWarnings.length
+        ? ` 경고 ${state.examLoadWarnings.length}건이 있습니다.`
+        : "";
+
+      setStatus(`${sourceLabel}를 불러왔습니다. 사용 가능 문항 ${state.records.length}개, 회차 ${rounds.length}개입니다.${warningText}`, false);
     } catch (error) {
       console.error(error);
-      setStatus(error.message || "문제은행을 불러오는 중 오류가 발생했습니다.", true);
+      setStatus(error.message || "문제지 출력 자료를 불러오는 중 오류가 발생했습니다.", true);
 
       if (elements.roundList) {
-        elements.roundList.textContent = "문제은행을 불러오지 못했습니다.";
+        elements.roundList.textContent = "문제지 출력 자료를 불러오지 못했습니다.";
       }
     }
   }
