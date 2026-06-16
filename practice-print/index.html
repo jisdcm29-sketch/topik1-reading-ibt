@@ -1,1 +1,589 @@
-1
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TOPIK I 읽기 유형별 문제지 출력</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --topik-blue: #0877f2;
+      --topik-blue-dark: #0058c8;
+      --topik-soft: #eaf4ff;
+      --line: #d8dee8;
+      --text: #1f2937;
+      --muted: #667085;
+      --bg: #f4f6f9;
+      --paper: #ffffff;
+      --red: #d93025;
+      --green: #188038;
+      --shadow: 0 8px 26px rgba(15, 23, 42, 0.12);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans KR", "Malgun Gothic", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button, input, select {
+      font-family: inherit;
+    }
+
+    .top-bar {
+      background: var(--topik-blue);
+      color: #fff;
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.14);
+    }
+
+    .top-title {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+    }
+
+    .top-subtitle {
+      margin: 4px 0 0;
+      font-size: 14px;
+      opacity: 0.92;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 900;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .layout {
+      width: min(1320px, calc(100% - 32px));
+      margin: 18px auto 42px;
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .control-panel,
+    .preview-panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .control-panel {
+      padding: 18px;
+      align-self: start;
+      position: sticky;
+      top: 16px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+    }
+
+    .preview-panel {
+      padding: 22px;
+      min-height: 720px;
+    }
+
+    .section-heading {
+      margin: 0 0 12px;
+      color: #003f8f;
+      font-size: 20px;
+      font-weight: 900;
+      border-bottom: 2px solid var(--topik-blue);
+      padding-bottom: 8px;
+    }
+
+    .field-group {
+      margin-bottom: 16px;
+    }
+
+    .field-group label,
+    .group-label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 900;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid #b8c7d9;
+      border-radius: 10px;
+      padding: 0 12px;
+      font-size: 15px;
+      background: #fff;
+    }
+
+    .checkbox-line,
+    .radio-line {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin: 7px 0;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .round-list {
+      max-height: 176px;
+      overflow-y: auto;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbfcff;
+    }
+
+    .button-stack {
+      display: grid;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .button {
+      width: 100%;
+      min-height: 44px;
+      border: none;
+      border-radius: 10px;
+      background: var(--topik-blue);
+      color: #fff;
+      font-weight: 900;
+      font-size: 15px;
+      cursor: pointer;
+      padding: 10px 12px;
+    }
+
+    .button:hover { filter: brightness(0.95); }
+
+    .button.secondary {
+      background: #ffffff;
+      color: var(--topik-blue);
+      border: 2px solid var(--topik-blue);
+    }
+
+    .button.gray {
+      background: #ffffff;
+      color: #384152;
+      border: 1px solid #cbd5e1;
+    }
+
+    .button.dark {
+      background: #111827;
+      color: #fff;
+    }
+
+    .button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .status-box {
+      margin: 14px 0;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--topik-soft);
+      border: 1px solid #b9d8ff;
+      color: #003f8f;
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: 700;
+      min-height: 44px;
+    }
+
+    .notice {
+      padding: 12px;
+      border-radius: 12px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #7c2d12;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .print-title {
+      margin: 0 0 6px;
+      color: #003f8f;
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+    }
+
+    .print-meta {
+      display: none !important;
+    }
+
+    .empty-preview {
+      border: 2px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 44px 20px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.8;
+      background: #fbfcfe;
+    }
+
+    .problem-section {
+      display: block;
+    }
+
+    .problem-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin: 0 0 20px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .problem-card.common-set {
+      border-color: #b9d8ff;
+    }
+
+    .problem-header {
+      padding: 10px 14px;
+      background: #f8fbff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-weight: 900;
+      color: #003f8f;
+    }
+
+    .source-info {
+      color: #475467;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .problem-body {
+      padding: 16px 18px 18px;
+    }
+
+    .instruction {
+      margin: 0 0 12px;
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.6;
+    }
+
+    .passage-box,
+    .insert-box,
+    .sentence-order-box {
+      margin: 10px 0 14px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #d6dce8;
+      background: #fbfdff;
+      line-height: 1.85;
+      white-space: pre-line;
+      font-size: 16px;
+    }
+
+    .insert-box {
+      border-color: #bfdbfe;
+      background: #eff6ff;
+      font-weight: 900;
+      color: #003f8f;
+      text-align: center;
+    }
+
+    .question-line {
+      margin: 12px 0;
+      line-height: 1.7;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .question-number {
+      color: #003f8f;
+      font-weight: 900;
+    }
+
+    .options {
+      margin: 8px 0 0;
+      display: grid;
+      gap: 7px;
+    }
+
+    .option-line {
+      line-height: 1.65;
+      font-size: 15.5px;
+    }
+
+    .item-block {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .item-block:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .question-image {
+      max-width: 100%;
+      max-height: 460px;
+      object-fit: contain;
+      display: block;
+      margin: 10px auto 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .answer-section {
+      margin-top: 28px;
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .answer-title {
+      color: #003f8f;
+      font-size: 22px;
+      font-weight: 900;
+      margin: 0 0 12px;
+    }
+
+    .answer-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .answer-table th,
+    .answer-table td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 9px;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.45;
+    }
+
+    .answer-table th {
+      background: #eef6ff;
+      color: #003f8f;
+      font-weight: 900;
+    }
+
+    .answer-table td:nth-child(1),
+    .answer-table td:nth-child(2),
+    .answer-table td:nth-child(3) {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .control-panel {
+        position: static;
+        max-height: none;
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 13mm;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .top-bar,
+      .control-panel {
+        display: none !important;
+      }
+
+      .layout {
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+
+      .preview-panel {
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+        min-height: auto;
+      }
+
+      .problem-card {
+        border-radius: 0;
+        margin-bottom: 14px;
+      }
+
+      .problem-header {
+        background: #f7f7f7 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .question-image {
+        max-height: 360px;
+      }
+
+      .empty-preview {
+        display: none !important;
+      }
+
+      body.print-student .answer-section {
+        display: none !important;
+      }
+
+      body.print-answer-only .print-title {
+        display: none !important;
+      }
+
+      body.print-answer-only .problem-section {
+        display: none !important;
+      }
+
+      body.print-answer-only .answer-section {
+        break-before: auto;
+        page-break-before: auto;
+        margin-top: 0;
+      }
+
+      body.print-answer-only .answer-title {
+        margin-top: 0;
+      }
+
+      body.print-student .source-info.hide-source,
+      body.print-with-answers .source-info.hide-source {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div>
+      <h1 class="top-title">TOPIK I 읽기 유형별 문제지 출력</h1>
+      <p class="top-subtitle">TOPIK I PBT Reading 31~70번 기준 · 교사용 출력 도구</p>
+    </div>
+    <a class="back-link" href="../reading-test/index.html?v=from_practice_print">인증 화면으로 돌아가기</a>
+  </header>
+
+  <main class="layout">
+    <aside class="control-panel" aria-label="문제지 출력 설정">
+      <h2 class="section-heading">출력 설정</h2>
+
+      <div class="notice">
+        이 도구는 시험 실행 기능이 아닙니다. 기존 문제은행을 읽어 교사용 문제지와 정답표를 출력합니다.
+        TOPIK I 읽기 원본 번호는 31번~70번 기준으로 표시됩니다.
+      </div>
+
+      <div class="field-group">
+        <div class="group-label">원본 문항 번호 범위</div>
+        <div class="input-row">
+          <label>
+            시작 번호
+            <input id="startNumberInput" type="number" min="31" max="70" value="31" />
+          </label>
+          <label>
+            끝 번호
+            <input id="endNumberInput" type="number" min="31" max="70" value="70" />
+          </label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="questionCountInput">출력 문항 수</label>
+        <input id="questionCountInput" type="number" min="0" value="0" />
+        <label class="checkbox-line">
+          <input id="allowDuplicateInput" type="checkbox" />
+          부족하면 중복 허용해서 문항 수 맞추기
+        </label>
+      </div>
+
+      <div class="field-group">
+        <div class="group-label">출제 회차 선택</div>
+        <div id="roundList" class="round-list">
+          문제은행을 불러오는 중입니다.
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="group-label">출력 순서</div>
+        <label class="radio-line">
+          <input type="radio" name="printOrder" value="source" checked />
+          회차·원본 번호순
+        </label>
+        <label class="radio-line">
+          <input type="radio" name="printOrder" value="random" />
+          랜덤
+        </label>
+      </div>
+
+      <div class="field-group">
+        <label class="checkbox-line">
+          <input id="showSourceInfoInput" type="checkbox" checked />
+          문제 카드에 원본 정보 표시
+        </label>
+      </div>
+
+      <div id="statusBox" class="status-box">문제은행을 불러오는 중입니다.</div>
+
+      <div class="button-stack">
+        <button id="generatePreviewButton" class="button" type="button">문제지 미리보기 생성</button>
+        <button id="printStudentButton" class="button secondary" type="button">학생용 문제지 PDF로 인쇄 / 저장</button>
+        <button id="printWithAnswerButton" class="button secondary" type="button">문제지+정답표 PDF로 인쇄 / 저장</button>
+        <button id="printAnswerOnlyButton" class="button dark" type="button">교사용 정답표 PDF로 인쇄 / 저장</button>
+        <button id="resetButton" class="button gray" type="button">초기화</button>
+      </div>
+    </aside>
+
+    <section class="preview-panel" aria-label="문제지 미리보기">
+      <div id="printArea">
+        <h2 id="printTitle" class="print-title">TOPIK I 읽기 원본 31~70번 유형별 문제지</h2>
+        <div id="printMeta" class="print-meta">문제지 미리보기를 생성하세요.</div>
+
+        <div id="emptyPreview" class="empty-preview">
+          왼쪽에서 범위와 회차를 선택한 뒤 <strong>문제지 미리보기 생성</strong>을 누르세요.<br />
+          예: 31~34번 유형만 모으려면 시작 31, 끝 34로 설정합니다.
+        </div>
+
+        <div id="problemSection" class="problem-section"></div>
+        <div id="answerSection" class="answer-section hidden"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./practice-print.js?v=topik1-practice-print-3"></script>
+</body>
+</html>

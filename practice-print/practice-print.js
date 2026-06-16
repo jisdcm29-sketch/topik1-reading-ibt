@@ -1,0 +1,1121 @@
+"use strict";
+
+/*
+  TOPIK I Reading Practice Print Tool
+  version: step46-4-topik1-image-passage-duplicate-hide-v1
+
+  역할:
+  - 기존 TOPIK I question-bank.json을 읽는다.
+  - 읽기 31~70번 표시 번호 기준으로 유형별 문제지를 만든다.
+  - 학생용 문제지, 문제지+정답표, 교사용 정답표만 인쇄한다.
+  - 시험 실행, 채점, 진단 보고서 로직은 포함하지 않는다.
+*/
+
+(function () {
+  const QUESTION_BANK_URL = "../reading-test/data/bank/question-bank.json";
+  const CIRCLED = ["", "①", "②", "③", "④"];
+
+  const state = {
+    bank: null,
+    records: [],
+    selectedRecords: []
+  };
+
+  const elements = {};
+
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function cacheElements() {
+    [
+      "startNumberInput",
+      "endNumberInput",
+      "questionCountInput",
+      "allowDuplicateInput",
+      "roundList",
+      "showSourceInfoInput",
+      "statusBox",
+      "generatePreviewButton",
+      "printStudentButton",
+      "printWithAnswerButton",
+      "printAnswerOnlyButton",
+      "resetButton",
+      "printTitle",
+      "printMeta",
+      "emptyPreview",
+      "problemSection",
+      "answerSection"
+    ].forEach(function (id) {
+      elements[id] = byId(id);
+    });
+  }
+
+  function normalizeArray(value) {
+    return Array.isArray(value) ? value : [];
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function normalizeText(value) {
+    return String(value == null ? "" : value).trim();
+  }
+
+  function getFirstNumber(value) {
+    if (Array.isArray(value)) {
+      for (let i = 0; i < value.length; i += 1) {
+        const parsed = Number(value[i]);
+        if (Number.isFinite(parsed)) {
+          return parsed;
+        }
+      }
+      return null;
+    }
+
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  function convertToDisplayNumber(numberValue) {
+    const n = Number(numberValue);
+
+    if (!Number.isFinite(n)) {
+      return null;
+    }
+
+    if (n >= 31 && n <= 70) {
+      return n;
+    }
+
+    if (n >= 1 && n <= 40) {
+      return n + 30;
+    }
+
+    return n;
+  }
+
+  function getDisplayNumber(item) {
+    const rawCandidates = [
+      item && item.display_question_number,
+      item && item.original_question_number,
+      item && item.question_number,
+      item && item.target_slot,
+      getFirstNumber(item && item.target_slots),
+      item && item.slot
+    ];
+
+    for (let i = 0; i < rawCandidates.length; i += 1) {
+      const converted = convertToDisplayNumber(rawCandidates[i]);
+      if (Number.isFinite(converted)) {
+        return converted;
+      }
+    }
+
+    return null;
+  }
+
+  function normalizeRoundValue(value) {
+    const text = String(value || "").trim();
+
+    if (!text) {
+      return "";
+    }
+
+    const exact = text.match(/^\d{2,4}$/);
+    if (exact) {
+      return exact[0];
+    }
+
+    const withUnit = text.match(/(\d{2,4})회/);
+    if (withUnit) {
+      return withUnit[1];
+    }
+
+    const rPattern = text.match(/R(?:OUND)?[-_ ]?(\d{2,4})/i);
+    if (rPattern) {
+      return rPattern[1];
+    }
+
+    const delimited = text.match(/(?:^|[^A-Za-z0-9])(\d{2,4})(?=[^A-Za-z0-9]|$)/g) || [];
+
+    for (let i = 0; i < delimited.length; i += 1) {
+      const digits = delimited[i].replace(/\D/g, "");
+      const numberValue = Number(digits);
+      if (Number.isFinite(numberValue) && numberValue >= 80) {
+        return digits;
+      }
+    }
+
+    return "";
+  }
+
+  function getSourceRoundFromObject(value) {
+    const directCandidates = [
+      value && value.source_round,
+      value && value.round,
+      value && value.exam_round,
+      value && value.source_exam,
+      value && value.source_pdf
+    ];
+
+    for (let i = 0; i < directCandidates.length; i += 1) {
+      const round = normalizeRoundValue(directCandidates[i]);
+      if (round) {
+        return round;
+      }
+    }
+
+    const textCandidates = [
+      value && value.id,
+      value && value.item_id,
+      value && value.set_id,
+      value && value.source_bank_id,
+      value && value.source_set_id,
+      value && value.source
+    ].join(" ");
+
+    return normalizeRoundValue(textCandidates);
+  }
+
+  function normalizeImageUrl(url) {
+    const raw = normalizeText(url).replace(/\\/g, "/");
+
+    if (!raw) {
+      return "";
+    }
+
+    if (/^(https?:|data:|blob:)/i.test(raw)) {
+      return raw;
+    }
+
+    const clean = raw.replace(/^\.\//, "");
+
+    if (clean.startsWith("../reading-test/")) {
+      return clean;
+    }
+
+    if (clean.startsWith("reading-test/")) {
+      return "../" + clean;
+    }
+
+    if (clean.startsWith("/reading-test/")) {
+      return ".." + clean;
+    }
+
+    if (clean.startsWith("images/")) {
+      return "../reading-test/" + clean;
+    }
+
+    if (clean.includes("/images/")) {
+      const fileName = clean.split("/images/").pop();
+      return "../reading-test/images/" + fileName;
+    }
+
+    return clean;
+  }
+
+  function getCorrectAnswer(item) {
+    const candidates = [
+      item && item.correct_answer,
+      item && item.answer,
+      item && item.correct_position,
+      item && item.correct_order
+    ];
+
+    for (let i = 0; i < candidates.length; i += 1) {
+      const value = candidates[i];
+
+      if (Array.isArray(value) && value.length) {
+        return value.join(" → ");
+      }
+
+      if (value !== undefined && value !== null && String(value).trim() !== "") {
+        return value;
+      }
+    }
+
+    return "";
+  }
+
+  function formatAnswer(value) {
+    if (Array.isArray(value)) {
+      return value.join(" → ");
+    }
+
+    const text = normalizeText(value);
+
+    if (!text) {
+      return "";
+    }
+
+    const numberValue = Number(text);
+    if (Number.isFinite(numberValue) && numberValue >= 1 && numberValue <= 4) {
+      return CIRCLED[numberValue];
+    }
+
+    return text;
+  }
+
+  function getOptionText(option, index) {
+    if (option && typeof option === "object") {
+      return normalizeText(option.text || option.label || option.value || option.option || "");
+    }
+
+    return normalizeText(option);
+  }
+
+  function getChoiceLabel(index) {
+    return CIRCLED[index + 1] || String(index + 1) + ".";
+  }
+
+  function normalizeSentenceLabel(labelValue) {
+    return normalizeText(labelValue)
+      .replace(/^[\s(（]+/, "")
+      .replace(/[\s)）]+$/, "");
+  }
+
+  function formatSentenceOrderText(value) {
+    if (Array.isArray(value)) {
+      return value
+        .map(function (part) {
+          return normalizeSentenceLabel(part);
+        })
+        .filter(Boolean)
+        .join(" → ");
+    }
+
+    return normalizeText(value)
+      .replace(/\s*[-–—>]\s*/g, " → ")
+      .replace(/\s*→\s*/g, " → ");
+  }
+
+  function buildSingleRecord(item, fallbackRound) {
+    const displayNumber = getDisplayNumber(item);
+
+    if (!Number.isFinite(displayNumber)) {
+      return null;
+    }
+
+    const sourceRound = getSourceRoundFromObject(item) || fallbackRound || "unknown";
+
+    return {
+      record_id: item.id || item.item_id || `single-${sourceRound}-${displayNumber}`,
+      group_id: "",
+      kind: "single",
+      source_round: sourceRound,
+      display_number: displayNumber,
+      instruction: item.instruction || "",
+      passage: item.passage || "",
+      question: item.question || "",
+      options: normalizeArray(item.options),
+      correct_answer: getCorrectAnswer(item),
+      type: item.type || "",
+      category: item.category || "",
+      diagnostic_area: item.diagnostic_area || "",
+      points: Number(item.points) || 0,
+      image_url: normalizeImageUrl(item.image_url || item.image || ""),
+      sentence_items: item.sentence_items,
+      correct_order: item.correct_order,
+      order_choice_orders: item.order_choice_orders,
+      start_candidate_labels: item.start_candidate_labels,
+      insert_sentence: item.insert_sentence || "",
+      insert_positions: item.insert_positions,
+      insert_markers: item.insert_markers,
+      correct_position: item.correct_position || "",
+      raw: item
+    };
+  }
+
+  function buildSetRecords(set, setIndex) {
+    const sourceRound = getSourceRoundFromObject(set) || `set${setIndex + 1}`;
+    const groupId = set.set_id || set.passage_group_id || `set-${sourceRound}-${setIndex + 1}`;
+    const setInstruction = set.instruction || set.group_title || set.passage_group_title || "";
+    const setImageUrl = normalizeImageUrl(set.image_url || set.image || "");
+    const setPassage = set.passage || set.shared_passage || "";
+
+    return normalizeArray(set.items).map(function (item, itemIndex) {
+      const displayNumber = getDisplayNumber(item);
+      if (!Number.isFinite(displayNumber)) {
+        return null;
+      }
+
+      const mergedItem = Object.assign({}, item);
+
+      return {
+        record_id: item.item_id || item.id || `${groupId}-item-${itemIndex + 1}`,
+        group_id: groupId,
+        kind: "set-item",
+        source_round: getSourceRoundFromObject(item) || sourceRound,
+        display_number: displayNumber,
+        instruction: item.instruction || setInstruction,
+        group_instruction: setInstruction,
+        group_title: set.group_title || set.passage_group_title || setInstruction,
+        passage: item.passage || "",
+        group_passage: setPassage,
+        question: item.question || "",
+        options: normalizeArray(item.options),
+        correct_answer: getCorrectAnswer(mergedItem),
+        type: item.type || "",
+        set_type: set.set_type || "",
+        category: item.category || "",
+        diagnostic_area: item.diagnostic_area || "",
+        points: Number(item.points) || 0,
+        image_url: normalizeImageUrl(item.image_url || item.image || setImageUrl),
+        group_image_url: setImageUrl,
+        sentence_items: item.sentence_items,
+        correct_order: item.correct_order,
+        order_choice_orders: item.order_choice_orders,
+        start_candidate_labels: item.start_candidate_labels,
+        insert_sentence: item.insert_sentence || "",
+        insert_positions: item.insert_positions,
+        insert_markers: item.insert_markers,
+        correct_position: item.correct_position || "",
+        source_set: set,
+        raw: item
+      };
+    }).filter(Boolean);
+  }
+
+  function flattenBank(bank) {
+    const records = [];
+
+    normalizeArray(bank.single_items).forEach(function (item, index) {
+      const fallbackRound = getSourceRoundFromObject(item) || "";
+      const record = buildSingleRecord(item, fallbackRound || String(Math.floor(index / 18) + 1));
+      if (record) {
+        records.push(record);
+      }
+    });
+
+    normalizeArray(bank.passage_sets).forEach(function (set, index) {
+      buildSetRecords(set, index).forEach(function (record) {
+        records.push(record);
+      });
+    });
+
+    return records
+      .filter(function (record) {
+        return record.display_number >= 31 && record.display_number <= 70;
+      })
+      .sort(compareBySourceThenNumber);
+  }
+
+  function compareBySourceThenNumber(a, b) {
+    const roundA = Number(a.source_round);
+    const roundB = Number(b.source_round);
+
+    if (Number.isFinite(roundA) && Number.isFinite(roundB) && roundA !== roundB) {
+      return roundA - roundB;
+    }
+
+    const textCompare = String(a.source_round).localeCompare(String(b.source_round), "ko");
+    if (textCompare !== 0) {
+      return textCompare;
+    }
+
+    if (a.display_number !== b.display_number) {
+      return a.display_number - b.display_number;
+    }
+
+    return String(a.record_id).localeCompare(String(b.record_id), "ko");
+  }
+
+  function shuffle(list) {
+    const copy = list.slice();
+
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = copy[i];
+      copy[i] = copy[j];
+      copy[j] = temp;
+    }
+
+    return copy;
+  }
+
+  async function loadBank() {
+    const response = await fetch(QUESTION_BANK_URL, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`문제은행을 불러오지 못했습니다. 상태 코드: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  function setStatus(message, isError) {
+    if (!elements.statusBox) {
+      return;
+    }
+
+    elements.statusBox.textContent = message;
+    elements.statusBox.style.color = isError ? "#d93025" : "#003f8f";
+    elements.statusBox.style.borderColor = isError ? "#ffc4c4" : "#b9d8ff";
+    elements.statusBox.style.background = isError ? "#fff1f1" : "#eaf4ff";
+  }
+
+  function getAvailableRounds() {
+    const rounds = Array.from(new Set(
+      state.records
+        .map(function (record) { return record.source_round; })
+        .filter(function (round) { return round && round !== "unknown"; })
+    ));
+
+    return rounds.sort(function (a, b) {
+      const na = Number(a);
+      const nb = Number(b);
+
+      if (Number.isFinite(na) && Number.isFinite(nb)) {
+        return na - nb;
+      }
+
+      return String(a).localeCompare(String(b), "ko");
+    });
+  }
+
+  function renderRoundList() {
+    const rounds = getAvailableRounds();
+
+    if (!elements.roundList) {
+      return;
+    }
+
+    if (!rounds.length) {
+      elements.roundList.innerHTML = "<div>문제은행에서 회차 정보를 찾지 못했습니다. 전체 문항을 사용합니다.</div>";
+      return;
+    }
+
+    const html = [
+      '<label class="checkbox-line">',
+      '<input id="roundAllCheckbox" type="checkbox" checked />',
+      '<strong>전체 회차</strong>',
+      '</label>'
+    ].concat(rounds.map(function (round) {
+      return [
+        '<label class="checkbox-line">',
+        `<input class="round-checkbox" type="checkbox" value="${escapeHtml(round)}" checked />`,
+        `${escapeHtml(round)}회`,
+        '</label>'
+      ].join("");
+    })).join("");
+
+    elements.roundList.innerHTML = html;
+
+    const allCheckbox = byId("roundAllCheckbox");
+    const roundCheckboxes = Array.from(document.querySelectorAll(".round-checkbox"));
+
+    if (allCheckbox) {
+      allCheckbox.addEventListener("change", function () {
+        roundCheckboxes.forEach(function (checkbox) {
+          checkbox.checked = allCheckbox.checked;
+        });
+      });
+    }
+
+    roundCheckboxes.forEach(function (checkbox) {
+      checkbox.addEventListener("change", function () {
+        if (!allCheckbox) {
+          return;
+        }
+
+        allCheckbox.checked = roundCheckboxes.every(function (item) {
+          return item.checked;
+        });
+      });
+    });
+  }
+
+  function getSelectedRounds() {
+    const checkboxes = Array.from(document.querySelectorAll(".round-checkbox"));
+
+    if (!checkboxes.length) {
+      return [];
+    }
+
+    return checkboxes
+      .filter(function (checkbox) { return checkbox.checked; })
+      .map(function (checkbox) { return checkbox.value; });
+  }
+
+  function getSelectedPrintOrder() {
+    const checked = document.querySelector('input[name="printOrder"]:checked');
+    return checked ? checked.value : "source";
+  }
+
+  function getSelectionOptions() {
+    let start = Number(elements.startNumberInput && elements.startNumberInput.value);
+    let end = Number(elements.endNumberInput && elements.endNumberInput.value);
+    const count = Math.max(0, Number(elements.questionCountInput && elements.questionCountInput.value) || 0);
+    const allowDuplicate = Boolean(elements.allowDuplicateInput && elements.allowDuplicateInput.checked);
+    const order = getSelectedPrintOrder();
+    const selectedRounds = getSelectedRounds();
+
+    if (!Number.isFinite(start)) {
+      start = 31;
+    }
+
+    if (!Number.isFinite(end)) {
+      end = 70;
+    }
+
+    start = Math.max(31, Math.min(70, start));
+    end = Math.max(31, Math.min(70, end));
+
+    if (start > end) {
+      const temp = start;
+      start = end;
+      end = temp;
+    }
+
+    if (elements.startNumberInput) {
+      elements.startNumberInput.value = String(start);
+    }
+
+    if (elements.endNumberInput) {
+      elements.endNumberInput.value = String(end);
+    }
+
+    return {
+      start,
+      end,
+      count,
+      allowDuplicate,
+      order,
+      selectedRounds
+    };
+  }
+
+  function filterRecords(options) {
+    let records = state.records.filter(function (record) {
+      const inRange = record.display_number >= options.start && record.display_number <= options.end;
+      const inRound = options.selectedRounds.length === 0 || options.selectedRounds.includes(record.source_round);
+      return inRange && inRound;
+    });
+
+    records = options.order === "random" ? shuffle(records) : records.sort(compareBySourceThenNumber);
+
+    if (options.count > 0) {
+      if (records.length >= options.count) {
+        records = records.slice(0, options.count);
+      } else if (records.length > 0 && options.allowDuplicate) {
+        const extended = records.slice();
+        let index = 0;
+
+        while (extended.length < options.count) {
+          const cloned = Object.assign({}, records[index % records.length]);
+          cloned.record_id = `${cloned.record_id}-dup-${extended.length + 1}`;
+          cloned.duplicated = true;
+          extended.push(cloned);
+          index += 1;
+        }
+
+        records = extended;
+      }
+    }
+
+    return records;
+  }
+
+  function makeTitle(options, answerOnly) {
+    const rangeText = options.start === options.end
+      ? `${options.start}번`
+      : `${options.start}~${options.end}번`;
+
+    return answerOnly
+      ? `TOPIK I 읽기 원본 ${rangeText} 유형별 정답표`
+      : `TOPIK I 읽기 원본 ${rangeText} 유형별 문제지`;
+  }
+
+  function renderSourceInfo(record) {
+    const sourceClass = elements.showSourceInfoInput && elements.showSourceInfoInput.checked
+      ? "source-info"
+      : "source-info hide-source";
+
+    const roundText = record.source_round && record.source_round !== "unknown"
+      ? `${record.source_round}회`
+      : "회차 미상";
+
+    return `<span class="${sourceClass}">${escapeHtml(roundText)} 원본 ${record.display_number}번</span>`;
+  }
+
+  function renderImage(url) {
+    const normalizedUrl = normalizeImageUrl(url);
+
+    if (!normalizedUrl) {
+      return "";
+    }
+
+    return `<img class="question-image" src="${escapeHtml(normalizedUrl)}" alt="문항 자료 이미지" />`;
+  }
+
+  function shouldRenderGroupPassageText(passage, imageUrl) {
+    /*
+      이미지형 공통 지문은 이미지 자체가 원본 지문 역할을 한다.
+      같은 내용을 텍스트 박스로 한 번 더 출력하면 63~64번처럼 문항이 다음 페이지로 밀릴 수 있으므로
+      이미지가 있는 공통 지문에서는 보조 텍스트 passage를 숨긴다.
+    */
+    return Boolean(normalizeText(passage) && !normalizeImageUrl(imageUrl));
+  }
+
+  function renderOptions(options) {
+    const optionList = normalizeArray(options);
+
+    if (!optionList.length) {
+      return "";
+    }
+
+    return [
+      '<div class="options">',
+      optionList.map(function (option, index) {
+        return `<div class="option-line">${getChoiceLabel(index)} ${escapeHtml(getOptionText(option, index))}</div>`;
+      }).join(""),
+      '</div>'
+    ].join("");
+  }
+
+  function renderOrderChoices(record) {
+    const orders = record.order_choice_orders;
+
+    if (!orders || typeof orders !== "object") {
+      return renderOptions(record.options);
+    }
+
+    const keys = Object.keys(orders).sort(function (a, b) {
+      const na = Number(a);
+      const nb = Number(b);
+
+      if (Number.isFinite(na) && Number.isFinite(nb)) {
+        return na - nb;
+      }
+
+      return String(a).localeCompare(String(b), "ko");
+    });
+
+    if (!keys.length) {
+      return renderOptions(record.options);
+    }
+
+    return [
+      '<div class="options">',
+      keys.map(function (key, index) {
+        const label = getChoiceLabel(index);
+        const value = formatSentenceOrderText(orders[key]);
+
+        return `<div class="option-line">${label} ${escapeHtml(value)}</div>`;
+      }).join(""),
+      '</div>'
+    ].join("");
+  }
+
+  function renderSentenceItems(record) {
+    const items = normalizeArray(record.sentence_items);
+
+    if (!items.length) {
+      return "";
+    }
+
+    const lines = items.map(function (item) {
+      if (item && typeof item === "object") {
+        const label = normalizeSentenceLabel(item.label || item.key || item.name || "");
+        const text = normalizeText(item.text || item.sentence || item.value || "");
+        return `${label ? "(" + label + ") " : ""}${text}`;
+      }
+
+      const rawText = normalizeText(item);
+      const labeledMatch = rawText.match(/^[(（]\s*([^()（）]+?)\s*[)）]\s*(.+)$/);
+
+      if (labeledMatch) {
+        const label = normalizeSentenceLabel(labeledMatch[1]);
+        const sentence = normalizeText(labeledMatch[2]);
+        return `${label ? "(" + label + ") " : ""}${sentence}`;
+      }
+
+      return rawText;
+    }).filter(Boolean);
+
+    if (!lines.length) {
+      return "";
+    }
+
+    return [
+      '<div class="sentence-order-box">',
+      '<strong>배열할 문장</strong><br />',
+      lines.map(escapeHtml).join("<br />"),
+      '</div>'
+    ].join("");
+  }
+
+  function renderInsertOptions(record) {
+    const positions = normalizeArray(record.insert_positions).length
+      ? normalizeArray(record.insert_positions)
+      : normalizeArray(record.insert_markers);
+
+    if (!positions.length) {
+      return renderOptions(record.options);
+    }
+
+    return [
+      '<div class="options">',
+      positions.map(function (position, index) {
+        return `<div class="option-line">${getChoiceLabel(index)} ${escapeHtml(position)}</div>`;
+      }).join(""),
+      '</div>'
+    ].join("");
+  }
+
+  function renderQuestionBlock(record, inSet) {
+    const question = normalizeText(record.question);
+    const passage = normalizeText(record.passage);
+    const groupPassage = normalizeText(record.group_passage);
+    const shouldShowPassage = !inSet && passage && passage !== question;
+    const isSentenceOrder = record.type === "sentence_order";
+    const isSentenceInsert = record.type === "sentence_insert";
+    const questionText = question || (passage && !shouldShowPassage ? passage : "");
+
+    const parts = [];
+
+    parts.push(`<div class="item-block">`);
+
+    if (!inSet) {
+      parts.push(`<div class="problem-header"><span>${escapeHtml(record.display_number)}번</span>${renderSourceInfo(record)}</div>`);
+      parts.push('<div class="problem-body">');
+    }
+
+    if (record.instruction && !inSet) {
+      parts.push(`<p class="instruction">${escapeHtml(record.instruction)}</p>`);
+    }
+
+    if (shouldShowPassage) {
+      parts.push(`<div class="passage-box">${escapeHtml(passage)}</div>`);
+    }
+
+    parts.push(renderImage(!inSet ? record.image_url : ""));
+
+    if (isSentenceOrder) {
+      parts.push(renderSentenceItems(record));
+      parts.push(`<div class="question-line"><span class="question-number">[${record.display_number}]</span> ${escapeHtml(questionText || "다음을 순서에 맞게 배열한 것을 고르십시오.")}</div>`);
+      parts.push(renderOrderChoices(record));
+    } else if (isSentenceInsert) {
+      if (record.insert_sentence) {
+        parts.push(`<div class="insert-box">${escapeHtml(record.insert_sentence)}</div>`);
+      }
+      parts.push(`<div class="question-line"><span class="question-number">[${record.display_number}]</span> ${escapeHtml(questionText || "다음 문장이 들어갈 곳으로 가장 알맞은 것을 고르십시오.")}</div>`);
+      parts.push(renderInsertOptions(record));
+    } else {
+      parts.push(`<div class="question-line"><span class="question-number">[${record.display_number}]</span> ${escapeHtml(questionText)}</div>`);
+      parts.push(renderOptions(record.options));
+    }
+
+    if (!inSet) {
+      parts.push('</div>');
+    }
+
+    parts.push('</div>');
+
+    return parts.join("");
+  }
+
+  function groupSelectedRecords(records) {
+    const groups = [];
+    const groupMap = new Map();
+
+    records.forEach(function (record) {
+      if (!record.group_id) {
+        groups.push({
+          type: "single",
+          key: record.record_id,
+          records: [record]
+        });
+        return;
+      }
+
+      if (!groupMap.has(record.group_id)) {
+        const group = {
+          type: "set",
+          key: record.group_id,
+          records: []
+        };
+        groupMap.set(record.group_id, group);
+        groups.push(group);
+      }
+
+      groupMap.get(record.group_id).records.push(record);
+    });
+
+    groups.forEach(function (group) {
+      group.records.sort(function (a, b) {
+        return a.display_number - b.display_number;
+      });
+    });
+
+    return groups;
+  }
+
+  function renderSetGroup(group) {
+    const first = group.records[0];
+    const numbers = group.records.map(function (record) { return record.display_number; });
+    const rangeText = numbers.length > 1
+      ? `${Math.min.apply(null, numbers)}~${Math.max.apply(null, numbers)}번`
+      : `${numbers[0]}번`;
+
+    const instruction = first.group_instruction || first.instruction || `[${rangeText}] 다음을 읽고 물음에 답하십시오.`;
+    const passage = normalizeText(first.group_passage);
+    const imageUrl = first.group_image_url || first.image_url;
+    const shouldShowPassageText = shouldRenderGroupPassageText(passage, imageUrl);
+
+    return [
+      '<article class="problem-card common-set">',
+      `<div class="problem-header"><span>${escapeHtml(rangeText)} 공통 지문</span>${renderSourceInfo(first)}</div>`,
+      '<div class="problem-body">',
+      instruction ? `<p class="instruction">${escapeHtml(instruction)}</p>` : "",
+      renderImage(imageUrl),
+      shouldShowPassageText ? `<div class="passage-box">${escapeHtml(passage)}</div>` : "",
+      group.records.map(function (record) {
+        return renderQuestionBlock(record, true);
+      }).join(""),
+      '</div>',
+      '</article>'
+    ].join("");
+  }
+
+  function renderProblemSection(records) {
+    const groups = groupSelectedRecords(records);
+
+    return groups.map(function (group) {
+      if (group.type === "set") {
+        return renderSetGroup(group);
+      }
+
+      return `<article class="problem-card">${renderQuestionBlock(group.records[0], false)}</article>`;
+    }).join("");
+  }
+
+  function renderAnswerSection(records, title) {
+    const rows = records.map(function (record, index) {
+      const roundText = record.source_round && record.source_round !== "unknown"
+        ? `${record.source_round}회`
+        : "미상";
+
+      return [
+        "<tr>",
+        `<td>${index + 1}</td>`,
+        `<td>${escapeHtml(formatAnswer(record.correct_answer))}</td>`,
+        `<td>${escapeHtml(roundText)}</td>`,
+        `<td>${escapeHtml(record.display_number + "번")}</td>`,
+        `<td>${escapeHtml(record.category || record.type || "미분류")}</td>`,
+        `<td>${escapeHtml(record.diagnostic_area || "미분류")}</td>`,
+        "</tr>"
+      ].join("");
+    }).join("");
+
+    return [
+      `<h2 class="answer-title">${escapeHtml(title)}</h2>`,
+      '<table class="answer-table">',
+      '<thead><tr><th>출력 순서</th><th>정답</th><th>원본 회차</th><th>원본 번호</th><th>유형</th><th>진단 영역</th></tr></thead>',
+      `<tbody>${rows}</tbody>`,
+      '</table>'
+    ].join("");
+  }
+
+  function updatePrintButtons(enabled) {
+    [
+      elements.printStudentButton,
+      elements.printWithAnswerButton,
+      elements.printAnswerOnlyButton
+    ].forEach(function (button) {
+      if (button) {
+        button.disabled = !enabled;
+      }
+    });
+  }
+
+  function generatePreview() {
+    const options = getSelectionOptions();
+    const records = filterRecords(options);
+    state.selectedRecords = records;
+
+    const title = makeTitle(options, false);
+    const answerTitle = makeTitle(options, true);
+
+    if (elements.printTitle) {
+      elements.printTitle.textContent = title;
+    }
+
+    if (elements.printMeta) {
+      elements.printMeta.textContent = "";
+      elements.printMeta.classList.add("hidden");
+      elements.printMeta.setAttribute("aria-hidden", "true");
+    }
+
+    if (!records.length) {
+      if (elements.emptyPreview) {
+        elements.emptyPreview.classList.remove("hidden");
+        elements.emptyPreview.innerHTML = "조건에 맞는 문항이 없습니다.<br />범위 또는 회차 선택을 다시 확인하세요.";
+      }
+
+      if (elements.problemSection) {
+        elements.problemSection.innerHTML = "";
+      }
+
+      if (elements.answerSection) {
+        elements.answerSection.innerHTML = "";
+        elements.answerSection.classList.add("hidden");
+      }
+
+      setStatus("조건에 맞는 문항이 없습니다.", true);
+      updatePrintButtons(false);
+      return;
+    }
+
+    if (elements.emptyPreview) {
+      elements.emptyPreview.classList.add("hidden");
+    }
+
+    if (elements.problemSection) {
+      elements.problemSection.innerHTML = renderProblemSection(records);
+    }
+
+    if (elements.answerSection) {
+      elements.answerSection.innerHTML = renderAnswerSection(records, answerTitle);
+      elements.answerSection.classList.remove("hidden");
+    }
+
+    setStatus(`${records.length}문항 미리보기를 생성했습니다. PDF 인쇄/저장 버튼을 사용할 수 있습니다.`, false);
+    updatePrintButtons(true);
+  }
+
+  function printWithMode(mode) {
+    if (!state.selectedRecords.length) {
+      generatePreview();
+    }
+
+    if (!state.selectedRecords.length) {
+      return;
+    }
+
+    document.body.classList.remove("print-student", "print-with-answers", "print-answer-only");
+    document.body.classList.add(mode);
+
+    window.setTimeout(function () {
+      window.print();
+
+      window.setTimeout(function () {
+        document.body.classList.remove("print-student", "print-with-answers", "print-answer-only");
+      }, 250);
+    }, 50);
+  }
+
+  function resetForm() {
+    if (elements.startNumberInput) elements.startNumberInput.value = "31";
+    if (elements.endNumberInput) elements.endNumberInput.value = "70";
+    if (elements.questionCountInput) elements.questionCountInput.value = "0";
+    if (elements.allowDuplicateInput) elements.allowDuplicateInput.checked = false;
+    if (elements.showSourceInfoInput) elements.showSourceInfoInput.checked = true;
+
+    const sourceOrder = document.querySelector('input[name="printOrder"][value="source"]');
+    if (sourceOrder) {
+      sourceOrder.checked = true;
+    }
+
+    Array.from(document.querySelectorAll(".round-checkbox")).forEach(function (checkbox) {
+      checkbox.checked = true;
+    });
+
+    const all = byId("roundAllCheckbox");
+    if (all) {
+      all.checked = true;
+    }
+
+    state.selectedRecords = [];
+
+    if (elements.printTitle) {
+      elements.printTitle.textContent = "TOPIK I 읽기 원본 31~70번 유형별 문제지";
+    }
+
+    if (elements.printMeta) {
+      elements.printMeta.textContent = "";
+      elements.printMeta.classList.add("hidden");
+      elements.printMeta.setAttribute("aria-hidden", "true");
+    }
+
+    if (elements.emptyPreview) {
+      elements.emptyPreview.classList.remove("hidden");
+      elements.emptyPreview.innerHTML = '왼쪽에서 범위와 회차를 선택한 뒤 <strong>문제지 미리보기 생성</strong>을 누르세요.<br />예: 31~34번 유형만 모으려면 시작 31, 끝 34로 설정합니다.';
+    }
+
+    if (elements.problemSection) {
+      elements.problemSection.innerHTML = "";
+    }
+
+    if (elements.answerSection) {
+      elements.answerSection.innerHTML = "";
+      elements.answerSection.classList.add("hidden");
+    }
+
+    setStatus(`문제은행 ${state.records.length}개 문항을 사용할 수 있습니다.`, false);
+    updatePrintButtons(false);
+  }
+
+  function bindEvents() {
+    if (elements.generatePreviewButton) {
+      elements.generatePreviewButton.addEventListener("click", generatePreview);
+    }
+
+    if (elements.printStudentButton) {
+      elements.printStudentButton.addEventListener("click", function () {
+        printWithMode("print-student");
+      });
+    }
+
+    if (elements.printWithAnswerButton) {
+      elements.printWithAnswerButton.addEventListener("click", function () {
+        printWithMode("print-with-answers");
+      });
+    }
+
+    if (elements.printAnswerOnlyButton) {
+      elements.printAnswerOnlyButton.addEventListener("click", function () {
+        printWithMode("print-answer-only");
+      });
+    }
+
+    if (elements.resetButton) {
+      elements.resetButton.addEventListener("click", resetForm);
+    }
+  }
+
+  async function init() {
+    cacheElements();
+    updatePrintButtons(false);
+    bindEvents();
+
+    try {
+      state.bank = await loadBank();
+      state.records = flattenBank(state.bank);
+
+      renderRoundList();
+
+      const rounds = getAvailableRounds();
+      setStatus(`문제은행을 불러왔습니다. 사용 가능 문항 ${state.records.length}개, 회차 ${rounds.length}개입니다.`, false);
+    } catch (error) {
+      console.error(error);
+      setStatus(error.message || "문제은행을 불러오는 중 오류가 발생했습니다.", true);
+
+      if (elements.roundList) {
+        elements.roundList.textContent = "문제은행을 불러오지 못했습니다.";
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
