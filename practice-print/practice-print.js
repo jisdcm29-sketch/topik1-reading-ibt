@@ -2,7 +2,7 @@
 
 /*
   TOPIK I Reading Practice Print Tool
-  version: step46-5-topik1-practice-print-actual-exam-rounds-v1
+  version: step46-6-topik1-practice-print-sequential-question-numbers-v1
 
   역할:
   - 실제 업로드된 고정 시험지 exam-manifest.json/data/exams/reading-*.json을 우선 읽는다.
@@ -993,6 +993,71 @@
       : `TOPIK I 읽기 원본 ${rangeText} 유형별 문제지`;
   }
 
+  function getPrintNumber(record, fallbackIndex) {
+    const numberValue = Number(record && record.print_number);
+
+    if (Number.isFinite(numberValue) && numberValue > 0) {
+      return numberValue;
+    }
+
+    const fallback = Number(fallbackIndex);
+
+    if (Number.isFinite(fallback) && fallback > 0) {
+      return fallback;
+    }
+
+    return record && Number.isFinite(Number(record.display_number))
+      ? Number(record.display_number)
+      : "";
+  }
+
+  function formatPrintQuestionNumber(record, fallbackIndex) {
+    const printNumber = getPrintNumber(record, fallbackIndex);
+    return printNumber ? `${printNumber}번` : "";
+  }
+
+  function formatQuestionLineNumber(record, fallbackIndex) {
+    const printNumberText = formatPrintQuestionNumber(record, fallbackIndex);
+    return printNumberText ? `[${printNumberText}]` : "[]";
+  }
+
+  function formatNumberRange(numbers) {
+    const cleanNumbers = normalizeArray(numbers)
+      .map(function (numberValue) { return Number(numberValue); })
+      .filter(function (numberValue) { return Number.isFinite(numberValue); });
+
+    if (!cleanNumbers.length) {
+      return "";
+    }
+
+    const min = Math.min.apply(null, cleanNumbers);
+    const max = Math.max.apply(null, cleanNumbers);
+
+    return min === max ? `${min}번` : `${min}~${max}번`;
+  }
+
+  function assignPrintNumbers(records) {
+    /*
+      문제지의 실제 표시 순서와 정답표의 '출력 순서'가 반드시 일치해야 한다.
+      공통 지문 세트는 한 카드 안에서 함께 표시되므로, 먼저 최종 카드 표시 순서를 만든 뒤
+      TOPIK II 출력 도구처럼 1번, 2번, 3번 ... 순서 번호를 부여한다.
+    */
+    const groups = groupSelectedRecords(records);
+    const orderedRecords = [];
+
+    groups.forEach(function (group) {
+      group.records.forEach(function (record) {
+        orderedRecords.push(record);
+      });
+    });
+
+    return orderedRecords.map(function (record, index) {
+      return Object.assign({}, record, {
+        print_number: index + 1
+      });
+    });
+  }
+
   function renderSourceInfo(record) {
     const sourceClass = elements.showSourceInfoInput && elements.showSourceInfoInput.checked
       ? "source-info"
@@ -1144,7 +1209,7 @@
     parts.push(`<div class="item-block">`);
 
     if (!inSet) {
-      parts.push(`<div class="problem-header"><span>${escapeHtml(record.display_number)}번</span>${renderSourceInfo(record)}</div>`);
+      parts.push(`<div class="problem-header"><span>${escapeHtml(formatPrintQuestionNumber(record))}</span>${renderSourceInfo(record)}</div>`);
       parts.push('<div class="problem-body">');
     }
 
@@ -1160,16 +1225,16 @@
 
     if (isSentenceOrder) {
       parts.push(renderSentenceItems(record));
-      parts.push(`<div class="question-line"><span class="question-number">[${record.display_number}]</span> ${escapeHtml(questionText || "다음을 순서에 맞게 배열한 것을 고르십시오.")}</div>`);
+      parts.push(`<div class="question-line"><span class="question-number">${escapeHtml(formatQuestionLineNumber(record))}</span> ${escapeHtml(questionText || "다음을 순서에 맞게 배열한 것을 고르십시오.")}</div>`);
       parts.push(renderOrderChoices(record));
     } else if (isSentenceInsert) {
       if (record.insert_sentence) {
         parts.push(`<div class="insert-box">${escapeHtml(record.insert_sentence)}</div>`);
       }
-      parts.push(`<div class="question-line"><span class="question-number">[${record.display_number}]</span> ${escapeHtml(questionText || "다음 문장이 들어갈 곳으로 가장 알맞은 것을 고르십시오.")}</div>`);
+      parts.push(`<div class="question-line"><span class="question-number">${escapeHtml(formatQuestionLineNumber(record))}</span> ${escapeHtml(questionText || "다음 문장이 들어갈 곳으로 가장 알맞은 것을 고르십시오.")}</div>`);
       parts.push(renderInsertOptions(record));
     } else {
-      parts.push(`<div class="question-line"><span class="question-number">[${record.display_number}]</span> ${escapeHtml(questionText)}</div>`);
+      parts.push(`<div class="question-line"><span class="question-number">${escapeHtml(formatQuestionLineNumber(record))}</span> ${escapeHtml(questionText)}</div>`);
       parts.push(renderOptions(record.options));
     }
 
@@ -1220,12 +1285,12 @@
 
   function renderSetGroup(group) {
     const first = group.records[0];
-    const numbers = group.records.map(function (record) { return record.display_number; });
-    const rangeText = numbers.length > 1
-      ? `${Math.min.apply(null, numbers)}~${Math.max.apply(null, numbers)}번`
-      : `${numbers[0]}번`;
+    const printNumbers = group.records.map(function (record) { return getPrintNumber(record); });
+    const originalNumbers = group.records.map(function (record) { return record.display_number; });
+    const rangeText = formatNumberRange(printNumbers) || formatNumberRange(originalNumbers);
+    const originalRangeText = formatNumberRange(originalNumbers) || rangeText;
 
-    const instruction = first.group_instruction || first.instruction || `[${rangeText}] 다음을 읽고 물음에 답하십시오.`;
+    const instruction = first.group_instruction || first.instruction || `[${originalRangeText}] 다음을 읽고 물음에 답하십시오.`;
     const passage = normalizeText(first.group_passage);
     const imageUrl = first.group_image_url || first.image_url;
     const shouldShowPassageText = shouldRenderGroupPassageText(passage, imageUrl);
@@ -1265,7 +1330,7 @@
 
       return [
         "<tr>",
-        `<td>${index + 1}</td>`,
+        `<td>${escapeHtml(getPrintNumber(record, index + 1))}</td>`,
         `<td>${escapeHtml(formatAnswer(record.correct_answer))}</td>`,
         `<td>${escapeHtml(roundText)}</td>`,
         `<td>${escapeHtml(record.display_number + "번")}</td>`,
@@ -1298,7 +1363,7 @@
 
   function generatePreview() {
     const options = getSelectionOptions();
-    const records = filterRecords(options);
+    const records = assignPrintNumbers(filterRecords(options));
     state.selectedRecords = records;
 
     const title = makeTitle(options, false);
