@@ -628,6 +628,82 @@
         display: none !important;
       }
 
+      /* STEP46-11: PDF 인쇄 시 화면용 잔상과 고정 UI를 더 강하게 차단합니다. */
+      body.is-printing,
+      body.topik1-print-clean {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+      }
+
+      body.is-printing > :not(.layout),
+      body.topik1-print-clean > :not(.layout) {
+        display: none !important;
+        visibility: hidden !important;
+      }
+
+      body.is-printing [style*="position: fixed"],
+      body.is-printing [style*="position:fixed"],
+      body.is-printing [style*="position: sticky"],
+      body.is-printing [style*="position:sticky"],
+      body.topik1-print-clean [style*="position: fixed"],
+      body.topik1-print-clean [style*="position:fixed"],
+      body.topik1-print-clean [style*="position: sticky"],
+      body.topik1-print-clean [style*="position:sticky"] {
+        display: none !important;
+        visibility: hidden !important;
+      }
+
+      body.is-printing .top-bar,
+      body.is-printing .control-panel,
+      body.is-printing aside,
+      body.is-printing nav,
+      body.is-printing header,
+      body.is-printing footer,
+      body.is-printing .floating,
+      body.is-printing .floating-button,
+      body.is-printing .toast,
+      body.is-printing .modal,
+      body.is-printing .overlay,
+      body.is-printing .tooltip,
+      body.is-printing .screen-only,
+      body.is-printing .no-print,
+      body.topik1-print-clean .top-bar,
+      body.topik1-print-clean .control-panel,
+      body.topik1-print-clean aside,
+      body.topik1-print-clean nav,
+      body.topik1-print-clean header,
+      body.topik1-print-clean footer,
+      body.topik1-print-clean .floating,
+      body.topik1-print-clean .floating-button,
+      body.topik1-print-clean .toast,
+      body.topik1-print-clean .modal,
+      body.topik1-print-clean .overlay,
+      body.topik1-print-clean .tooltip,
+      body.topik1-print-clean .screen-only,
+      body.topik1-print-clean .no-print {
+        display: none !important;
+        visibility: hidden !important;
+      }
+
+      body.is-printing .layout,
+      body.topik1-print-clean .layout,
+      body.is-printing .preview-panel,
+      body.topik1-print-clean .preview-panel,
+      body.is-printing #printArea,
+      body.topik1-print-clean #printArea {
+        position: static !important;
+        transform: none !important;
+        filter: none !important;
+        box-shadow: none !important;
+      }
+
+      body.is-printing *,
+      body.topik1-print-clean * {
+        animation: none !important;
+        transition: none !important;
+      }
+
 
       .top-bar,
       .control-panel,
@@ -772,10 +848,10 @@
         TOPIK I 읽기 원본 번호는 31번~70번 기준으로 표시됩니다.
       </div>
 
-      <div class="print-setting-note screen-only" id="printSettingNote">
-        <strong>PDF 저장 안내</strong><br />
-        Chrome/Edge 인쇄 창에서 <strong>머리글과 바닥글은 끄고</strong>, <strong>배경 그래픽은 켜기</strong>로 저장하세요.
-        머리글과 바닥글이 켜져 있으면 날짜, URL, 페이지 번호가 문제지에 함께 들어갑니다.
+      <div class="print-setting-note screen-only clean-pdf-notice" id="printSettingNote">
+        <strong>PDF 저장 필수 확인</strong><br />
+        Chrome/Edge 인쇄 창에서 <strong>머리글과 바닥글: 끄기</strong>, <strong>배경 그래픽: 켜기</strong>로 저장하세요.<br />
+        머리글과 바닥글이 켜져 있으면 날짜, URL, 페이지 번호가 문제지 위아래에 함께 들어갑니다.
       </div>
 
       <div class="field-group">
@@ -854,6 +930,6 @@
     </section>
   </main>
 
-  <script src="./practice-print.js?v=topik1-practice-print-step46-7"></script>
+  <script src="./practice-print.js?v=topik1-practice-print-step46-11"></script>
 </body>
 </html>
