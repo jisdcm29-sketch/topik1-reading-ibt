@@ -305,6 +305,12 @@
       font-size: 16px;
     }
 
+    .sentence-order-box-empty {
+      color: #b42318;
+      border-color: #fecaca;
+      background: #fff7f7;
+    }
+
     .insert-box {
       border-color: #bfdbfe;
       background: #eff6ff;
@@ -414,6 +420,161 @@
       }
     }
 
+
+    .problem-card.sentence-order-set .problem-body {
+      padding: 12px 16px 14px;
+    }
+
+    .problem-card.sentence-order-set .instruction {
+      margin-bottom: 8px;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .problem-card.sentence-order-set .item-block {
+      margin-top: 10px;
+      padding-top: 10px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .problem-card.sentence-order-set .sentence-order-box {
+      margin: 6px 0 8px;
+      padding: 10px 12px;
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .problem-card.sentence-order-set .question-line {
+      margin: 8px 0 6px;
+      line-height: 1.5;
+      font-size: 15.5px;
+    }
+
+    .problem-card.sentence-order-set .options {
+      gap: 4px;
+      margin-top: 5px;
+    }
+
+    .problem-card.sentence-order-set .option-line {
+      line-height: 1.45;
+      font-size: 15px;
+    }
+
+    .student-answer-sheet {
+      break-before: page;
+      page-break-before: always;
+      margin-top: 28px;
+      padding-top: 4px;
+    }
+
+    .student-answer-guide {
+      margin: 0 0 14px;
+      color: #475467;
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .student-answer-groups {
+      display: block;
+    }
+
+    .student-answer-group {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin: 0 0 18px;
+      padding: 0;
+    }
+
+    .student-answer-group + .student-answer-group {
+      break-before: page;
+      page-break-before: always;
+      padding-top: 2px;
+    }
+
+    .student-answer-group-title {
+      margin: 0 0 8px;
+      padding: 8px 10px;
+      border: 1px solid #b8c7dd;
+      border-radius: 8px;
+      background: #f4f8ff;
+      color: #003f8f;
+      font-size: 16px;
+      font-weight: 900;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .student-answer-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .student-answer-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: #fff;
+      border: 1px solid #94a3b8;
+    }
+
+    .student-answer-table th,
+    .student-answer-table td {
+      border: 1px solid #cbd5e1;
+      text-align: center;
+      vertical-align: middle;
+      height: 30px;
+      padding: 3px 4px;
+      line-height: 1.25;
+    }
+
+    .student-answer-table th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-size: 13px;
+      font-weight: 900;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .student-answer-number-head,
+    .student-answer-number-cell {
+      width: 54px;
+      white-space: nowrap;
+    }
+
+    .student-answer-number-cell {
+      color: #003f8f;
+      font-size: 13.5px;
+      font-weight: 900;
+    }
+
+    .student-answer-choice-cell {
+      min-width: 34px;
+    }
+
+    .student-answer-bubble {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 24px;
+      border: 1px solid #94a3b8;
+      border-radius: 999px;
+      color: #111827;
+      font-size: 14px;
+      font-weight: 900;
+      background: #fff;
+    }
+
+    .student-answer-source {
+      display: none;
+    }
+
+
     @media print {
       @page {
         size: A4;
@@ -456,6 +617,55 @@
       .question-image {
         max-height: 360px;
       }
+
+
+      .student-answer-sheet {
+        break-before: page;
+        page-break-before: always;
+        margin-top: 0;
+      }
+
+      .student-answer-group {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .student-answer-group + .student-answer-group {
+        break-before: page;
+        page-break-before: always;
+      }
+
+      .student-answer-group-title {
+        font-size: 15px;
+        margin-bottom: 7px;
+        padding: 7px 9px;
+      }
+
+      .student-answer-columns {
+        gap: 10px;
+      }
+
+      .student-answer-table th,
+      .student-answer-table td {
+        height: 27px;
+        padding: 2px 3px;
+      }
+
+      .student-answer-number-head,
+      .student-answer-number-cell {
+        width: 50px;
+      }
+
+      .student-answer-number-cell {
+        font-size: 12.5px;
+      }
+
+      .student-answer-bubble {
+        width: 26px;
+        height: 22px;
+        font-size: 13px;
+      }
+
 
       .empty-preview {
         display: none !important;
@@ -584,6 +794,6 @@
     </section>
   </main>
 
-  <script src="./practice-print.js?v=topik1-practice-print-3"></script>
+  <script src="./practice-print.js?v=topik1-practice-print-step46-7"></script>
 </body>
 </html>

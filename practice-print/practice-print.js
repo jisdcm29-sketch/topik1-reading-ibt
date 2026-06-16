@@ -2,13 +2,14 @@
 
 /*
   TOPIK I Reading Practice Print Tool
-  version: step46-6-topik1-practice-print-sequential-question-numbers-v1
+  version: step46-8-topik1-practice-print-answer-sheet-and-order-v1
 
   역할:
   - 실제 업로드된 고정 시험지 exam-manifest.json/data/exams/reading-*.json을 우선 읽는다.
   - 고정 시험지 로드가 어려울 때만 question-bank.json을 예비 자료로 사용한다.
   - 읽기 31~70번 표시 번호 기준으로 유형별 문제지를 만든다.
   - 학생용 문제지, 문제지+정답표, 교사용 정답표만 인쇄한다.
+  - 학생 답안 기록표와 57~58번 문장 순서 표시를 학생 배포용으로 정리한다.
   - 시험 실행, 채점, 진단 보고서 로직은 포함하지 않는다.
 */
 
@@ -1139,11 +1140,57 @@
     ].join("");
   }
 
+
+  function getFallbackSentenceItemsFromText(text) {
+    const raw = normalizeText(text);
+
+    if (!raw) {
+      return [];
+    }
+
+    return raw
+      .split(/\r?\n+/)
+      .map(function (line) { return normalizeText(line); })
+      .filter(function (line) {
+        return /^[(（]\s*[가-힣A-Za-z0-9]+\s*[)）]\s*/.test(line);
+      });
+  }
+
+  function getSentenceOrderItems(record) {
+    const explicitItems = normalizeArray(record && record.sentence_items).filter(function (item) {
+      if (item && typeof item === "object") {
+        return Boolean(normalizeText(item.text || item.sentence || item.value || ""));
+      }
+
+      return Boolean(normalizeText(item));
+    });
+
+    if (explicitItems.length) {
+      return explicitItems;
+    }
+
+    /*
+      일부 기존 회차는 sentence_items 배열 없이 passage 또는 group_passage에
+      (가)~(라) 문장을 넣어 둔 상태다. 문장 순서 문항은 공통 지문 텍스트를 숨기므로,
+      이 값을 배열할 문장으로 다시 해석해서 학생용 문제지에 표시한다.
+    */
+    return getFallbackSentenceItemsFromText(
+      (record && record.group_passage) ||
+      (record && record.passage) ||
+      ""
+    );
+  }
+
   function renderSentenceItems(record) {
-    const items = normalizeArray(record.sentence_items);
+    const items = getSentenceOrderItems(record);
 
     if (!items.length) {
-      return "";
+      return [
+        '<div class="sentence-order-box sentence-order-box-empty">',
+        '<strong>배열할 문장</strong><br />',
+        '배열할 문장 데이터가 없습니다. 원본 시험지 JSON의 sentence_items 또는 passage 값을 확인하세요.',
+        '</div>'
+      ].join("");
     }
 
     const lines = items.map(function (item) {
@@ -1205,8 +1252,9 @@
     const questionText = question || (passage && !shouldShowPassage ? passage : "");
 
     const parts = [];
+    const itemClass = isSentenceOrder ? "item-block sentence-order-item" : "item-block";
 
-    parts.push(`<div class="item-block">`);
+    parts.push(`<div class="${itemClass}">`);
 
     if (!inSet) {
       parts.push(`<div class="problem-header"><span>${escapeHtml(formatPrintQuestionNumber(record))}</span>${renderSourceInfo(record)}</div>`);
@@ -1289,14 +1337,18 @@
     const originalNumbers = group.records.map(function (record) { return record.display_number; });
     const rangeText = formatNumberRange(printNumbers) || formatNumberRange(originalNumbers);
     const originalRangeText = formatNumberRange(originalNumbers) || rangeText;
+    const isSentenceOrderSet = group.records.length > 0 && group.records.every(function (record) {
+      return record.type === "sentence_order";
+    });
 
     const instruction = first.group_instruction || first.instruction || `[${originalRangeText}] 다음을 읽고 물음에 답하십시오.`;
     const passage = normalizeText(first.group_passage);
     const imageUrl = first.group_image_url || first.image_url;
-    const shouldShowPassageText = shouldRenderGroupPassageText(passage, imageUrl);
+    const shouldShowPassageText = !isSentenceOrderSet && shouldRenderGroupPassageText(passage, imageUrl);
+    const cardClass = isSentenceOrderSet ? "problem-card common-set sentence-order-set" : "problem-card common-set";
 
     return [
-      '<article class="problem-card common-set">',
+      `<article class="${cardClass}">`,
       `<div class="problem-header"><span>${escapeHtml(rangeText)} 공통 지문</span>${renderSourceInfo(first)}</div>`,
       '<div class="problem-body">',
       instruction ? `<p class="instruction">${escapeHtml(instruction)}</p>` : "",
@@ -1310,16 +1362,133 @@
     ].join("");
   }
 
+
+  function renderStudentAnswerChoiceHead() {
+    return [1, 2, 3, 4].map(function (value) {
+      return `<th scope="col">${escapeHtml(getChoiceLabel(value - 1))}</th>`;
+    }).join("");
+  }
+
+  function renderStudentAnswerChoiceCells() {
+    return [1, 2, 3, 4].map(function (value) {
+      return [
+        '<td class="student-answer-choice-cell">',
+        `<span class="student-answer-bubble">${escapeHtml(getChoiceLabel(value - 1))}</span>`,
+        '</td>'
+      ].join("");
+    }).join("");
+  }
+
+  function chunkList(list, size) {
+    const chunks = [];
+
+    for (let index = 0; index < list.length; index += size) {
+      chunks.push(list.slice(index, index + size));
+    }
+
+    return chunks;
+  }
+
+  function makePrintRangeLabel(items) {
+    const numbers = items.map(function (item) {
+      return getPrintNumber(item.record, item.index + 1);
+    }).map(function (value) {
+      const numberValue = Number(value);
+      return Number.isFinite(numberValue) ? numberValue : null;
+    }).filter(function (value) {
+      return value !== null;
+    });
+
+    if (!numbers.length) {
+      return "답안 기록표";
+    }
+
+    const min = Math.min.apply(null, numbers);
+    const max = Math.max.apply(null, numbers);
+
+    return min === max ? `${min}번 답안 기록표` : `${min}~${max}번 답안 기록표`;
+  }
+
+  function renderStudentAnswerTable(items) {
+    const rows = items.map(function (item) {
+      const record = item.record;
+      const printNumber = getPrintNumber(record, item.index + 1);
+
+      return [
+        "<tr>",
+        `<th scope="row" class="student-answer-number-cell">${escapeHtml(printNumber)}번</th>`,
+        renderStudentAnswerChoiceCells(),
+        "</tr>"
+      ].join("");
+    }).join("");
+
+    return [
+      '<table class="student-answer-table">',
+      '<thead>',
+      '<tr>',
+      '<th scope="col" class="student-answer-number-head">번호</th>',
+      renderStudentAnswerChoiceHead(),
+      '</tr>',
+      '</thead>',
+      `<tbody>${rows}</tbody>`,
+      '</table>'
+    ].join("");
+  }
+
+  function renderStudentAnswerGroup(items, groupIndex) {
+    const midpoint = Math.ceil(items.length / 2);
+    const leftItems = items.slice(0, midpoint);
+    const rightItems = items.slice(midpoint);
+    const title = makePrintRangeLabel(items);
+
+    return [
+      `<section class="student-answer-group" aria-label="${escapeHtml(title)}">`,
+      `<h3 class="student-answer-group-title">${escapeHtml(title)}</h3>`,
+      '<div class="student-answer-columns">',
+      renderStudentAnswerTable(leftItems),
+      rightItems.length ? renderStudentAnswerTable(rightItems) : '<div class="student-answer-table-spacer"></div>',
+      '</div>',
+      '</section>'
+    ].join("");
+  }
+
+  function renderStudentAnswerSheet(records) {
+    if (!records.length) {
+      return "";
+    }
+
+    const indexedRecords = records.map(function (record, index) {
+      return { record, index };
+    });
+
+    const groups = chunkList(indexedRecords, 40).map(function (items, groupIndex) {
+      return renderStudentAnswerGroup(items, groupIndex);
+    }).join("");
+
+    return [
+      '<section class="student-answer-sheet">',
+      '<h2 class="answer-title">학생 답안 기록표</h2>',
+      '<p class="student-answer-guide">문제를 풀면서 선택한 답에 표시하세요. 40문항 단위로 나누었으며, 교사용 정답표의 출력 순서 번호와 일치합니다.</p>',
+      '<div class="student-answer-groups">',
+      groups,
+      '</div>',
+      '</section>'
+    ].join("");
+  }
+
+
+
   function renderProblemSection(records) {
     const groups = groupSelectedRecords(records);
-
-    return groups.map(function (group) {
+    const problemHtml = groups.map(function (group) {
       if (group.type === "set") {
         return renderSetGroup(group);
       }
 
       return `<article class="problem-card">${renderQuestionBlock(group.records[0], false)}</article>`;
     }).join("");
+
+    return problemHtml + renderStudentAnswerSheet(records);
   }
 
   function renderAnswerSection(records, title) {
