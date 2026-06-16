@@ -2,15 +2,16 @@
 
 /*
   TOPIK I Reading Practice Print Tool
-  version: step46-11-topik1-practice-print-residue-guard-v1
+  version: step46-12-topik1-practice-print-actual-round-guard-v1
 
   역할:
-  - 실제 업로드된 고정 시험지 exam-manifest.json/data/exams/reading-*.json을 우선 읽는다.
+  - 실제 업로드된 고정 시험지 exam-manifest.json/data/exams/reading-*.json을 우선 읽고, 회차 표시도 manifest 기준으로 고정한다.
   - 고정 시험지 로드가 어려울 때만 question-bank.json을 예비 자료로 사용한다.
   - 읽기 31~70번 표시 번호 기준으로 유형별 문제지를 만든다.
   - 학생용 문제지, 문제지+정답표, 교사용 정답표만 인쇄한다.
   - 학생 답안 기록표와 57~58번 문장 순서 표시를 학생 배포용으로 정리한다.
   - PDF 저장 시 브라우저 머리글/바닥글 해제를 매번 확인하고 인쇄 전용 화면 요소·잔상을 정리한다.
+  - question-bank 예비 자료 사용 시 031~070처럼 원본 문항 번호가 회차처럼 섞이는 것을 차단한다.
   - 시험 실행, 채점, 진단 보고서 로직은 포함하지 않는다.
 */
 
@@ -24,6 +25,7 @@
     manifest: null,
     records: [],
     selectedRecords: [],
+    actualRoundSet: new Set(),
     examLoadWarnings: []
   };
 
@@ -161,6 +163,84 @@
     return "";
   }
 
+
+  function getRoundFromExamFileValue(fileValue) {
+    const fileText = normalizeText(fileValue).replace(/\\/g, "/");
+    const match = fileText.match(/(?:^|\/)reading-(\d{2,4})\.json$/i);
+    return match ? match[1] : "";
+  }
+
+  function isPseudoQuestionNumberRound(roundValue) {
+    const text = normalizeText(roundValue);
+    const numeric = Number(text);
+
+    return Boolean(
+      /^\d{2,3}$/.test(text) &&
+      Number.isFinite(numeric) &&
+      numeric >= 31 &&
+      numeric <= 70
+    );
+  }
+
+  function isStrictActualRoundCandidate(roundValue) {
+    const text = normalizeText(roundValue);
+
+    return Boolean(
+      /^\d{2,4}$/.test(text) &&
+      !isPseudoQuestionNumberRound(text)
+    );
+  }
+
+  function isManifestRoundAllowed(roundValue, entry) {
+    const text = normalizeText(roundValue);
+
+    if (!/^\d{2,4}$/.test(text)) {
+      return false;
+    }
+
+    const fileRound = getRoundFromExamFileValue(entry && (entry.file || entry.path || entry.url || ""));
+
+    if (fileRound) {
+      return fileRound === text;
+    }
+
+    return isStrictActualRoundCandidate(text);
+  }
+
+  function isSelectableRound(roundValue) {
+    const text = normalizeText(roundValue);
+
+    if (!text) {
+      return false;
+    }
+
+    if (state.actualRoundSet && state.actualRoundSet.has(text)) {
+      return true;
+    }
+
+    return isStrictActualRoundCandidate(text);
+  }
+
+  function sanitizePracticePrintRecords(records, allowedRounds) {
+    const allowed = Array.isArray(allowedRounds) && allowedRounds.length
+      ? new Set(allowedRounds.map(function (round) { return normalizeText(round); }).filter(Boolean))
+      : null;
+
+    return normalizeArray(records).filter(function (record) {
+      const round = normalizeText(record && record.source_round);
+
+      if (!round) {
+        return false;
+      }
+
+      if (allowed) {
+        return allowed.has(round);
+      }
+
+      return isStrictActualRoundCandidate(round);
+    });
+  }
+
   function getSourceRoundFromObject(value) {
     const directCandidates = [
       value && value.source_round,
@@ -190,21 +270,8 @@
   }
 
 
-  function isPseudoQuestionNumberRound(roundValue) {
-    const text = normalizeText(roundValue);
-    const numeric = Number(text);
-
-    return Boolean(
-      /^\d{2,3}$/.test(text) &&
-      Number.isFinite(numeric) &&
-      numeric >= 31 &&
-      numeric <= 70
-    );
-  }
-
   function isUsableRound(roundValue) {
-    const text = normalizeText(roundValue);
-    return Boolean(text && text !== "unknown" && !isPseudoQuestionNumberRound(text));
+    return isSelectableRound(roundValue);
   }
 
   function normalizeImageUrl(url) {
@@ -502,17 +569,29 @@
   }
 
   function getRoundFromManifestEntry(entry) {
-    return normalizeRoundValue(
-      entry && (
-        entry.round ||
-        entry.source_round ||
-        entry.generated_exam_round ||
-        entry.value ||
-        entry.id ||
-        entry.label ||
-        entry.file
-      )
+    if (!entry) {
+      return "";
+    }
+
+    const fileRound = getRoundFromExamFileValue(entry.file || entry.path || entry.url || "");
+    if (fileRound) {
+      return fileRound;
+    }
+
+    const explicitRound = normalizeRoundValue(
+      entry.round ||
+      entry.source_round ||
+      entry.generated_exam_round ||
+      entry.exam_round ||
+      entry.value ||
+      entry.id
     );
+
+    if (explicitRound) {
+      return explicitRound;
+    }
+
+    return normalizeRoundValue(entry.label || entry.name || entry.title || "");
   }
 
   function normalizeExamFileUrl(fileValue) {
@@ -577,7 +656,7 @@
     }
 
     const round = getRoundFromManifestEntry(entry);
-    if (!isUsableRound(round)) {
+    if (!isManifestRoundAllowed(round, entry)) {
       return false;
     }
 
@@ -771,6 +850,7 @@
   async function loadExamRecordsFromManifest() {
     const result = {
       manifest: null,
+      actualRounds: [],
       records: [],
       warnings: []
     };
@@ -783,6 +863,13 @@
     }
 
     const entries = getManifestEntries(result.manifest).filter(isFullReadingExamEntry);
+    result.actualRounds = Array.from(new Set(entries.map(function (entry) {
+      return getRoundFromManifestEntry(entry);
+    }).filter(Boolean)));
+
+    if (!result.actualRounds.length) {
+      result.warnings.push("exam-manifest.json에서 실제 reading-*.json 고정 시험지 회차를 찾지 못했습니다.");
+    }
 
     for (let i = 0; i < entries.length; i += 1) {
       const entry = entries[i];
@@ -808,7 +895,7 @@
       }
     }
 
-    result.records = result.records.sort(compareBySourceThenNumber);
+    result.records = sanitizePracticePrintRecords(result.records, result.actualRounds).sort(compareBySourceThenNumber);
     return result;
   }
 
@@ -827,7 +914,7 @@
     const rounds = Array.from(new Set(
       state.records
         .map(function (record) { return record.source_round; })
-        .filter(isUsableRound)
+        .filter(isSelectableRound)
     ));
 
     return rounds.sort(function (a, b) {
@@ -1065,7 +1152,7 @@
       ? "source-info"
       : "source-info hide-source";
 
-    const roundText = isUsableRound(record.source_round)
+    const roundText = isSelectableRound(record.source_round)
       ? `${record.source_round}회`
       : "회차 미상";
 
@@ -1739,18 +1826,21 @@
     bindEvents();
 
     try {
-      state.bank = await loadBank();
-
       const examResult = await loadExamRecordsFromManifest();
       state.manifest = examResult.manifest;
       state.examLoadWarnings = examResult.warnings;
+      state.actualRoundSet = new Set(normalizeArray(examResult.actualRounds).map(function (round) {
+        return normalizeText(round);
+      }).filter(Boolean));
 
       if (examResult.records.length) {
-        state.records = examResult.records;
+        state.records = sanitizePracticePrintRecords(examResult.records, Array.from(state.actualRoundSet));
       } else {
-        state.records = flattenBank(state.bank).filter(function (record) {
-          return !isPseudoQuestionNumberRound(record.source_round);
-        });
+        state.bank = await loadBank();
+        state.records = sanitizePracticePrintRecords(flattenBank(state.bank));
+        if (!state.records.length) {
+          state.examLoadWarnings.push("문제은행 예비 자료에서도 실제 회차 문항을 찾지 못했습니다. 031~070 같은 원본 번호성 회차는 출력에서 제외했습니다.");
+        }
       }
 
       renderRoundList();
