@@ -1,156 +1,387 @@
-param(
+﻿param(
   [switch]$Strict
 )
 
-$ErrorCount = 0
-$WarnCount = 0
+$ErrorActionPreference = "Stop"
 
-function Write-Ok($Message) {
-  Write-Host "[OK] $Message" -ForegroundColor Green
+$script:ErrorCount = 0
+$script:WarningCount = 0
+
+function Write-Ok {
+  param([string]$Message)
+  Write-Host ("[OK] " + $Message) -ForegroundColor Green
 }
 
-function Write-Warn($Message) {
-  $script:WarnCount += 1
-  Write-Host "[WARN] $Message" -ForegroundColor Yellow
+function Write-Info {
+  param([string]$Message)
+  Write-Host ("[INFO] " + $Message) -ForegroundColor Cyan
 }
 
-function Write-Err($Message) {
+function Write-Warn2 {
+  param([string]$Message)
+  $script:WarningCount += 1
+  Write-Host ("[WARN] " + $Message) -ForegroundColor Yellow
+}
+
+function Write-Error2 {
+  param([string]$Message)
   $script:ErrorCount += 1
-  Write-Host "[ERROR] $Message" -ForegroundColor Red
+  Write-Host ("[ERROR] " + $Message) -ForegroundColor Red
 }
 
-$Root = Get-Location
-$PracticeJs = Join-Path $Root "practice-print\practice-print.js"
-$Manifest = Join-Path $Root "reading-test\data\exam-manifest.json"
-$ExamsDir = Join-Path $Root "reading-test\data\exams"
+function Get-ProjectRoot {
+  $scriptFolder = $null
 
-if (!(Test-Path $PracticeJs)) {
-  Write-Err "practice-print\practice-print.js not found."
-} else {
-  Write-Ok "practice-print\practice-print.js exists."
-
-  $JsText = Get-Content $PracticeJs -Raw -Encoding UTF8
-
-  if ($JsText -match "EXAM_MANIFEST_URL") {
-    Write-Ok "practice-print reads exam-manifest.json."
-  } else {
-    Write-Err "practice-print does not read exam-manifest.json."
+  if ($PSScriptRoot) {
+    $scriptFolder = $PSScriptRoot
+  } elseif ($MyInvocation.MyCommand.Path) {
+    $scriptFolder = Split-Path -Parent $MyInvocation.MyCommand.Path
   }
 
-  if ($JsText -match "loadExamRecordsFromManifest") {
-    Write-Ok "practice-print loads actual fixed exam files from manifest."
-  } else {
-    Write-Err "manifest-based exam loading function is missing."
-  }
-
-  if ($JsText -match "isPseudoQuestionNumberRound") {
-    Write-Ok "pseudo rounds such as 031~070 are filtered."
-  } else {
-    Write-Err "pseudo round filtering is missing."
-  }
-
-  if ($JsText -match "isFullReadingExamEntry") {
-    Write-Ok "random and level-test entries are excluded from print round list."
-  } else {
-    Write-Err "full reading exam entry filter is missing."
-  }
-
-  if ($JsText -match "normalizeExamFileUrl") {
-    Write-Ok "exam file paths are normalized for practice-print."
-  } else {
-    Write-Err "exam file path normalization is missing."
-  }
-
-  if (Get-Command node -ErrorAction SilentlyContinue) {
-    $nodeResult = & node --check $PracticeJs 2>&1
-    if ($LASTEXITCODE -eq 0) {
-      Write-Ok "practice-print.js passed node syntax check."
-    } else {
-      Write-Err "practice-print.js failed node syntax check: $nodeResult"
+  if ($scriptFolder) {
+    $candidate = Resolve-Path (Join-Path $scriptFolder "..") -ErrorAction SilentlyContinue
+    if ($candidate -and (Test-Path (Join-Path $candidate.Path "reading-test")) -and (Test-Path (Join-Path $candidate.Path "practice-print"))) {
+      return $candidate.Path
     }
-  } else {
-    Write-Warn "Node.js not found. Skipped JS syntax check."
   }
+
+  $current = (Get-Location).Path
+  if ((Test-Path (Join-Path $current "reading-test")) -and (Test-Path (Join-Path $current "practice-print"))) {
+    return $current
+  }
+
+  return $current
 }
 
-if (!(Test-Path $Manifest)) {
-  Write-Err "reading-test\data\exam-manifest.json not found."
-} else {
-  Write-Ok "exam-manifest.json exists."
+function Test-RequiredFile {
+  param([string]$RelativePath)
+
+  if (Test-Path $RelativePath -PathType Leaf) {
+    Write-Ok "$RelativePath exists."
+    return $true
+  }
+
+  Write-Error2 "$RelativePath not found."
+  return $false
+}
+
+function Test-RequiredDir {
+  param([string]$RelativePath)
+
+  if (Test-Path $RelativePath -PathType Container) {
+    Write-Ok "$RelativePath exists."
+    return $true
+  }
+
+  Write-Error2 "$RelativePath not found."
+  return $false
+}
+
+function Read-TextFile {
+  param([string]$RelativePath)
 
   try {
-    $ManifestJson = Get-Content $Manifest -Raw -Encoding UTF8 | ConvertFrom-Json
-    $Entries = @()
-    if ($ManifestJson -is [System.Array]) {
-      $Entries = $ManifestJson
-    } elseif ($ManifestJson.exams) {
-      $Entries = $ManifestJson.exams
-    } elseif ($ManifestJson.items) {
-      $Entries = $ManifestJson.items
-    } elseif ($ManifestJson.exam_list) {
-      $Entries = $ManifestJson.exam_list
-    }
-
-    $FullReadingEntries = @($Entries | Where-Object {
-      $file = "" + $_.file
-      $label = "" + $_.label
-      $id = "" + $_.id + " " + $_.value
-      $enabledOk = -not ($_.PSObject.Properties.Name -contains "enabled") -or $_.enabled -ne $false
-      $studentVisibleOk = -not ($_.PSObject.Properties.Name -contains "student_visible") -or $_.student_visible -ne $false
-      $isLevel = ($file + " " + $label + " " + $id) -match "level[-_ ]?test|레벨"
-      $isRandom = ($label + " " + $id) -match "random|랜덤"
-      $isReadingFile = $file -match "reading-\d+\.json$"
-      $enabledOk -and $studentVisibleOk -and !$isLevel -and !$isRandom -and $isReadingFile
-    })
-
-    if ($FullReadingEntries.Count -gt 0) {
-      Write-Ok ("manifest has {0} fixed reading exams." -f $FullReadingEntries.Count)
-    } else {
-      Write-Err "manifest has no fixed reading exam entries."
-    }
-
-    foreach ($entry in $FullReadingEntries) {
-      $file = "" + $entry.file
-      if ($file -match "reading-(\d+)\.json$") {
-        $round = $Matches[1]
-        $path = $file
-        if ($path -match "^data/") {
-          $path = Join-Path $Root ("reading-test\" + ($path -replace "/", "\"))
-        } elseif ($path -match "^exams/") {
-          $path = Join-Path $Root ("reading-test\data\" + ($path -replace "/", "\"))
-        } elseif ($path -match "^reading-\d+\.json$") {
-          $path = Join-Path $ExamsDir $path
-        } else {
-          $path = Join-Path $Root ($path -replace "/", "\")
-        }
-
-        if (Test-Path $path) {
-          Write-Ok ("reading-{0}.json exists." -f $round)
-        } else {
-          Write-Warn ("manifest points to reading-{0}.json, but file was not found at {1}" -f $round, $path)
-        }
-      }
-    }
+    return Get-Content $RelativePath -Raw -Encoding UTF8
   } catch {
-    Write-Err ("exam-manifest.json parse failed: " + $_.Exception.Message)
+    Write-Error2 "Cannot read $RelativePath. $($_.Exception.Message)"
+    return ""
   }
 }
 
+function Test-TextPattern {
+  param(
+    [string]$Label,
+    [string]$Text,
+    [string]$Pattern,
+    [switch]$WarningOnly
+  )
+
+  if ($Text -match $Pattern) {
+    Write-Ok $Label
+    return $true
+  }
+
+  if ($WarningOnly) {
+    Write-Warn2 $Label
+  } else {
+    Write-Error2 $Label
+  }
+
+  return $false
+}
+
+function Normalize-ImageReference {
+  param([string]$Reference)
+
+  $value = [string]$Reference
+  $value = $value.Trim()
+
+  if (-not $value) {
+    return $null
+  }
+
+  if ($value -match "^(https?:|data:)") {
+    return $null
+  }
+
+  $value = $value -replace "/", "\"
+  $value = $value.TrimStart("\")
+
+  if ($value -match "^\.\\images\\(.+)$") {
+    return Join-Path "reading-test\images" $Matches[1]
+  }
+
+  if ($value -match "^images\\(.+)$") {
+    return Join-Path "reading-test\images" $Matches[1]
+  }
+
+  if ($value -match "^(\.\.\\)?reading-test\\images\\(.+)$") {
+    return Join-Path "reading-test\images" $Matches[2]
+  }
+
+  if ($value -match "^reading-test\\images\\(.+)$") {
+    return $value
+  }
+
+  if ($value -match "\.(png|jpg|jpeg|webp|gif)$") {
+    return $value
+  }
+
+  return $null
+}
+
+function Find-ImageRefs {
+  param(
+    [Parameter(ValueFromPipeline=$true)]
+    $Node,
+    [System.Collections.Generic.List[string]]$Result
+  )
+
+  if ($null -eq $Node) {
+    return
+  }
+
+  if ($Node -is [string]) {
+    return
+  }
+
+  if ($Node -is [System.Collections.IEnumerable] -and -not ($Node -is [string])) {
+    foreach ($item in $Node) {
+      Find-ImageRefs -Node $item -Result $Result
+    }
+    return
+  }
+
+  if ($Node.PSObject -and $Node.PSObject.Properties) {
+    foreach ($prop in $Node.PSObject.Properties) {
+      $name = [string]$prop.Name
+      $value = $prop.Value
+
+      if (($name -match "image") -and ($value -is [string]) -and ($value -match "\.(png|jpg|jpeg|webp|gif)")) {
+        $normalized = Normalize-ImageReference $value
+        if ($normalized) {
+          $Result.Add($normalized)
+        }
+      }
+
+      Find-ImageRefs -Node $value -Result $Result
+    }
+  }
+}
+
+$root = Get-ProjectRoot
+Set-Location $root
+
 Write-Host ""
+Write-Host "============================================================" -ForegroundColor Cyan
+Write-Host "TOPIK I STEP46 practice-print validation" -ForegroundColor Cyan
+Write-Host "============================================================" -ForegroundColor Cyan
+Write-Info "Project root: $root"
+
+# 1. Required files and folders
+$requiredFiles = @(
+  "practice-print\index.html",
+  "practice-print\practice-print.js",
+  "practice-print\README.txt",
+  "reading-test\practice-print-link.js",
+  "reading-test\index.html",
+  "reading-test\data\bank\question-bank.json"
+)
+
+$requiredDirs = @(
+  "practice-print",
+  "reading-test",
+  "reading-test\data\bank",
+  "reading-test\images"
+)
+
+foreach ($dir in $requiredDirs) {
+  Test-RequiredDir $dir | Out-Null
+}
+
+foreach ($file in $requiredFiles) {
+  Test-RequiredFile $file | Out-Null
+}
+
+if ($script:ErrorCount -gt 0) {
+  Write-Host ""
+  Write-Host "Required file check failed. Fix missing files first." -ForegroundColor Red
+}
+
+# 2. Read operation files
+$readingIndexText = ""
+$linkText = ""
+$practiceIndexText = ""
+$practiceJsText = ""
+$bankText = ""
+
+if (Test-Path "reading-test\index.html") {
+  $readingIndexText = Read-TextFile "reading-test\index.html"
+}
+if (Test-Path "reading-test\practice-print-link.js") {
+  $linkText = Read-TextFile "reading-test\practice-print-link.js"
+}
+if (Test-Path "practice-print\index.html") {
+  $practiceIndexText = Read-TextFile "practice-print\index.html"
+}
+if (Test-Path "practice-print\practice-print.js") {
+  $practiceJsText = Read-TextFile "practice-print\practice-print.js"
+}
+if (Test-Path "reading-test\data\bank\question-bank.json") {
+  $bankText = Read-TextFile "reading-test\data\bank\question-bank.json"
+}
+
+# 3. reading-test link checks
+if ($readingIndexText) {
+  Test-TextPattern "reading-test/index.html loads practice-print-link.js." $readingIndexText "practice-print-link\.js" | Out-Null
+
+  $linkCount = ([regex]::Matches($readingIndexText, "practice-print-link\.js")).Count
+  if ($linkCount -eq 1) {
+    Write-Ok "practice-print-link.js is loaded once."
+  } elseif ($linkCount -gt 1) {
+    Write-Warn2 "practice-print-link.js appears $linkCount times. It should normally appear once."
+  }
+}
+
+if ($linkText) {
+  Test-TextPattern "practice-print-link.js keeps teacher print button text." $linkText "교사용 문제지 출력" | Out-Null
+  Test-TextPattern "practice-print-link.js opens ../practice-print/index.html." $linkText "\.\./practice-print/index\.html" | Out-Null
+  Test-TextPattern "practice-print-link.js does not change exam execution logic directly." $linkText "installPracticePrintLink" | Out-Null
+}
+
+# 4. practice-print/index.html checks
+if ($practiceIndexText) {
+  Test-TextPattern "practice-print/index.html has start number input." $practiceIndexText "id=""startNumberInput""" | Out-Null
+  Test-TextPattern "practice-print/index.html has end number input." $practiceIndexText "id=""endNumberInput""" | Out-Null
+  Test-TextPattern "practice-print/index.html has student print button." $practiceIndexText "id=""printStudentButton""" | Out-Null
+  Test-TextPattern "practice-print/index.html has with-answer print button." $practiceIndexText "id=""printWithAnswerButton""" | Out-Null
+  Test-TextPattern "practice-print/index.html has answer-only print button." $practiceIndexText "id=""printAnswerOnlyButton""" | Out-Null
+  Test-TextPattern "practice-print/index.html hides top print meta line." $practiceIndexText "(?s)\.print-meta\s*\{.*?display\s*:\s*none\s*!important" | Out-Null
+  Test-TextPattern "practice-print/index.html hides problem-title during answer-only printing." $practiceIndexText "(?s)body\.print-answer-only\s+\.print-title\s*\{.*?display\s*:\s*none\s*!important" | Out-Null
+  Test-TextPattern "practice-print/index.html loads practice-print.js." $practiceIndexText "practice-print\.js" | Out-Null
+}
+
+# 5. practice-print.js checks
+if ($practiceJsText) {
+  Test-TextPattern "practice-print.js reads ../reading-test/data/bank/question-bank.json." $practiceJsText "\.\./reading-test/data/bank/question-bank\.json" | Out-Null
+  Test-TextPattern "practice-print.js keeps TOPIK I 31~70 conversion logic." $practiceJsText "convertToDisplayNumber" | Out-Null
+  Test-TextPattern "practice-print.js keeps sentence order label normalization." $practiceJsText "normalizeSentenceLabel" | Out-Null
+  Test-TextPattern "practice-print.js renders order_choice_orders with ①②③④ order." $practiceJsText "renderOrderChoices" | Out-Null
+  Test-TextPattern "practice-print.js uses getChoiceLabel(index), not raw option keys." $practiceJsText "getChoiceLabel\(index\)" | Out-Null
+  Test-TextPattern "practice-print.js supports insert_positions/insert_markers." $practiceJsText "insert_positions|insert_markers" | Out-Null
+  Test-TextPattern "practice-print.js hides duplicate text passage when common-passage image exists." $practiceJsText "shouldRenderGroupPassageText" | Out-Null
+  Test-TextPattern "practice-print.js hides passage text when imageUrl is present." $practiceJsText "!normalizeImageUrl\(imageUrl\)" | Out-Null
+  Test-TextPattern "practice-print.js assigns output-order question numbers for problem cards." $practiceJsText "assignPrintNumbers" | Out-Null
+  Test-TextPattern "practice-print.js stores print_number on selected records." $practiceJsText "print_number" | Out-Null
+  Test-TextPattern "practice-print.js formats TOPIK II-style question line numbers." $practiceJsText "formatQuestionLineNumber" | Out-Null
+  Test-TextPattern "practice-print.js formats problem card headers with output-order numbers." $practiceJsText "formatPrintQuestionNumber" | Out-Null
+}
+
+# 6. JavaScript syntax check when Node.js is available
+if ($practiceJsText) {
+  $node = Get-Command node -ErrorAction SilentlyContinue
+  if ($node) {
+    Write-Info "Running node --check for practice-print.js ..."
+    & node --check "practice-print\practice-print.js" | Out-Null
+    if ($LASTEXITCODE -eq 0) {
+      Write-Ok "practice-print.js passed node --check."
+    } else {
+      Write-Error2 "practice-print.js failed node --check."
+    }
+  } else {
+    Write-Warn2 "Node.js is not available. Skipped practice-print.js syntax check."
+  }
+}
+
+# 7. question-bank JSON and image path checks
+$bank = $null
+if ($bankText) {
+  try {
+    $bank = $bankText | ConvertFrom-Json
+    Write-Ok "question-bank.json is valid JSON."
+  } catch {
+    Write-Error2 "question-bank.json is not valid JSON. $($_.Exception.Message)"
+  }
+}
+
+if ($bank) {
+  $singleCount = 0
+  $setCount = 0
+
+  if ($bank.single_items) {
+    $singleCount = @($bank.single_items).Count
+  }
+  if ($bank.passage_sets) {
+    $setCount = @($bank.passage_sets).Count
+  }
+
+  if (($singleCount + $setCount) -gt 0) {
+    Write-Ok "question-bank has single_items=$singleCount, passage_sets=$setCount."
+  } else {
+    Write-Error2 "question-bank has no single_items or passage_sets."
+  }
+
+  if ($bankText -match '"source_round"\s*:\s*"?83"?') {
+    Write-Ok "question-bank includes 83회 items."
+  } else {
+    Write-Warn2 "question-bank does not appear to include 83회 items."
+  }
+
+  $imageRefs = New-Object System.Collections.Generic.List[string]
+  Find-ImageRefs -Node $bank -Result $imageRefs
+
+  $uniqueImages = @($imageRefs | Sort-Object -Unique)
+  if ($uniqueImages.Count -gt 0) {
+    Write-Info "Checking referenced images: $($uniqueImages.Count)"
+    foreach ($img in $uniqueImages) {
+      if (Test-Path $img -PathType Leaf) {
+        Write-Ok "$img exists."
+      } else {
+        Write-Error2 "$img not found."
+      }
+    }
+  } else {
+    Write-Warn2 "No image references found in question-bank.json."
+  }
+}
+
+# 8. Final summary
+Write-Host ""
+Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "Validation summary" -ForegroundColor Cyan
-Write-Host "==================" -ForegroundColor Cyan
-Write-Host ("Errors  : {0}" -f $ErrorCount)
-Write-Host ("Warnings: {0}" -f $WarnCount)
+Write-Host "============================================================" -ForegroundColor Cyan
+Write-Host ("Errors  : " + $script:ErrorCount)
+Write-Host ("Warnings: " + $script:WarningCount)
 
-if ($ErrorCount -gt 0) {
-  Write-Host "Result: FAIL - fix errors." -ForegroundColor Red
+if ($script:ErrorCount -gt 0) {
+  Write-Host "Result: FAIL - fix errors before GitHub release." -ForegroundColor Red
   exit 1
 }
 
-if ($Strict -and $WarnCount -gt 0) {
-  Write-Host "Result: FAIL - warnings are treated as errors in Strict mode." -ForegroundColor Red
+if ($Strict -and $script:WarningCount -gt 0) {
+  Write-Host "Result: FAIL - Strict mode treats warnings as errors." -ForegroundColor Red
   exit 1
 }
 
-Write-Host "Result: PASS - STEP46-5 practice-print actual round fix is ready." -ForegroundColor Green
+Write-Host "Result: PASS - STEP46-6 practice-print sequential numbering is ready." -ForegroundColor Green
 exit 0
