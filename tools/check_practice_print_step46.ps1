@@ -325,6 +325,12 @@ if ($practiceJsText) {
   Test-TextPattern "practice-print.js supports beforeprint cleanup." $practiceJsText "beforeprint" | Out-Null
   Test-TextPattern "practice-print.js adds is-printing class while printing." $practiceJsText "is-printing" | Out-Null
   Test-TextPattern "practice-print.js adds topik1-print-clean class while printing." $practiceJsText "topik1-print-clean" | Out-Null
+  Test-TextPattern "practice-print.js reads actual round from reading-*.json filenames." $practiceJsText "getRoundFromExamFileValue" | Out-Null
+  Test-TextPattern "practice-print.js validates manifest-declared fixed exam rounds." $practiceJsText "isManifestRoundAllowed" | Out-Null
+  Test-TextPattern "practice-print.js blocks pseudo 031~070 question-number rounds." $practiceJsText "isPseudoQuestionNumberRound" | Out-Null
+  Test-TextPattern "practice-print.js stores manifest actual rounds in state.actualRoundSet." $practiceJsText "actualRoundSet" | Out-Null
+  Test-TextPattern "practice-print.js sanitizes records by actual upload rounds." $practiceJsText "sanitizePracticePrintRecords" | Out-Null
+  Test-TextPattern "practice-print.js filters round list by selectable actual rounds." $practiceJsText "isSelectableRound" | Out-Null
 }
 
 # 6. JavaScript syntax check when Node.js is available
@@ -413,5 +419,5 @@ if ($Strict -and $script:WarningCount -gt 0) {
   exit 1
 }
 
-Write-Host "Result: PASS - STEP46-11 practice-print print residue guard is ready." -ForegroundColor Green
+Write-Host "Result: PASS - STEP46-12 practice-print actual round guard is ready." -ForegroundColor Green
 exit 0
