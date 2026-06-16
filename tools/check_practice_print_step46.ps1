@@ -278,7 +278,14 @@ if ($practiceIndexText) {
   Test-TextPattern "practice-print/index.html has answer-only print button." $practiceIndexText "id=""printAnswerOnlyButton""" | Out-Null
   Test-TextPattern "practice-print/index.html hides top print meta line." $practiceIndexText "(?s)\.print-meta\s*\{.*?display\s*:\s*none\s*!important" | Out-Null
   Test-TextPattern "practice-print/index.html hides problem-title during answer-only printing." $practiceIndexText "(?s)body\.print-answer-only\s+\.print-title\s*\{.*?display\s*:\s*none\s*!important" | Out-Null
+  Test-TextPattern "practice-print/index.html includes student answer sheet styles." $practiceIndexText "student-answer-sheet" | Out-Null
+  Test-TextPattern "practice-print/index.html includes compact sentence-order print styles." $practiceIndexText "sentence-order-set" | Out-Null
   Test-TextPattern "practice-print/index.html loads practice-print.js." $practiceIndexText "practice-print\.js" | Out-Null
+  Test-TextPattern "practice-print/index.html includes table-based student answer sheet CSS." $practiceIndexText "student-answer-table" | Out-Null
+  Test-TextPattern "practice-print/index.html starts student answer sheet on a new page." $practiceIndexText "student-answer-sheet\s*\{[\s\S]*?page-break-before\s*:\s*always" | Out-Null
+  Test-TextPattern "practice-print/index.html includes 40-question answer group CSS." $practiceIndexText "student-answer-group" | Out-Null
+  Test-TextPattern "practice-print/index.html includes two-column answer sheet CSS." $practiceIndexText "student-answer-columns" | Out-Null
+  Test-TextPattern "practice-print/index.html includes expanded answer bubble CSS." $practiceIndexText "student-answer-bubble" | Out-Null
 }
 
 # 5. practice-print.js checks
@@ -295,6 +302,15 @@ if ($practiceJsText) {
   Test-TextPattern "practice-print.js stores print_number on selected records." $practiceJsText "print_number" | Out-Null
   Test-TextPattern "practice-print.js formats TOPIK II-style question line numbers." $practiceJsText "formatQuestionLineNumber" | Out-Null
   Test-TextPattern "practice-print.js formats problem card headers with output-order numbers." $practiceJsText "formatPrintQuestionNumber" | Out-Null
+  Test-TextPattern "practice-print.js removes duplicated shared passage for sentence-order sets." $practiceJsText "isSentenceOrderSet" | Out-Null
+  Test-TextPattern "practice-print.js renders student answer recording sheet." $practiceJsText "renderStudentAnswerSheet" | Out-Null
+  Test-TextPattern "practice-print.js prints answer choices ①②③④ on answer sheet." $practiceJsText "student-answer-choices" | Out-Null
+  Test-TextPattern "practice-print.js renders answer sheet as a table for wider check spacing." $practiceJsText "student-answer-table" | Out-Null
+  Test-TextPattern "practice-print.js renders each answer choice as a separate printable bubble." $practiceJsText "student-answer-bubble" | Out-Null
+  Test-TextPattern "practice-print.js groups student answer sheet by 40 questions." $practiceJsText "chunkList\(indexedRecords,\s*40\)" | Out-Null
+  Test-TextPattern "practice-print.js renders answer sheet range labels such as 1~40번." $practiceJsText "makePrintRangeLabel" | Out-Null
+  Test-TextPattern "practice-print.js renders two-column answer tables." $practiceJsText "student-answer-columns" | Out-Null
+  Test-TextPattern "practice-print.js recovers sentence-order items from passage/group_passage when sentence_items is missing." $practiceJsText "getFallbackSentenceItemsFromText|getSentenceOrderItems" | Out-Null
 }
 
 # 6. JavaScript syntax check when Node.js is available
@@ -383,5 +399,5 @@ if ($Strict -and $script:WarningCount -gt 0) {
   exit 1
 }
 
-Write-Host "Result: PASS - STEP46-6 practice-print sequential numbering is ready." -ForegroundColor Green
+Write-Host "Result: PASS - STEP46-9 practice-print final student answer sheet is ready." -ForegroundColor Green
 exit 0
