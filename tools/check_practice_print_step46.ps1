@@ -285,6 +285,11 @@ if ($practiceIndexText) {
   Test-TextPattern "practice-print/index.html hides screen-only helpers in print CSS." $practiceIndexText "(?s)@media print.*?\.screen-only" | Out-Null
   Test-TextPattern "practice-print/index.html has is-printing print cleanup rules." $practiceIndexText "body\.is-printing|body::before" | Out-Null
   Test-TextPattern "practice-print/index.html includes STEP46-11 topik1-print-clean CSS." $practiceIndexText "topik1-print-clean" | Out-Null
+  Test-TextPattern "practice-print/index.html includes STEP46-13 student compact print CSS." $practiceIndexText "STEP46-13|body\.print-student\s+\.problem-card" | Out-Null
+  Test-TextPattern "practice-print/index.html includes round select all button." $practiceIndexText "selectAllRoundsButton|회차 전체 선택" | Out-Null
+  Test-TextPattern "practice-print/index.html includes round clear all button." $practiceIndexText "clearAllRoundsButton|회차 전체 해제" | Out-Null
+  Test-TextPattern "practice-print/index.html includes round toolbar styles." $practiceIndexText "round-toolbar|round-action-button" | Out-Null
+  Test-TextPattern "practice-print/index.html reduces student passage box spacing." $practiceIndexText "body\.print-student\s+\.passage-box" | Out-Null
   Test-TextPattern "practice-print/index.html blocks fixed or sticky inline elements during printing." $practiceIndexText "position:\s*fixed|position:fixed|position:\s*sticky|position:sticky" | Out-Null
   Test-TextPattern "practice-print/index.html strongly hides non-layout body children during printing." $practiceIndexText "body\.is-printing\s*>\s*:not\(\.layout\)" | Out-Null
   Test-TextPattern "practice-print/index.html clearly instructs header and footer off." $practiceIndexText "머리글과 바닥글:\s*끄기|머리글과 바닥글은 끄고" | Out-Null
@@ -331,6 +336,8 @@ if ($practiceJsText) {
   Test-TextPattern "practice-print.js stores manifest actual rounds in state.actualRoundSet." $practiceJsText "actualRoundSet" | Out-Null
   Test-TextPattern "practice-print.js sanitizes records by actual upload rounds." $practiceJsText "sanitizePracticePrintRecords" | Out-Null
   Test-TextPattern "practice-print.js filters round list by selectable actual rounds." $practiceJsText "isSelectableRound" | Out-Null
+  Test-TextPattern "practice-print.js supports quick round select buttons." $practiceJsText "setAllRoundCheckboxes|syncRoundQuickButtons" | Out-Null
+  Test-TextPattern "practice-print.js treats cleared round selection as no results." $practiceJsText "hasRoundFilter|hasNoSelectedRound" | Out-Null
 }
 
 # 6. JavaScript syntax check when Node.js is available
@@ -419,5 +426,5 @@ if ($Strict -and $script:WarningCount -gt 0) {
   exit 1
 }
 
-Write-Host "Result: PASS - STEP46-12 practice-print actual round guard is ready." -ForegroundColor Green
+Write-Host "Result: PASS - STEP46-14 practice-print round quick buttons are ready." -ForegroundColor Green
 exit 0
