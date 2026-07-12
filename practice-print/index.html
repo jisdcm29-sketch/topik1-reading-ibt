@@ -156,6 +156,39 @@
       background: #fbfcff;
     }
 
+    .round-toolbar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 8px 0 8px;
+    }
+
+    .round-action-button {
+      min-height: 34px;
+      border: 1px solid var(--topik-blue);
+      border-radius: 9px;
+      background: #ffffff;
+      color: var(--topik-blue);
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      padding: 7px 8px;
+    }
+
+    .round-action-button:hover {
+      background: var(--topik-soft);
+    }
+
+    .round-action-button.gray {
+      border-color: #cbd5e1;
+      color: #384152;
+    }
+
+    .round-action-button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     .button-stack {
       display: grid;
       gap: 9px;
@@ -748,6 +781,168 @@
         max-height: 360px;
       }
 
+      /* STEP46-13: 학생용 문제지 인쇄 간격 압축
+         - 화면 미리보기와 교사용 정답표는 유지
+         - 학생용 문제지 인쇄(print-student)에서만 카드 여백과 줄 간격을 줄입니다. */
+      body.print-student .print-title {
+        margin: 0 0 8px;
+        font-size: 21px;
+        line-height: 1.25;
+      }
+
+      body.print-student .problem-card {
+        margin-bottom: 8px;
+        border-radius: 0;
+      }
+
+      body.print-student .problem-header {
+        padding: 6px 10px;
+        min-height: 0;
+        line-height: 1.25;
+      }
+
+      body.print-student .source-info {
+        font-size: 11.5px;
+        line-height: 1.25;
+      }
+
+      body.print-student .problem-body {
+        padding: 9px 12px 10px;
+      }
+
+      body.print-student .instruction {
+        margin: 0 0 6px;
+        font-size: 15.5px;
+        line-height: 1.35;
+      }
+
+      body.print-student .passage-box,
+      body.print-student .insert-box,
+      body.print-student .sentence-order-box {
+        margin: 5px 0 8px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        line-height: 1.48;
+        font-size: 14.5px;
+      }
+
+      body.print-student .question-line {
+        margin: 6px 0 4px;
+        line-height: 1.35;
+        font-size: 15px;
+      }
+
+      body.print-student .options {
+        margin-top: 3px;
+        gap: 2px;
+      }
+
+      body.print-student .option-line {
+        line-height: 1.33;
+        font-size: 14.5px;
+      }
+
+      body.print-student .item-block {
+        margin-top: 8px;
+        padding-top: 8px;
+      }
+
+      body.print-student .question-image {
+        max-height: 320px;
+        margin: 6px auto 8px;
+      }
+
+      body.print-student .problem-card.sentence-order-set .problem-body {
+        padding: 8px 10px 9px;
+      }
+
+      body.print-student .problem-card.sentence-order-set .instruction {
+        margin-bottom: 5px;
+        font-size: 15px;
+        line-height: 1.3;
+      }
+
+      body.print-student .problem-card.sentence-order-set .sentence-order-box {
+        margin: 4px 0 6px;
+        padding: 7px 9px;
+        line-height: 1.38;
+        font-size: 14px;
+      }
+
+      body.print-student .problem-card.sentence-order-set .question-line {
+        margin: 5px 0 3px;
+        line-height: 1.3;
+        font-size: 14.5px;
+      }
+
+      body.print-student .problem-card.sentence-order-set .options {
+        gap: 1px;
+        margin-top: 2px;
+      }
+
+      body.print-student .problem-card.sentence-order-set .option-line {
+        line-height: 1.28;
+        font-size: 14px;
+      }
+
+      body.print-student .problem-card.sentence-order-set .item-block {
+        margin-top: 6px;
+        padding-top: 6px;
+      }
+
+      /* STEP46-15: 학생용 문제지 간격 미세 조정
+         - 단일 문항 중심으로만 추가 압축합니다.
+         - 공통 지문, 순서 문항, 삽입 문항, 답안 기록표의 구조는 유지합니다.
+         - 이미지 문항은 읽기 가능성을 해치지 않는 범위에서만 소폭 줄입니다. */
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) {
+        margin-bottom: 6px;
+      }
+
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) .problem-header {
+        padding: 5px 9px;
+        font-size: 14.5px;
+        line-height: 1.2;
+      }
+
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) .problem-body {
+        padding: 7px 10px 8px;
+      }
+
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) .instruction {
+        margin: 0 0 4px;
+        font-size: 14.8px;
+        line-height: 1.28;
+      }
+
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) .passage-box {
+        margin: 4px 0 6px;
+        padding: 6px 8px;
+        min-height: 0;
+        line-height: 1.38;
+        font-size: 14.2px;
+      }
+
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) .question-line {
+        margin: 4px 0 2px;
+        line-height: 1.26;
+        font-size: 14.5px;
+      }
+
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) .options {
+        margin-top: 1px;
+        gap: 0;
+      }
+
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) .option-line {
+        line-height: 1.23;
+        font-size: 14px;
+      }
+
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) .question-image {
+        max-height: 300px;
+        margin: 5px auto 6px;
+      }
+
 
       .student-answer-sheet {
         break-before: page;
@@ -879,6 +1074,10 @@
 
       <div class="field-group">
         <div class="group-label">출제 회차 선택</div>
+        <div class="round-toolbar screen-only" aria-label="출제 회차 빠른 선택">
+          <button id="selectAllRoundsButton" class="round-action-button" type="button">회차 전체 선택</button>
+          <button id="clearAllRoundsButton" class="round-action-button gray" type="button">회차 전체 해제</button>
+        </div>
         <div id="roundList" class="round-list">
           문제은행을 불러오는 중입니다.
         </div>
@@ -930,6 +1129,6 @@
     </section>
   </main>
 
-  <script src="./practice-print.js?v=topik1-practice-print-step46-11"></script>
+  <script src="./practice-print.js?v=topik1-practice-print-step46-15-compact-refine"></script>
 </body>
 </html>

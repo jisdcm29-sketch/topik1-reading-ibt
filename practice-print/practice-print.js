@@ -2,7 +2,7 @@
 
 /*
   TOPIK I Reading Practice Print Tool
-  version: step46-12-topik1-practice-print-actual-round-guard-v1
+  version: step46-14-topik1-practice-print-round-select-buttons-v1
 
   역할:
   - 실제 업로드된 고정 시험지 exam-manifest.json/data/exams/reading-*.json을 우선 읽고, 회차 표시도 manifest 기준으로 고정한다.
@@ -12,6 +12,7 @@
   - 학생 답안 기록표와 57~58번 문장 순서 표시를 학생 배포용으로 정리한다.
   - PDF 저장 시 브라우저 머리글/바닥글 해제를 매번 확인하고 인쇄 전용 화면 요소·잔상을 정리한다.
   - question-bank 예비 자료 사용 시 031~070처럼 원본 문항 번호가 회차처럼 섞이는 것을 차단한다.
+  - 출제 회차 선택 영역에 전체 선택/전체 해제 버튼을 제공한다.
   - 시험 실행, 채점, 진단 보고서 로직은 포함하지 않는다.
 */
 
@@ -42,6 +43,8 @@
       "questionCountInput",
       "allowDuplicateInput",
       "roundList",
+      "selectAllRoundsButton",
+      "clearAllRoundsButton",
       "showSourceInfoInput",
       "statusBox",
       "generatePreviewButton",
@@ -929,6 +932,31 @@
     });
   }
 
+  function syncRoundQuickButtons() {
+    const roundCheckboxes = Array.from(document.querySelectorAll(".round-checkbox"));
+    const checkedCount = roundCheckboxes.filter(function (checkbox) {
+      return checkbox.checked;
+    }).length;
+
+    if (elements.selectAllRoundsButton) {
+      elements.selectAllRoundsButton.disabled = !roundCheckboxes.length || checkedCount === roundCheckboxes.length;
+    }
+
+    if (elements.clearAllRoundsButton) {
+      elements.clearAllRoundsButton.disabled = !roundCheckboxes.length || checkedCount === 0;
+    }
+  }
+
+  function setAllRoundCheckboxes(checked) {
+    const roundCheckboxes = Array.from(document.querySelectorAll(".round-checkbox"));
+
+    roundCheckboxes.forEach(function (checkbox) {
+      checkbox.checked = Boolean(checked);
+    });
+
+    syncRoundQuickButtons();
+  }
+
   function renderRoundList() {
     const rounds = getAvailableRounds();
 
@@ -938,47 +966,40 @@
 
     if (!rounds.length) {
       elements.roundList.innerHTML = "<div>실제 업로드된 시험지 회차 정보를 찾지 못했습니다. 전체 문항을 사용합니다.</div>";
+      syncRoundQuickButtons();
       return;
     }
 
-    const html = [
-      '<label class="checkbox-line">',
-      '<input id="roundAllCheckbox" type="checkbox" checked />',
-      '<strong>전체 회차</strong>',
-      '</label>'
-    ].concat(rounds.map(function (round) {
+    const html = rounds.map(function (round) {
       return [
         '<label class="checkbox-line">',
         `<input class="round-checkbox" type="checkbox" value="${escapeHtml(round)}" checked />`,
         `${escapeHtml(round)}회`,
         '</label>'
       ].join("");
-    })).join("");
+    }).join("");
 
     elements.roundList.innerHTML = html;
 
-    const allCheckbox = byId("roundAllCheckbox");
     const roundCheckboxes = Array.from(document.querySelectorAll(".round-checkbox"));
 
-    if (allCheckbox) {
-      allCheckbox.addEventListener("change", function () {
-        roundCheckboxes.forEach(function (checkbox) {
-          checkbox.checked = allCheckbox.checked;
-        });
+    roundCheckboxes.forEach(function (checkbox) {
+      checkbox.addEventListener("change", syncRoundQuickButtons);
+    });
+
+    if (elements.selectAllRoundsButton) {
+      elements.selectAllRoundsButton.addEventListener("click", function () {
+        setAllRoundCheckboxes(true);
       });
     }
 
-    roundCheckboxes.forEach(function (checkbox) {
-      checkbox.addEventListener("change", function () {
-        if (!allCheckbox) {
-          return;
-        }
-
-        allCheckbox.checked = roundCheckboxes.every(function (item) {
-          return item.checked;
-        });
+    if (elements.clearAllRoundsButton) {
+      elements.clearAllRoundsButton.addEventListener("click", function () {
+        setAllRoundCheckboxes(false);
       });
-    });
+    }
+
+    syncRoundQuickButtons();
   }
 
   function getSelectedRounds() {
@@ -1005,6 +1026,7 @@
     const allowDuplicate = Boolean(elements.allowDuplicateInput && elements.allowDuplicateInput.checked);
     const order = getSelectedPrintOrder();
     const selectedRounds = getSelectedRounds();
+    const hasRoundFilter = document.querySelectorAll(".round-checkbox").length > 0;
 
     if (!Number.isFinite(start)) {
       start = 31;
@@ -1037,14 +1059,17 @@
       count,
       allowDuplicate,
       order,
-      selectedRounds
+      selectedRounds,
+      hasRoundFilter
     };
   }
 
   function filterRecords(options) {
     let records = state.records.filter(function (record) {
       const inRange = record.display_number >= options.start && record.display_number <= options.end;
-      const inRound = options.selectedRounds.length === 0 || options.selectedRounds.includes(record.source_round);
+      const hasRoundFilter = Boolean(options.hasRoundFilter);
+      const hasNoSelectedRound = hasRoundFilter && options.selectedRounds.length === 0;
+      const inRound = !hasRoundFilter || (!hasNoSelectedRound && options.selectedRounds.includes(record.source_round));
       return inRange && inRound;
     });
 
