@@ -1,6 +1,6 @@
 "use strict";
 
-console.log("TOPIK I Reading Diagnosis loaded: step42-topik1-reading-zone-label-fix-v1");
+console.log("TOPIK I Reading Diagnosis loaded: step46-diagnosis-issue-label-fix-v1");
 
 const AUTO_DIAGNOSIS_STORAGE_KEY = "topik1_latest_reading_result";
 const LEVEL_TEST_DIAGNOSIS_STORAGE_KEY = "topik1_latest_leveltest_result";
@@ -1485,7 +1485,7 @@ function renderZoneTable(stats) {
       <td>${numberOrZero(stat.correct)} / ${numberOrZero(stat.total)}</td>
       <td>${numberOrZero(stat.points_earned)} / ${numberOrZero(stat.points_possible)}</td>
       <td>${numberOrZero(stat.point_rate)}%</td>
-      <td>${escapeHtml(makeQuestionListText(stat.wrong_questions))}</td>
+      <td>${escapeHtml(makeProblemQuestionListText(stat.wrong_questions))}</td>
     </tr>
   `).join("");
 
@@ -1517,7 +1517,7 @@ function renderStatsTable(stats, firstColumnLabel) {
       <td>${numberOrZero(stat.correct)} / ${numberOrZero(stat.total)}</td>
       <td>${numberOrZero(stat.points_earned)} / ${numberOrZero(stat.points_possible)}</td>
       <td>${numberOrZero(stat.point_rate)}%</td>
-      <td>${escapeHtml(makeQuestionListText(stat.wrong_questions))}</td>
+      <td>${escapeHtml(makeProblemQuestionListText(stat.wrong_questions))}</td>
     </tr>
   `).join("");
 
@@ -1662,6 +1662,15 @@ function renderPrescriptions(prescriptions) {
       <p>${escapeHtml(item.body)}</p>
     </div>
   `).join("");
+}
+
+
+function makeProblemQuestionListText(numbers) {
+  const text = makeQuestionListText(numbers);
+
+  return text === "관련 문항 없음"
+    ? "문제 발생 없음"
+    : text;
 }
 
 function makeQuestionListText(numbers) {
