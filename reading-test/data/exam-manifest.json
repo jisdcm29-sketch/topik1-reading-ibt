@@ -1,5 +1,5 @@
 {
-  "manifest_version": "1.6-step44-83-reading-leveltest",
+  "manifest_version": "1.7-step64-reading-leveltest-draft",
   "manifest_name": "TOPIK I Reading Exam Manifest",
   "level": "TOPIK I",
   "section": "reading",
@@ -8,7 +8,7 @@
   "expected_total_questions": 40,
   "default_time_limit_minutes": 60,
   "total_possible_points": 100,
-  "description": "TOPIK I 읽기 31~70번 PBT형 IBT 시험지 목록입니다. 83회, 91회, 96회, 97회, 99회, 100회, 102회, 103회 및 랜덤 출제를 관리합니다.",
+  "description": "TOPIK I 읽기 31~70번 PBT형 IBT 시험지 목록입니다. 64회, 83회, 91회, 96회, 97회, 99회, 100회, 102회, 103회 및 랜덤 출제를 관리합니다.",
   "data_paths": {
     "bank": "data/bank/question-bank.json",
     "template": "data/bank/exam-template.json",
@@ -17,6 +17,7 @@
   },
   "student_visible_order": [
     "random-full",
+    "reading-64",
     "reading-83",
     "reading-91",
     "reading-96",
@@ -26,6 +27,7 @@
     "reading-102",
     "reading-103",
     "leveltest-random",
+    "leveltest-64",
     "leveltest-83",
     "leveltest-91",
     "leveltest-96",
@@ -52,6 +54,25 @@
         "bank_file": "data/bank/question-bank.json",
         "template_file": "data/bank/exam-template.json"
       }
+    },
+    {
+      "id": "reading-64",
+      "value": "round-64",
+      "label": "64회 40문항 실전시험",
+      "exam_type": "full",
+      "selection_type": "round",
+      "mode": "round",
+      "source_round": "64",
+      "round": "64",
+      "question_count": 40,
+      "time_limit_minutes": 60,
+      "student_visible": true,
+      "enabled": true,
+      "file": "data/exams/reading-64.json",
+      "answer_key_file": "data/answer-keys/answer-key-64.json",
+      "review_status": "internal_review_visible_text_image_applied",
+      "review_note": "64회 40문항 실전시험을 1차 화면 검수용으로 추가했습니다. 40~42번과 63~64번은 images 폴더의 64_R040.png, 64_R041.png, 64_R042.png, 64_R063_064.png를 사용합니다. 이미지형 PDF 기준 수동 입력본이므로 화면 검수 후 안정본으로 전환하세요.",
+      "status": "internal_review"
     },
     {
       "id": "reading-83",
@@ -234,6 +255,47 @@
         "bank_file": "data/bank/question-bank.json",
         "template_file": "data/bank/exam-template.json"
       }
+    },
+    {
+      "id": "leveltest-64",
+      "value": "leveltest-64",
+      "label": "64회 레벨테스트",
+      "exam_type": "leveltest",
+      "selection_type": "round",
+      "mode": "round",
+      "source_round": "64",
+      "round": "64",
+      "question_count": 20,
+      "time_limit_minutes": 30,
+      "leveltest_slots": [
+        31,
+        33,
+        34,
+        37,
+        40,
+        43,
+        46,
+        48,
+        49,
+        50,
+        57,
+        58,
+        59,
+        60,
+        63,
+        64,
+        67,
+        68,
+        69,
+        70
+      ],
+      "student_visible": true,
+      "enabled": true,
+      "file": "data/exams/level-test-64.json",
+      "answer_key_file": "data/answer-keys/answer-key-64.json",
+      "review_status": "internal_review_visible_text_image_applied",
+      "review_note": "64회 대표 20문항 레벨테스트를 1차 화면 검수용으로 추가했습니다. 원본 번호와 공통 지문 구조를 유지합니다.",
+      "status": "internal_review"
     },
     {
       "id": "leveltest-83",
