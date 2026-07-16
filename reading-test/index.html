@@ -1296,6 +1296,260 @@
         margin-top: 8px !important;
       }
     }
+    /* ===== TOPIK I 글자 크기/간격 조정 패치 - compact-font-1 =====
+       목적: font-up-1보다 글씨와 간격을 조금 줄여 한 화면에 더 잘 보이게 조정
+       범위: reading-test/index.html 스타일만 수정, 시험 로직은 수정하지 않음
+    */
+    .exam-shell {
+      width: min(1420px, calc(100% - 56px)) !important;
+    }
+
+    .section-heading {
+      font-size: 30px !important;
+      line-height: 1.3 !important;
+      font-weight: 900 !important;
+      margin-bottom: 18px !important;
+    }
+
+    .answer-count {
+      min-width: 86px !important;
+      padding: 8px 15px !important;
+      font-size: 19px !important;
+      line-height: 1.2 !important;
+    }
+
+    .question-instruction {
+      margin: 22px 0 16px !important;
+      font-size: 26px !important;
+      line-height: 1.42 !important;
+      font-weight: 900 !important;
+      letter-spacing: -0.45px !important;
+    }
+
+    .view-tab {
+      min-width: 62px !important;
+      height: 38px !important;
+      font-size: 18px !important;
+      line-height: 1.15 !important;
+      font-weight: 900 !important;
+    }
+
+    .panel-label {
+      padding: 12px 15px !important;
+      font-size: 19px !important;
+      line-height: 1.28 !important;
+      font-weight: 900 !important;
+    }
+
+    .passage-content {
+      padding: 22px 24px !important;
+      font-size: 22px !important;
+      line-height: 1.72 !important;
+      font-weight: 650 !important;
+    }
+
+    .question-content {
+      padding: 22px 24px !important;
+    }
+
+    .question-text {
+      font-size: 24px !important;
+      line-height: 1.48 !important;
+      font-weight: 900 !important;
+      letter-spacing: -0.35px !important;
+    }
+
+    .option-button {
+      min-height: 58px !important;
+      padding: 13px 18px !important;
+      font-size: 21px !important;
+      line-height: 1.45 !important;
+      font-weight: 750 !important;
+      letter-spacing: -0.25px !important;
+    }
+
+    .blank-sentence {
+      min-height: 88px !important;
+      padding: 20px 22px !important;
+      font-size: 23px !important;
+      line-height: 1.72 !important;
+      font-weight: 750 !important;
+    }
+
+    .blank-select {
+      min-width: 240px !important;
+      height: 48px !important;
+      font-size: 22px !important;
+      font-weight: 800 !important;
+    }
+
+    .nav-button {
+      min-width: 170px !important;
+      height: 44px !important;
+      font-size: 18px !important;
+      font-weight: 900 !important;
+    }
+
+    .button {
+      font-size: 17px !important;
+      line-height: 1.32 !important;
+    }
+
+    .timer-pill {
+      font-size: 17px !important;
+      padding: 8px 16px !important;
+    }
+
+    .timer-pill .time {
+      font-size: 24px !important;
+    }
+
+    .candidate-label,
+    .candidate-phone {
+      font-size: 14px !important;
+    }
+
+    .candidate-name {
+      font-size: 21px !important;
+    }
+
+    .exam-title {
+      font-size: 27px !important;
+    }
+
+    /* 일반 문제 화면 여백 압축 */
+    .question-panel,
+    .passage-panel {
+      margin-bottom: 14px !important;
+    }
+
+    .question-card,
+    .passage-card,
+    .content-card {
+      padding-top: 14px !important;
+      padding-bottom: 14px !important;
+    }
+
+    .option-list,
+    .options-list {
+      gap: 10px !important;
+    }
+
+    /* 문장 순서형 57~58번: 글씨 유지, 세로 간격만 압축 */
+    .sentence-order-stage {
+      padding: 16px 16px 18px !important;
+      font-size: 21px !important;
+    }
+
+    .sentence-order-stage section {
+      padding: 16px !important;
+    }
+
+    .sentence-order-stage section > div:first-child {
+      font-size: 20px !important;
+      line-height: 1.35 !important;
+      font-weight: 900 !important;
+    }
+
+    .sentence-order-stage .question-text {
+      font-size: 23px !important;
+      line-height: 1.42 !important;
+      font-weight: 900 !important;
+      margin-bottom: 12px !important;
+    }
+
+    .sentence-order-slot {
+      min-height: 70px !important;
+      margin-bottom: 10px !important;
+    }
+
+    .sentence-order-slot > div {
+      min-height: 70px !important;
+      padding: 13px 16px !important;
+      font-size: 21px !important;
+      line-height: 1.45 !important;
+      font-weight: 900 !important;
+      letter-spacing: -0.25px !important;
+      word-break: keep-all !important;
+    }
+
+    .sentence-order-item {
+      min-height: 102px !important;
+      padding: 15px 18px !important;
+      font-size: 22px !important;
+      line-height: 1.45 !important;
+      font-weight: 900 !important;
+      letter-spacing: -0.3px !important;
+      word-break: keep-all !important;
+    }
+
+    .sentence-order-item > div:first-child {
+      font-size: 21px !important;
+      line-height: 1.32 !important;
+      margin-bottom: 7px !important;
+      font-weight: 900 !important;
+    }
+
+    .sentence-order-item > div:last-child {
+      font-size: 22px !important;
+      line-height: 1.45 !important;
+      font-weight: 900 !important;
+    }
+
+    #resetSentenceOrderButton {
+      min-height: 46px !important;
+      font-size: 18px !important;
+      line-height: 1.25 !important;
+      font-weight: 900 !important;
+    }
+
+    /* 문장 삽입형 59~60번 및 공통 지문형 */
+    .inserted-answer-highlight {
+      font-size: inherit !important;
+      line-height: inherit !important;
+      font-weight: 900 !important;
+    }
+
+    .reading-layout {
+      gap: 16px !important;
+      padding: 16px !important;
+    }
+
+    /* 내부 스크롤 영역의 위아래 낭비 줄이기 */
+    .test-card,
+    .exam-card,
+    #testScreen .card {
+      padding-top: 18px !important;
+      padding-bottom: 18px !important;
+    }
+
+    /* 작은 화면에서는 지나친 가로 넘침 방지 */
+    @media (max-width: 1100px) {
+      .exam-shell {
+        width: min(100%, calc(100% - 28px)) !important;
+      }
+
+      .question-instruction {
+        font-size: 24px !important;
+      }
+
+      .question-text {
+        font-size: 22px !important;
+      }
+
+      .option-button,
+      .passage-content,
+      .blank-sentence,
+      .sentence-order-item,
+      .sentence-order-slot > div {
+        font-size: 20px !important;
+      }
+
+      .reading-layout {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
   </style>
 </head>
 
