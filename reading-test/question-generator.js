@@ -616,6 +616,9 @@
       correct_order: item.correct_order,
       order_choice_orders: item.order_choice_orders,
       start_candidate_labels: item.start_candidate_labels,
+      order_interaction_rule: item.order_interaction_rule,
+      render_contract: item.render_contract || "",
+      render_note: item.render_note || "",
       insert_sentence: item.insert_sentence || "",
       insert_positions: item.insert_positions,
       insert_markers: item.insert_markers,
@@ -656,6 +659,9 @@
       original_question_number: setItem.original_question_number || questionNumber,
       generated_exam_id: generatedExamId,
       template_slot: questionNumber,
+      order_interaction_rule: setItem.order_interaction_rule,
+      render_contract: setItem.render_contract || "",
+      render_note: setItem.render_note || "",
       insert_sentence: setItem.insert_sentence || "",
       insert_positions: setItem.insert_positions,
       insert_markers: setItem.insert_markers,
@@ -667,6 +673,7 @@
       question.correct_order = normalizeArray(setItem.correct_order);
       question.order_choice_orders = setItem.order_choice_orders;
       question.start_candidate_labels = normalizeArray(setItem.start_candidate_labels);
+      question.order_interaction_rule = setItem.order_interaction_rule;
     }
 
     if (setItem.type === "sentence_insert") {
@@ -674,6 +681,8 @@
       question.insert_positions = normalizeArray(setItem.insert_positions);
       question.insert_markers = normalizeArray(setItem.insert_markers);
       question.correct_position = setItem.correct_position || "";
+      question.render_contract = setItem.render_contract || "";
+      question.render_note = setItem.render_note || "";
     }
 
     return question;

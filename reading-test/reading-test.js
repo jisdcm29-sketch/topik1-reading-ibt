@@ -2455,6 +2455,12 @@ function normalizeQuestions(data) {
       start_candidate_labels: Array.isArray(question.start_candidate_labels)
         ? question.start_candidate_labels
         : undefined,
+      order_interaction_rule:
+        question.order_interaction_rule && typeof question.order_interaction_rule === "object"
+          ? question.order_interaction_rule
+          : undefined,
+      render_contract: question.render_contract || "",
+      render_note: question.render_note || "",
       insert_sentence:
         question.insert_sentence ||
         question.sentence_to_insert ||
@@ -3624,6 +3630,23 @@ function renderQuestionInstruction(question) {
 }
 
 function renderQuestionStage(question) {
+  /*
+    STEP41-INSERT-V5:
+    sentence_insert 문항은 공통 지문 세트에 속하더라도 일반 공통 지문/빈칸 렌더러보다
+    먼저 처리해야 한다. 그래야 41회 59번처럼 오른쪽 문제 패널에 삽입 문장 박스가 표시된다.
+    60번 같은 뒤 문항은 renderCommonPassageQuestion + buildCommonPassageContentHtml에서
+    59번 선택 상태를 이어받아 지문에 반영한다.
+  */
+  if (question.type === "sentence_insert") {
+    renderSentenceInsertQuestion(question);
+    return;
+  }
+
+  if (question.type === "sentence_order") {
+    renderSentenceOrderQuestion(question);
+    return;
+  }
+
   if (isCommonPassageBlankChoice(question) || isCommonBlankChoiceLikeQuestion(question)) {
     renderCommonPassageBlankChoiceQuestion(question);
     return;
@@ -3634,15 +3657,6 @@ function renderQuestionStage(question) {
     return;
   }
 
-  if (question.type === "sentence_insert") {
-    renderSentenceInsertQuestion(question);
-    return;
-  }
-
-  if (question.type === "sentence_order") {
-    renderSentenceOrderQuestion(question);
-    return;
-  }
 
   if (question.type === "visual_not_matching") {
     renderVisualNotMatchingQuestion(question);
@@ -4131,10 +4145,23 @@ function renderSentenceInsertQuestion(question) {
   const selectedOptionNumber = Number(answers[question.id]) || null;
   const selectedLabel = selectedOptionNumber ? positionLabels[selectedOptionNumber - 1] : "";
   const questionNumber = Number(question.question_number);
-  const rawQuestionText = getQuestionTextForPanel(
+
+  /*
+    STEP41-INSERT-V6:
+    문장 삽입형은 기존 회차 화면 방식과 맞춰
+    오른쪽 문제 패널 상단에 삽입 문장 박스를 먼저 표시하고,
+    그 아래에 질문과 ㉠~㉣ 위치 선택 버튼을 표시한다.
+    회차별·랜덤 문제은행 모두 문항 데이터의 insert_sentence,
+    insert_positions, render_contract를 보존하면 같은 방식으로 렌더링된다.
+  */
+  const rawQuestionText = stripInsertSentenceFromQuestionText(
     question,
-    "다음 문장이 들어갈 곳으로 가장 알맞은 것을 고르십시오."
+    getQuestionTextForPanel(
+      question,
+      "다음 문장이 들어갈 곳을 고르십시오."
+    )
   );
+
   const numberedQuestionText = Number.isFinite(questionNumber)
     ? `[${questionNumber}] ${String(rawQuestionText).replace(/^\s*\[\d+\]\s*/, "")}`
     : rawQuestionText;
@@ -4146,6 +4173,8 @@ function renderSentenceInsertQuestion(question) {
     insertSentence
   );
 
+  const insertSentenceBoxHtml = buildInsertSentenceBoxHtml(insertSentence);
+
   const positionButtonsHtml = positionLabels.map(function (label, index) {
     const optionNumber = index + 1;
     const selectedClass = selectedOptionNumber === optionNumber ? " selected" : "";
@@ -4156,7 +4185,7 @@ function renderSentenceInsertQuestion(question) {
         class="option-button${selectedClass}"
         data-position-number="${optionNumber}"
         style="
-          min-height:52px;
+          min-height:58px;
           padding:10px 14px;
           font-size:20px;
           font-weight:900;
@@ -4165,6 +4194,7 @@ function renderSentenceInsertQuestion(question) {
           justify-content:center;
           text-align:center;
         "
+        aria-label="${optionNumber}번 ${escapeHtml(label)}"
       >
         ${escapeHtml(label)}
       </button>
@@ -4176,7 +4206,7 @@ function renderSentenceInsertQuestion(question) {
     <div style="background:#ffffff; padding:14px 16px 16px; min-height:420px;">
       <div class="reading-layout" style="
         padding:0;
-        grid-template-columns:minmax(0, 1.18fr) minmax(350px, 0.82fr);
+        grid-template-columns:minmax(0, 1.22fr) minmax(360px, 0.78fr);
         align-items:stretch;
         gap:16px;
       ">
@@ -4200,36 +4230,16 @@ function renderSentenceInsertQuestion(question) {
         <article class="question-panel">
           <div class="panel-label">${Number.isFinite(questionNumber) ? questionNumber + "번 문제" : "문제"}</div>
           <div class="question-content" style="padding:20px 22px;">
-            <div style="
-              border:2px solid #b9d8ff;
-              border-radius:12px;
-              background:#f7fbff;
-              min-height:88px;
-              padding:14px 18px;
-              margin-bottom:16px;
-              display:flex;
-              align-items:center;
-              justify-content:center;
-              text-align:center;
-            ">
-              <div style="
-                color:#111827;
-                font-size:20px;
-                line-height:1.55;
-                font-weight:900;
-                width:100%;
-              ">
-                ${escapeHtml(insertSentence)}
-              </div>
-            </div>
+            ${insertSentenceBoxHtml}
 
-            <p class="question-text" style="margin-bottom:14px;">
+            <p class="question-text" style="margin:14px 0 14px;">
               ${escapeHtml(numberedQuestionText)}
             </p>
 
             <div class="options-area" style="
               grid-template-columns:repeat(2, minmax(0, 1fr));
               gap:10px;
+              margin-top:12px;
             ">
               ${positionButtonsHtml}
             </div>
@@ -4254,6 +4264,68 @@ function renderSentenceInsertQuestion(question) {
   highlightInsertedAnswersInCurrentStage(question);
 }
 
+
+function stripInsertSentenceFromQuestionText(question, text) {
+  let cleanText = String(text || "").trim();
+  const insertSentence = String(getInsertSentence(question) || "").trim();
+
+  if (!cleanText) {
+    return "다음 문장이 들어갈 곳을 고르십시오.";
+  }
+
+  if (insertSentence && cleanText.includes(insertSentence)) {
+    cleanText = cleanText.replace(insertSentence, "").trim();
+  }
+
+  cleanText = cleanText
+    .replace(/\s*다음\s*문장이\s*들어갈\s*곳으로\s*가장\s*알맞은\s*것을\s*고르십시오\.?\s*/g, "다음 문장이 들어갈 곳을 고르십시오.")
+    .replace(/\s*다음\s*문장이\s*들어갈\s*위치로\s*알맞은\s*곳을\s*고르십시오\.?\s*/g, "다음 문장이 들어갈 곳을 고르십시오.")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!cleanText || cleanText === "." || cleanText === "。") {
+    return "다음 문장이 들어갈 곳을 고르십시오.";
+  }
+
+  return cleanText;
+}
+
+
+function buildInsertSentenceBoxHtml(insertSentence) {
+  const safeSentence = escapeHtml(String(insertSentence || "").trim());
+
+  if (!safeSentence) {
+    return "";
+  }
+
+  return `
+    <div class="insert-sentence-box" style="
+      border:2px solid #b7d3ff;
+      border-radius:12px;
+      background:#eef6ff;
+      min-height:76px;
+      padding:16px 18px;
+      margin:0 0 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      box-shadow:0 0 0 1px rgba(59,130,246,0.10) inset;
+    ">
+      <div style="
+        color:#111827;
+        font-size:20px;
+        line-height:1.65;
+        font-weight:900;
+        width:100%;
+        word-break:keep-all;
+        overflow-wrap:break-word;
+      ">
+        ${safeSentence}
+      </div>
+    </div>
+  `;
+}
 
 function getInsertSentence(question) {
   return (
@@ -4634,6 +4706,112 @@ function getSentenceOrderPlacedTextStyle(text) {
 
   return "font-size:16px; letter-spacing:0; line-height:1.5; white-space:normal; word-break:keep-all; overflow-wrap:normal;";
 }
+
+function getSentenceOrderInteractionRule(question) {
+  const rule = question && typeof question.order_interaction_rule === "object"
+    ? question.order_interaction_rule
+    : null;
+
+  return rule || {};
+}
+
+function getSentenceOrderAutoFixedFirstLabel(question, sentenceItems) {
+  const rule = getSentenceOrderInteractionRule(question);
+  const ruleFixedLabel = normalizeSentenceOrderOptionLabel(rule.fixed_first_label);
+
+  if (rule.auto_place_fixed_first && ruleFixedLabel) {
+    const existsInItems = sentenceItems.some(function (item) {
+      return item.label === ruleFixedLabel;
+    });
+
+    if (existsInItems) {
+      return ruleFixedLabel;
+    }
+  }
+
+  const optionOrders = getSentenceOrderOptionOrders(question, sentenceItems);
+
+  if (optionOrders.length < 2) {
+    return "";
+  }
+
+  const firstLabel = optionOrders[0] && optionOrders[0][0];
+
+  if (!firstLabel) {
+    return "";
+  }
+
+  const everyOptionSharesFirstLabel = optionOrders.every(function (candidateOrder) {
+    return candidateOrder && candidateOrder[0] === firstLabel;
+  });
+
+  return everyOptionSharesFirstLabel ? firstLabel : "";
+}
+
+function getSentenceOrderFilledLabels(order) {
+  return (Array.isArray(order) ? order : []).filter(Boolean);
+}
+
+function getSentenceOrderPrefixCandidateItems(question, sentenceItems, order) {
+  const usedLabels = getSentenceOrderFilledLabels(order);
+  const optionOrders = getSentenceOrderOptionOrders(question, sentenceItems);
+  const candidateLabels = [];
+
+  function addCandidate(label) {
+    const value = normalizeSentenceOrderOptionLabel(label);
+
+    if (!value || usedLabels.includes(value) || candidateLabels.includes(value)) {
+      return;
+    }
+
+    const existsInItems = sentenceItems.some(function (item) {
+      return item.label === value;
+    });
+
+    if (existsInItems) {
+      candidateLabels.push(value);
+    }
+  }
+
+  const rule = getSentenceOrderInteractionRule(question);
+  const decisionTree = rule && typeof rule.decision_tree === "object"
+    ? rule.decision_tree
+    : null;
+
+  if (decisionTree && usedLabels.length > 0) {
+    const key = usedLabels.join("-");
+    const rawCandidates = Array.isArray(decisionTree[key]) ? decisionTree[key] : [];
+
+    rawCandidates.forEach(addCandidate);
+
+    if (candidateLabels.length > 0) {
+      return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
+    }
+  }
+
+  if (optionOrders.length > 0 && usedLabels.length > 0) {
+    optionOrders.forEach(function (candidateOrder) {
+      const prefixMatches = usedLabels.every(function (label, index) {
+        return candidateOrder[index] === label;
+      });
+
+      if (prefixMatches) {
+        addCandidate(candidateOrder[usedLabels.length]);
+      }
+    });
+
+    if (candidateLabels.length > 0) {
+      return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
+    }
+  }
+
+  return [];
+}
+
+function shouldSentenceOrderUseGuidedMode(question, sentenceItems) {
+  return Boolean(getSentenceOrderAutoFixedFirstLabel(question, sentenceItems));
+}
+
 function getSentenceOrderStartCandidateItems(question, sentenceItems) {
   const optionOrders = getSentenceOrderOptionOrders(question, sentenceItems);
   const candidateLabels = [];
@@ -4731,6 +4909,12 @@ function getSentenceOrderSecondCandidateItems(question, sentenceItems, order) {
 function getSentenceOrderVisibleItems(question, sentenceItems, order) {
   const usedLabels = order.filter(Boolean);
 
+  const prefixCandidateItems = getSentenceOrderPrefixCandidateItems(question, sentenceItems, order);
+
+  if (prefixCandidateItems.length > 0) {
+    return prefixCandidateItems;
+  }
+
   if (!order[0]) {
     return getSentenceOrderStartCandidateItems(question, sentenceItems)
       .filter(function (item) {
@@ -4763,9 +4947,7 @@ function placeSentenceInNextAvailableSlot(question, sentenceItems, label) {
   }
 
   const order = getSentenceOrderState(question, sentenceItems);
-  const targetIndex = order[0]
-    ? getFirstEmptySentenceOrderSlotIndex(order)
-    : 0;
+  const targetIndex = getFirstEmptySentenceOrderSlotIndex(order);
 
   if (targetIndex < 0) {
     return;
@@ -4780,14 +4962,21 @@ function renderSentenceOrderQuestion(question) {
   const visibleItems = getSentenceOrderVisibleItems(question, sentenceItems, order);
   const hasFirstSentence = Boolean(order[0]);
   const hasSecondSentence = Boolean(order[1]);
+  const hasThirdSentence = Boolean(order[2]);
+  const fixedFirstLabel = getSentenceOrderAutoFixedFirstLabel(question, sentenceItems);
+  const isGuidedFixedFirstMode = Boolean(fixedFirstLabel);
 
   const rightPanelTitle = "";
 
-  const stepGuideText = !hasFirstSentence
-    ? "먼저 시작 문장 후보 두 개 중 하나를 선택하세요."
-    : !hasSecondSentence
-      ? "두 번째 문장 후보 두 개 중 하나를 선택하세요."
-      : "문장 순서가 자동으로 완성되었습니다.";
+  const stepGuideText = isGuidedFixedFirstMode && !hasSecondSentence
+    ? "두 번째 문장 후보 두 개 중 하나를 선택하세요."
+    : isGuidedFixedFirstMode && !hasThirdSentence
+      ? "세 번째 문장 후보 두 개 중 하나를 선택하세요."
+      : !hasFirstSentence
+        ? "먼저 시작 문장 후보 두 개 중 하나를 선택하세요."
+        : !hasSecondSentence
+          ? "두 번째 문장 후보 두 개 중 하나를 선택하세요."
+          : "문장 순서가 자동으로 완성되었습니다.";
 
   const numberedStepGuideText = getNumberedQuestionTextForPanel(question, stepGuideText);
   const slotCount = Math.max(order.length, 4);
@@ -4846,15 +5035,19 @@ function renderSentenceOrderQuestion(question) {
             ${order.map(function (label, index) {
               const item = sentenceItems.find((sentenceItem) => sentenceItem.label === label);
               const emptyText =
-                !order[0] && index === 0
-                  ? "먼저 시작 문장을 여기에 놓으세요"
-                  : !order[1] && index === 1
-                    ? "두 번째 문장을 선택하세요"
-                    : !order[0]
-                      ? "시작 문장을 먼저 선택하세요"
-                      : !order[1]
-                        ? "두 번째 문장을 먼저 선택하세요"
-                        : `${index + 1}번째 문장을 여기에 놓으세요`;
+                isGuidedFixedFirstMode && index === 0
+                  ? "시작 문장이 자동 배치됩니다"
+                  : !order[0] && index === 0
+                    ? "먼저 시작 문장을 여기에 놓으세요"
+                    : !order[1] && index === 1
+                      ? "두 번째 문장을 선택하세요"
+                      : isGuidedFixedFirstMode && !order[2] && index === 2
+                        ? "세 번째 문장을 선택하세요"
+                        : !order[0]
+                          ? "시작 문장을 먼저 선택하세요"
+                          : !order[1]
+                            ? "두 번째 문장을 먼저 선택하세요"
+                            : `${index + 1}번째 문장을 여기에 놓으세요`;
 
               const content = item
                 ? `<div style="
@@ -4961,7 +5154,7 @@ function renderSentenceOrderQuestion(question) {
                         ? "background:#e9f3ff;border-color:#0877f2;box-shadow:inset 0 0 0 1px #0877f2;"
                         : "";
 
-                    const candidateTitle = hasSecondSentence
+                    const candidateTitle = hasSecondSentence && !isGuidedFixedFirstMode
                       ? ""
                       : `<div style="
                           color:#003f8f;
@@ -5193,7 +5386,22 @@ function getSentenceOrderState(question, sentenceItems) {
     sentenceOrderAnswers[question.id] = Array(sentenceItems.length).fill(null);
   }
 
-  return sentenceOrderAnswers[question.id];
+  const order = sentenceOrderAnswers[question.id];
+  const fixedFirstLabel = getSentenceOrderAutoFixedFirstLabel(question, sentenceItems);
+
+  if (fixedFirstLabel) {
+    for (let index = 0; index < order.length; index += 1) {
+      if (index !== 0 && order[index] === fixedFirstLabel) {
+        order[index] = null;
+      }
+    }
+
+    if (order[0] !== fixedFirstLabel) {
+      order[0] = fixedFirstLabel;
+    }
+  }
+
+  return order;
 }
 
 function bindSentenceOrderEvents(question, sentenceItems) {
@@ -5287,14 +5495,19 @@ function bindSentenceOrderEvents(question, sentenceItems) {
 }
 function completeSentenceOrderAfterTwoChoices(question, sentenceItems) {
   const order = getSentenceOrderState(question, sentenceItems);
+  const filledLabels = getSentenceOrderFilledLabels(order);
+  const fixedFirstLabel = getSentenceOrderAutoFixedFirstLabel(question, sentenceItems);
+  const minimumFilledCount = fixedFirstLabel ? 3 : 2;
 
-  if (!order[0] || !order[1]) {
+  if (filledLabels.length < minimumFilledCount) {
     return;
   }
 
   const optionOrders = getSentenceOrderOptionOrders(question, sentenceItems);
   const matchedOptionOrder = optionOrders.find(function (candidateOrder) {
-    return candidateOrder[0] === order[0] && candidateOrder[1] === order[1];
+    return filledLabels.every(function (label, index) {
+      return candidateOrder[index] === label;
+    });
   });
 
   if (matchedOptionOrder) {
@@ -5303,50 +5516,75 @@ function completeSentenceOrderAfterTwoChoices(question, sentenceItems) {
     return;
   }
 
-  const correctOrder = getCorrectOrder(question, sentenceItems);
-  const completedOrder = [order[0], order[1]];
-  const usedLabels = new Set(completedOrder);
+  const completedOrder = order.slice(0, sentenceItems.length);
+  const usedLabels = new Set(completedOrder.filter(Boolean));
 
+  const correctOrder = getCorrectOrder(question, sentenceItems);
   correctOrder.forEach(function (label) {
-    if (!usedLabels.has(label)) {
-      completedOrder.push(label);
+    const emptyIndex = completedOrder.indexOf(null);
+
+    if (emptyIndex >= 0 && !usedLabels.has(label)) {
+      completedOrder[emptyIndex] = label;
       usedLabels.add(label);
     }
   });
 
   sentenceItems.forEach(function (item) {
-    if (!usedLabels.has(item.label)) {
-      completedOrder.push(item.label);
+    const emptyIndex = completedOrder.indexOf(null);
+
+    if (emptyIndex >= 0 && !usedLabels.has(item.label)) {
+      completedOrder[emptyIndex] = item.label;
       usedLabels.add(item.label);
     }
   });
 
   sentenceOrderAnswers[question.id] = completedOrder.slice(0, sentenceItems.length);
-  answers[question.id] = sentenceOrderAnswers[question.id].join("-");
+
+  if (sentenceOrderAnswers[question.id].every(Boolean)) {
+    answers[question.id] = sentenceOrderAnswers[question.id].join("-");
+  }
 }
 
 function placeSentenceInSlot(question, sentenceItems, slotIndex, label) {
   if (!label) return;
 
   const order = getSentenceOrderState(question, sentenceItems);
-  const normalizedSlotIndex = order[0]
-    ? Number(slotIndex)
-    : 0;
+  const fixedFirstLabel = getSentenceOrderAutoFixedFirstLabel(question, sentenceItems);
+  const normalizedLabel = normalizeSentenceOrderOptionLabel(label);
+
+  if (fixedFirstLabel && normalizedLabel === fixedFirstLabel) {
+    renderQuestion();
+    return;
+  }
+
+  let normalizedSlotIndex = Number(slotIndex);
+
+  if (!Number.isFinite(normalizedSlotIndex) || normalizedSlotIndex < 0) {
+    normalizedSlotIndex = getFirstEmptySentenceOrderSlotIndex(order);
+  }
+
+  if (fixedFirstLabel && normalizedSlotIndex === 0) {
+    normalizedSlotIndex = getFirstEmptySentenceOrderSlotIndex(order);
+  }
+
+  if (normalizedSlotIndex < 0 || normalizedSlotIndex >= order.length) {
+    return;
+  }
 
   for (let index = 0; index < order.length; index += 1) {
-    if (order[index] === label) {
+    if (order[index] === normalizedLabel) {
       order[index] = null;
     }
   }
 
-  order[normalizedSlotIndex] = label;
+  order[normalizedSlotIndex] = normalizedLabel;
   selectedSentenceForOrder = null;
 
-  if (order[0] && order[1]) {
-    completeSentenceOrderAfterTwoChoices(question, sentenceItems);
-  } else if (order.every(Boolean)) {
+  completeSentenceOrderAfterTwoChoices(question, sentenceItems);
+
+  if (order.every(Boolean)) {
     answers[question.id] = order.join("-");
-  } else {
+  } else if (!answers[question.id]) {
     delete answers[question.id];
   }
 
@@ -5356,8 +5594,22 @@ function placeSentenceInSlot(question, sentenceItems, slotIndex, label) {
 function isCommonPassageBlankChoice(question) {
   if (!question) return false;
 
-  if (question.type === "common_passage_blank_choice") {
-    return true;
+  /*
+    STEP41-SET-BLANK-SYNC-V3:
+    41회 49~50, 51~52, 53~54, 55~56, 61~62, 65~66, 67~68, 69~70처럼
+    앞 문항에서 빈칸 답을 고르고 뒤 문항에서 같은 공통 지문을 다시 보는 세트는
+    앞 문항의 선택값이 뒤 문항 지문에도 그대로 반영되어야 한다.
+
+    기존에는 question.type === "common_passage_blank_choice" 또는
+    "들어갈 말"이라는 정확한 문구만 인식했기 때문에,
+    41회처럼 type이 "blank_common_passage"이고 문항 문구가
+    "㉠에 들어갈 알맞은 말"인 경우 앞 문항을 빈칸 세트의 lead 문항으로 찾지 못했다.
+  */
+  if (
+    question.type === "common_passage_blank_choice" ||
+    question.type === "blank_common_passage"
+  ) {
+    return hasBlankMarker(getSharedPassage(question));
   }
 
   if (!hasPassageGroup(question)) {
@@ -5366,12 +5618,18 @@ function isCommonPassageBlankChoice(question) {
 
   const questionText = String(question.question || "");
   const categoryText = String(question.category || "");
+  const instructionText = String(question.instruction || "");
+  const combinedText = `${questionText} ${categoryText} ${instructionText}`;
 
   return (
-    questionText.includes("들어갈 말") ||
-    categoryText.includes("빈칸") ||
-    categoryText.includes("연결어")
-  ) && hasBlankMarker(getSharedPassage(question));
+    (
+      combinedText.includes("들어갈") ||
+      combinedText.includes("빈칸") ||
+      combinedText.includes("연결어") ||
+      combinedText.includes("연결 표현")
+    ) &&
+    hasBlankMarker(getSharedPassage(question))
+  );
 }
 
 function hasBlankMarker(text) {
@@ -5712,6 +5970,7 @@ function renderCommonPassageQuestion(question) {
 
 function shouldRenderOneColumnChoice(question) {
   const oneColumnTypes = [
+    "main_topic",
     "topic_content",
     "topic_choice",
     "same_content",
