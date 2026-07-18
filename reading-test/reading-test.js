@@ -4785,7 +4785,7 @@ function getSentenceOrderPrefixCandidateItems(question, sentenceItems, order) {
     rawCandidates.forEach(addCandidate);
 
     if (candidateLabels.length > 0) {
-      return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
+      return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, getSentenceOrderCandidateLimit(question, 2)));
     }
   }
 
@@ -4801,7 +4801,7 @@ function getSentenceOrderPrefixCandidateItems(question, sentenceItems, order) {
     });
 
     if (candidateLabels.length > 0) {
-      return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
+      return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, getSentenceOrderCandidateLimit(question, 2)));
     }
   }
 
@@ -4810,6 +4810,15 @@ function getSentenceOrderPrefixCandidateItems(question, sentenceItems, order) {
 
 function shouldSentenceOrderUseGuidedMode(question, sentenceItems) {
   return Boolean(getSentenceOrderAutoFixedFirstLabel(question, sentenceItems));
+}
+
+
+function getSentenceOrderCandidateLimit(question, fallbackLimit) {
+  const rule = getSentenceOrderInteractionRule(question);
+  const rawLimit = Number(rule.max_visible_candidates);
+  const limit = Number.isFinite(rawLimit) && rawLimit >= 1 ? Math.floor(rawLimit) : Number(fallbackLimit || 2);
+
+  return Math.max(1, Math.min(limit, 4));
 }
 
 function getSentenceOrderStartCandidateItems(question, sentenceItems) {
@@ -4837,7 +4846,7 @@ function getSentenceOrderStartCandidateItems(question, sentenceItems) {
       addLabel(candidateOrder[0]);
     });
 
-    return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
+    return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, getSentenceOrderCandidateLimit(question, 2)));
   }
 
   const correctOrder = getCorrectOrder(question, sentenceItems);
@@ -4858,7 +4867,7 @@ function getSentenceOrderStartCandidateItems(question, sentenceItems) {
     }
   });
 
-  return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
+  return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, getSentenceOrderCandidateLimit(question, 2)));
 }
 
 function getSentenceOrderSecondCandidateItems(question, sentenceItems, order) {
@@ -4890,7 +4899,7 @@ function getSentenceOrderSecondCandidateItems(question, sentenceItems, order) {
     });
 
     if (candidateLabels.length > 0) {
-      return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
+      return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, getSentenceOrderCandidateLimit(question, 2)));
     }
   }
 
@@ -4903,7 +4912,7 @@ function getSentenceOrderSecondCandidateItems(question, sentenceItems, order) {
     }
   });
 
-  return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, 2));
+  return findSentenceOrderItemsByLabels(sentenceItems, candidateLabels.slice(0, getSentenceOrderCandidateLimit(question, 2)));
 }
 
 function getSentenceOrderVisibleItems(question, sentenceItems, order) {
@@ -5493,10 +5502,42 @@ function bindSentenceOrderEvents(question, sentenceItems) {
     });
   }
 }
+
+function getSentenceOrderUniquePrefixAutoCompleteOrder(question, sentenceItems, filledLabels) {
+  const rule = getSentenceOrderInteractionRule(question);
+
+  if (!rule.auto_complete_unique_prefix_after_second) {
+    return null;
+  }
+
+  const fixedFirstLabel = getSentenceOrderAutoFixedFirstLabel(question, sentenceItems);
+
+  if (!fixedFirstLabel || !Array.isArray(filledLabels) || filledLabels.length < 2) {
+    return null;
+  }
+
+  const optionOrders = getSentenceOrderOptionOrders(question, sentenceItems);
+  const matchedOrders = optionOrders.filter(function (candidateOrder) {
+    return filledLabels.every(function (label, index) {
+      return candidateOrder[index] === label;
+    });
+  });
+
+  return matchedOrders.length === 1 ? matchedOrders[0] : null;
+}
+
 function completeSentenceOrderAfterTwoChoices(question, sentenceItems) {
   const order = getSentenceOrderState(question, sentenceItems);
   const filledLabels = getSentenceOrderFilledLabels(order);
   const fixedFirstLabel = getSentenceOrderAutoFixedFirstLabel(question, sentenceItems);
+  const uniquePrefixOrder = getSentenceOrderUniquePrefixAutoCompleteOrder(question, sentenceItems, filledLabels);
+
+  if (uniquePrefixOrder) {
+    sentenceOrderAnswers[question.id] = uniquePrefixOrder.slice(0, sentenceItems.length);
+    answers[question.id] = sentenceOrderAnswers[question.id].join("-");
+    return;
+  }
+
   const minimumFilledCount = fixedFirstLabel ? 3 : 2;
 
   if (filledLabels.length < minimumFilledCount) {
