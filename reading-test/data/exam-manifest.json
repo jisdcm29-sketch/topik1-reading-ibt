@@ -1,5 +1,5 @@
 {
-  "manifest_version": "2.0-step36-reading-leveltest-draft",
+  "manifest_version": "2.0-step35-reading-leveltest-draft",
   "manifest_name": "TOPIK I Reading Exam Manifest",
   "level": "TOPIK I",
   "section": "reading",
@@ -8,7 +8,7 @@
   "expected_total_questions": 40,
   "default_time_limit_minutes": 60,
   "total_possible_points": 100,
-  "description": "TOPIK I 읽기 31~70번 PBT형 IBT 시험지 목록입니다. 36회, 37회, 41회, 52회, 60회, 64회, 83회, 91회, 96회, 97회, 99회, 100회, 102회, 103회 및 랜덤 출제를 관리합니다.",
+  "description": "TOPIK I 읽기 31~70번 PBT형 IBT 시험지 목록입니다. 35회, 36회, 37회, 41회, 52회, 60회, 64회, 83회, 91회, 96회, 97회, 99회, 100회, 102회, 103회 및 랜덤 출제를 관리합니다.",
   "data_paths": {
     "bank": "data/bank/question-bank.json",
     "template": "data/bank/exam-template.json",
@@ -18,6 +18,7 @@
   "student_visible_order": [
     "random-full",
     "reading-36",
+    "reading-35",
     "reading-37",
     "reading-41",
     "reading-52",
@@ -33,6 +34,7 @@
     "reading-103",
     "leveltest-random",
     "leveltest-36",
+    "leveltest-35",
     "leveltest-37",
     "leveltest-41",
     "leveltest-52",
@@ -82,6 +84,25 @@
       "answer_key_file": "data/answer-keys/answer-key-36.json",
       "review_status": "internal_review_visible_text_image_applied",
       "review_note": "36회 40문항 실전시험을 1차 화면 검수용으로 추가했습니다. 40~42번과 63~64번은 images 폴더의 36_R040.png, 36_R041.png, 36_R042.png, 36_R063_064.png를 사용합니다. 57~58번은 37회·41회와 유사한 고정 시작 문장 단계식 순서형이며 59번은 삽입 문장 박스 렌더링을 사용합니다.",
+      "status": "internal_review"
+    },
+    {
+      "id": "reading-35",
+      "value": "round-35",
+      "label": "35회 40문항 실전시험",
+      "exam_type": "full",
+      "selection_type": "round",
+      "mode": "round",
+      "source_round": "35",
+      "round": "35",
+      "question_count": 40,
+      "time_limit_minutes": 60,
+      "student_visible": true,
+      "enabled": true,
+      "file": "data/exams/reading-35.json",
+      "answer_key_file": "data/answer-keys/answer-key-35.json",
+      "review_status": "internal_review_visible_text_image_applied",
+      "review_note": "35회 40문항 실전시험을 1차 화면 검수용으로 추가했습니다. 40~42번과 63~64번은 images 폴더의 35_R040.png, 35_R041.png, 35_R042.png, 35_R063_064.png를 사용합니다. 58번은 (가) 자동 배치 후 세 후보를 먼저 보여 주는 특수 단계식 순서형입니다.",
       "status": "internal_review"
     },
     {
@@ -400,6 +421,47 @@
       "answer_key_file": "data/answer-keys/answer-key-36.json",
       "review_status": "internal_review_visible_text_image_applied",
       "review_note": "36회 대표 20문항 레벨테스트를 1차 화면 검수용으로 추가했습니다. 원본 번호와 공통 지문 구조를 유지합니다.",
+      "status": "internal_review"
+    },
+    {
+      "id": "leveltest-35",
+      "value": "leveltest-35",
+      "label": "35회 레벨테스트",
+      "exam_type": "leveltest",
+      "selection_type": "round",
+      "mode": "round",
+      "source_round": "35",
+      "round": "35",
+      "question_count": 20,
+      "time_limit_minutes": 30,
+      "leveltest_slots": [
+        31,
+        33,
+        34,
+        37,
+        40,
+        43,
+        46,
+        48,
+        49,
+        50,
+        57,
+        58,
+        59,
+        60,
+        63,
+        64,
+        67,
+        68,
+        69,
+        70
+      ],
+      "student_visible": true,
+      "enabled": true,
+      "file": "data/exams/level-test-35.json",
+      "answer_key_file": "data/answer-keys/answer-key-35.json",
+      "review_status": "internal_review_visible_text_image_applied",
+      "review_note": "35회 대표 20문항 레벨테스트를 1차 화면 검수용으로 추가했습니다. 원본 번호와 공통 지문 구조를 유지합니다.",
       "status": "internal_review"
     },
     {
@@ -1060,5 +1122,14 @@
     "leveltest_36_file": "data/exams/level-test-36.json",
     "answer_key_36_file": "data/answer-keys/answer-key-36.json",
     "note": "36회 고정 40문항과 레벨테스트를 추가했습니다. 40~42번 및 63~64번 이미지 자료를 사용합니다. 57~58번 단계식 순서형은 37회·41회 최종 보완 방식과 동일한 데이터 계약을 적용했고, 59번 삽입 문장 박스 표시와 공통 지문 괄호 연동을 유지합니다."
+  },
+  "step35_status": {
+    "step": "STEP35-1",
+    "round_35": "internal_review_visible",
+    "created_at": "2026-07-18",
+    "reading_35_file": "data/exams/reading-35.json",
+    "leveltest_35_file": "data/exams/level-test-35.json",
+    "answer_key_35_file": "data/answer-keys/answer-key-35.json",
+    "note": "35회 고정 40문항과 레벨테스트를 추가했습니다. 40~42번 및 63~64번 이미지 자료를 사용합니다. 58번은 (가) 자동 배치 후 (나)/(다)/(라) 세 후보를 먼저 보여 주고 선택 경로에 따라 자동 완성되는 특수 단계식 순서형으로 처리했습니다."
   }
 }
