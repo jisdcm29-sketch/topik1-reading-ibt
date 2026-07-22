@@ -629,7 +629,7 @@
     @media print {
       @page {
         size: A4;
-        margin: 13mm;
+        margin: 10mm;
       }
 
       body {
@@ -944,6 +944,226 @@
       }
 
 
+      /* STEP46-16: 학생 배포용 문제지 장 수 축소 v2
+         - 실제 practice-print 인쇄 HTML에 적용
+         - 학생용 문제지와 문제지+정답표의 문제지 부분만 압축
+         - 답안 기록표와 교사용 정답표 구조는 유지
+         - 이미지형 단일 문항이 한 페이지를 과도하게 차지하지 않도록 이미지 폭/높이와 선택지 간격을 줄임
+      */
+      body.print-student .print-title,
+      body.print-with-answers .print-title {
+        margin: 0 0 4px !important;
+        font-size: 18px !important;
+        line-height: 1.15 !important;
+      }
+
+      body.print-student .problem-card,
+      body.print-with-answers .problem-card {
+        margin-bottom: 4px !important;
+        border-radius: 0 !important;
+        border-color: #cfd6e0 !important;
+      }
+
+      body.print-student .problem-header,
+      body.print-with-answers .problem-header {
+        padding: 3px 7px !important;
+        min-height: 0 !important;
+        font-size: 12.5px !important;
+        line-height: 1.15 !important;
+      }
+
+      body.print-student .source-info,
+      body.print-with-answers .source-info {
+        font-size: 10.5px !important;
+        line-height: 1.15 !important;
+      }
+
+      body.print-student .problem-body,
+      body.print-with-answers .problem-body {
+        padding: 5px 8px 6px !important;
+      }
+
+      body.print-student .instruction,
+      body.print-with-answers .instruction {
+        margin: 0 0 3px !important;
+        font-size: 13.2px !important;
+        line-height: 1.18 !important;
+      }
+
+      body.print-student .passage-box,
+      body.print-student .insert-box,
+      body.print-student .sentence-order-box,
+      body.print-with-answers .passage-box,
+      body.print-with-answers .insert-box,
+      body.print-with-answers .sentence-order-box {
+        margin: 3px 0 4px !important;
+        padding: 5px 7px !important;
+        border-radius: 6px !important;
+        font-size: 12.8px !important;
+        line-height: 1.22 !important;
+      }
+
+      body.print-student .question-line,
+      body.print-with-answers .question-line {
+        margin: 3px 0 2px !important;
+        font-size: 13.2px !important;
+        line-height: 1.18 !important;
+      }
+
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) .options,
+      body.print-with-answers .problem-card:not(.common-set):not(.sentence-order-set) .options {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        column-gap: 12px !important;
+        row-gap: 0 !important;
+        margin-top: 1px !important;
+      }
+
+      body.print-student .option-line,
+      body.print-with-answers .option-line {
+        font-size: 12.6px !important;
+        line-height: 1.14 !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      body.print-student .item-block,
+      body.print-with-answers .item-block {
+        margin-top: 5px !important;
+        padding-top: 5px !important;
+      }
+
+      body.print-student .question-image,
+      body.print-with-answers .question-image {
+        max-width: 72% !important;
+        max-height: 235px !important;
+        width: auto !important;
+        height: auto !important;
+        margin: 2px auto 4px !important;
+        border-radius: 6px !important;
+      }
+
+      body.print-student .problem-card:not(.common-set):not(.sentence-order-set) .question-image,
+      body.print-with-answers .problem-card:not(.common-set):not(.sentence-order-set) .question-image {
+        max-width: 70% !important;
+        max-height: 220px !important;
+      }
+
+      body.print-student .problem-card.sentence-order-set .problem-body,
+      body.print-with-answers .problem-card.sentence-order-set .problem-body {
+        padding: 6px 8px 7px !important;
+      }
+
+      body.print-student .problem-card.sentence-order-set .sentence-order-box,
+      body.print-with-answers .problem-card.sentence-order-set .sentence-order-box {
+        font-size: 12.5px !important;
+        line-height: 1.18 !important;
+      }
+
+      body.print-student .problem-card.sentence-order-set .options,
+      body.print-with-answers .problem-card.sentence-order-set .options {
+        gap: 0 !important;
+      }
+
+
+      /* STEP46-17: 전체 회차 출력용 장 수 축소 v3
+         - 40~43번처럼 이미지형 단일 문항이 많이 이어질 때 한 페이지에 1문항만 남는 현상을 줄입니다.
+         - 시험 실행/채점/진단 로직은 변경하지 않습니다.
+         - 학생용 문제지와 문제지+정답표의 문제지 부분에만 적용합니다.
+         - 이미지 안 글자 가독성을 고려해 과도하게 숨기지 않고, 이미지형 카드의 폭/높이/간격만 추가 압축합니다.
+      */
+      @page {
+        size: A4;
+        margin: 8mm;
+      }
+
+      body.print-student .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set),
+      body.print-with-answers .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) {
+        margin-bottom: 3px !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      body.print-student .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .problem-header,
+      body.print-with-answers .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .problem-header {
+        padding: 2px 6px !important;
+        font-size: 11.6px !important;
+        line-height: 1.08 !important;
+      }
+
+      body.print-student .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .source-info,
+      body.print-with-answers .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .source-info {
+        font-size: 9.8px !important;
+        line-height: 1.08 !important;
+      }
+
+      body.print-student .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .problem-body,
+      body.print-with-answers .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .problem-body {
+        padding: 3px 6px 4px !important;
+      }
+
+      body.print-student .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .instruction,
+      body.print-with-answers .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .instruction {
+        margin: 0 0 2px !important;
+        font-size: 12.2px !important;
+        line-height: 1.12 !important;
+      }
+
+      body.print-student .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .passage-box,
+      body.print-with-answers .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .passage-box {
+        margin: 1px 0 2px !important;
+        padding: 3px 5px !important;
+        min-height: 0 !important;
+        border-radius: 4px !important;
+        font-size: 11.5px !important;
+        line-height: 1.12 !important;
+      }
+
+      body.print-student .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .question-image,
+      body.print-with-answers .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .question-image {
+        max-width: 62% !important;
+        max-height: 182px !important;
+        margin: 1px auto 2px !important;
+        border-radius: 4px !important;
+      }
+
+      body.print-student .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .question-line,
+      body.print-with-answers .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .question-line {
+        margin: 2px 0 1px !important;
+        font-size: 12.3px !important;
+        line-height: 1.1 !important;
+      }
+
+      body.print-student .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .options,
+      body.print-with-answers .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .options {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        column-gap: 9px !important;
+        row-gap: 0 !important;
+        margin-top: 0 !important;
+      }
+
+      body.print-student .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .option-line,
+      body.print-with-answers .problem-card:has(.question-image):not(.common-set):not(.sentence-order-set) .option-line {
+        font-size: 11.9px !important;
+        line-height: 1.08 !important;
+      }
+
+      body.print-student .student-answer-guide,
+      body.print-with-answers .student-answer-guide {
+        margin-bottom: 8px !important;
+        font-size: 12.5px !important;
+        line-height: 1.35 !important;
+      }
+
+      body.print-student .student-answer-group-title,
+      body.print-with-answers .student-answer-group-title {
+        font-size: 14px !important;
+        padding: 6px 8px !important;
+        margin-bottom: 6px !important;
+      }
+
+
+
       .student-answer-sheet {
         break-before: page;
         page-break-before: always;
@@ -1129,6 +1349,6 @@
     </section>
   </main>
 
-  <script src="./practice-print.js?v=topik1-practice-print-step46-15-compact-refine"></script>
+  <script src="./practice-print.js?v=topik1-practice-print-step46-17-compact-v3"></script>
 </body>
 </html>
