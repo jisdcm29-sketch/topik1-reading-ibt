@@ -374,19 +374,52 @@
       .replace(/[\s)）]+$/, "");
   }
 
-  function formatSentenceOrderText(value) {
-    if (Array.isArray(value)) {
-      return value
-        .map(function (part) {
-          return normalizeSentenceLabel(part);
-        })
-        .filter(Boolean)
-        .join(" → ");
+  function wrapSentenceOrderLabel(value) {
+    const label = normalizeSentenceLabel(value);
+
+    if (!label) {
+      return "";
     }
 
-    return normalizeText(value)
-      .replace(/\s*[-–—>]\s*/g, " → ")
-      .replace(/\s*→\s*/g, " → ");
+    if (/^[가-힣A-Za-z0-9]+$/.test(label)) {
+      return `(${label})`;
+    }
+
+    return label;
+  }
+
+  function formatSentenceOrderText(value) {
+    function formatParts(parts) {
+      return parts
+        .map(function (part) {
+          return wrapSentenceOrderLabel(part);
+        })
+        .filter(Boolean)
+        .join("-");
+    }
+
+    if (Array.isArray(value)) {
+      return formatParts(value);
+    }
+
+    const text = normalizeText(value);
+
+    if (!text) {
+      return "";
+    }
+
+    const parts = text
+      .split(/\s*(?:[-–—>]|→)\s*/)
+      .map(function (part) {
+        return normalizeSentenceLabel(part);
+      })
+      .filter(Boolean);
+
+    if (parts.length >= 2) {
+      return formatParts(parts);
+    }
+
+    return wrapSentenceOrderLabel(text) || text;
   }
 
   function buildSingleRecord(item, fallbackRound) {
