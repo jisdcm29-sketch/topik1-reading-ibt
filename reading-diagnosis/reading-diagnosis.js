@@ -4,9 +4,12 @@ console.log("TOPIK I Reading Diagnosis loaded: step46-diagnosis-issue-label-fix-
 
 const AUTO_DIAGNOSIS_STORAGE_KEY = "topik1_latest_reading_result";
 const LEVEL_TEST_DIAGNOSIS_STORAGE_KEY = "topik1_latest_leveltest_result";
+const QUESTION_PRACTICE_DIAGNOSIS_STORAGE_KEY = "topik1_latest_question_practice_result";
+const QUESTION_PRACTICE_WRONG_REVIEW_STORAGE_KEY = "topik1_question_practice_wrong_review_question_numbers";
 const WRONG_REVIEW_STORAGE_KEY = "topik1_wrong_review_question_numbers";
 const WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY = "topik1_wrong_review_source_result";
 const WRONG_REVIEW_TEST_URL = "../reading-test/index.html?mode=wrong-review";
+const READING_TEST_START_URL = "../reading-test/index.html";
 
 const state = {
   sourceResult: null,
@@ -41,6 +44,35 @@ function bindEvents() {
       window.print();
     });
   }
+
+  ensureReturnToStartButton();
+}
+
+
+function ensureReturnToStartButton() {
+  const target = els.reportActions;
+
+  if (!target || document.getElementById("returnToStartButton")) {
+    return;
+  }
+
+  const button = document.createElement("button");
+  button.id = "returnToStartButton";
+  button.type = "button";
+  button.textContent = "처음 인증 화면으로";
+  button.className = "secondary";
+  button.style.cssText = [
+    "margin-right: 8px",
+    "padding: 10px 16px",
+    "border-radius: 8px",
+    "font-weight: 900"
+  ].join(";");
+
+  button.addEventListener("click", function () {
+    window.location.href = READING_TEST_START_URL + "?v=return-start-" + Date.now();
+  });
+
+  target.insertBefore(button, target.firstChild);
 }
 
 function tryAutoLoad() {
@@ -48,6 +80,10 @@ function tryAutoLoad() {
   const shouldAutoLoad = params.get("auto") === "1";
   const requestedMode = String(params.get("mode") || params.get("source") || "").toLowerCase();
   const isLevelTestMode = requestedMode === "leveltest" || requestedMode === "level-test";
+  const isQuestionPracticeMode =
+    requestedMode === "question-practice" ||
+    requestedMode === "question_practice" ||
+    requestedMode === "practice";
 
   if (!shouldAutoLoad) {
     setStatus("자동 연결 없이 열렸습니다. 결과 JSON 파일을 직접 선택하세요.", "");
@@ -55,13 +91,17 @@ function tryAutoLoad() {
     return;
   }
 
-  const storageKey = isLevelTestMode
-    ? LEVEL_TEST_DIAGNOSIS_STORAGE_KEY
-    : AUTO_DIAGNOSIS_STORAGE_KEY;
+  const storageKey = isQuestionPracticeMode
+    ? QUESTION_PRACTICE_DIAGNOSIS_STORAGE_KEY
+    : isLevelTestMode
+      ? LEVEL_TEST_DIAGNOSIS_STORAGE_KEY
+      : AUTO_DIAGNOSIS_STORAGE_KEY;
 
-  const resultLabel = isLevelTestMode
-    ? "레벨테스트 결과"
-    : "40문항 읽기 결과";
+  const resultLabel = isQuestionPracticeMode
+    ? "유형별 문항 선택 연습 결과"
+    : isLevelTestMode
+      ? "레벨테스트 결과"
+      : "40문항 읽기 결과";
 
   try {
     const raw = localStorage.getItem(storageKey);
@@ -77,6 +117,10 @@ function tryAutoLoad() {
 
     if (isLevelTestMode && !isLevelTestResultData(data)) {
       throw new Error("레벨테스트 결과 파일이 아닙니다. 40문항 결과와 구분해서 다시 확인하세요.");
+    }
+
+    if (isQuestionPracticeMode && !isQuestionPracticeResultData(data)) {
+      throw new Error("유형별 문항 선택 연습 결과 파일이 아닙니다. 일반 40문항 결과와 구분해서 다시 확인하세요.");
     }
 
     state.sourceResult = data;
@@ -161,6 +205,17 @@ function isLevelTestResultData(result) {
   );
 }
 
+function isQuestionPracticeResultData(result) {
+  return Boolean(
+    result &&
+      (result.generated_exam_type === "question-practice" ||
+        result.generated_exam_mode === "question-practice" ||
+        String(result.test_scope || "").toLowerCase().includes("question practice") ||
+        result.question_practice ||
+        result.question_practice_connection)
+  );
+}
+
 function buildDiagnosisReport(result) {
   const items = Array.isArray(result.items) ? result.items : [];
   const score = numberOrZero(result.section_score_100 ?? result.earned_points);
@@ -197,6 +252,7 @@ function buildDiagnosisReport(result) {
     score,
     level,
     isLevelTest: isLevelTestResultData(result),
+    isQuestionPractice: isQuestionPracticeResultData(result),
     items,
     categoryAnalysis,
     diagnosticAnalysis,
@@ -965,16 +1021,26 @@ function renderReport(report) {
   const level = report.level;
   const totalQuestions = numberOrZero(result.total_questions);
   const isLevelTest = Boolean(report.isLevelTest || isLevelTestResultData(result));
+  const isQuestionPractice = Boolean(report.isQuestionPractice || isQuestionPracticeResultData(result));
   const isFullSet = Boolean(result.is_full_40_question_set) || totalQuestions >= 40;
 
-  const reportTitle = isLevelTest
-    ? "TOPIK I 읽기 레벨테스트 진단 보고서"
-    : "TOPIK I 읽기 진단 보고서";
-  const scoreLabel = isLevelTest ? "레벨테스트 점수" : "읽기 점수";
-  const correctLabel = isLevelTest ? "정답 수" : "정답 수";
-  const rangeText = isLevelTest
-    ? "20문항 레벨테스트 결과입니다. 이 결과는 40문항 정식 진단 보고서를 덮어쓰지 않습니다."
-    : `${escapeHtml(result.test_name || "TOPIK I Reading")} · ${escapeHtml(result.test_scope || "TOPIK I PBT Reading 31-70")}`;
+  const reportTitle = isQuestionPractice
+    ? "TOPIK I 읽기 유형별 연습 진단 보고서"
+    : isLevelTest
+      ? "TOPIK I 읽기 레벨테스트 진단 보고서"
+      : "TOPIK I 읽기 진단 보고서";
+  const scoreLabel = isQuestionPractice
+    ? "연습 점수"
+    : isLevelTest
+      ? "레벨테스트 점수"
+      : "읽기 점수";
+  const correctLabel = "정답 수";
+  const questionPracticeInfo = result.question_practice || {};
+  const rangeText = isQuestionPractice
+    ? `${escapeHtml(result.generated_exam_label || "유형별 문항 선택 연습")} · ${escapeHtml(questionPracticeInfo.range || "")} · ${numberOrZero(result.total_questions)}문항`
+    : isLevelTest
+      ? "20문항 레벨테스트 결과입니다. 이 결과는 40문항 정식 진단 보고서를 덮어쓰지 않습니다."
+      : `${escapeHtml(result.test_name || "TOPIK I Reading")} · ${escapeHtml(result.test_scope || "TOPIK I PBT Reading 31-70")}`;
 
   els.reportPaper.innerHTML = `
     <div class="report-title">
@@ -1004,9 +1070,11 @@ function renderReport(report) {
     <div class="level-box">
       <strong>${escapeHtml(level.title)}</strong><br />
       ${
-        isLevelTest
-          ? `레벨테스트 환산 점수: ${numberOrZero(result.section_score_100 ?? result.earned_points)}점<br />`
-          : `읽기 점수 구간: ${escapeHtml(level.range)}<br />`
+        isQuestionPractice
+          ? `유형별 연습 환산 점수: ${numberOrZero(result.section_score_100 ?? result.earned_points)}점<br />`
+          : isLevelTest
+            ? `레벨테스트 환산 점수: ${numberOrZero(result.section_score_100 ?? result.earned_points)}점<br />`
+            : `읽기 점수 구간: ${escapeHtml(level.range)}<br />`
       }
       예상 수준: ${escapeHtml(level.expected_level)}<br />
       안정권 해석: ${escapeHtml(level.stable_level)}<br />
@@ -1017,25 +1085,33 @@ function renderReport(report) {
     <div class="notice">
       <strong>${isLevelTest ? "레벨테스트 안내" : "공식 급수 안내"}</strong><br />
       ${
-        isLevelTest
-          ? "이 보고서는 TOPIK I 읽기 20문항 레벨테스트 결과를 100점으로 환산해 만든 참고 진단 보고서입니다. 40문항 정식 진단 보고서는 일반 실전시험 제출 후 별도로 생성됩니다."
-          : "이 보고서는 TOPIK I 읽기 영역만 기준으로 한 예상 수준입니다. 공식 TOPIK I 급수는 듣기와 읽기 합산 200점 기준으로 결정되므로, 이 결과만으로 공식 급수를 확정할 수 없습니다."
+        isQuestionPractice
+          ? "이 보고서는 여러 회차에서 선택한 같은 유형 문항만 모아 푼 연습 결과입니다. 일반 40문항 정식 진단 보고서를 덮어쓰지 않습니다."
+          : isLevelTest
+            ? "이 보고서는 TOPIK I 읽기 20문항 레벨테스트 결과를 100점으로 환산해 만든 참고 진단 보고서입니다. 40문항 정식 진단 보고서는 일반 실전시험 제출 후 별도로 생성됩니다."
+            : "이 보고서는 TOPIK I 읽기 영역만 기준으로 한 예상 수준입니다. 공식 TOPIK I 급수는 듣기와 읽기 합산 200점 기준으로 결정되므로, 이 결과만으로 공식 급수를 확정할 수 없습니다."
       }
     </div>
 
     ${
-      !isLevelTest && isFullSet
+      !isQuestionPractice && !isLevelTest && isFullSet
         ? ""
-        : isLevelTest
+        : isQuestionPractice
           ? `<div class="notice">
-              <strong>결과 보관 안내</strong><br />
-              이 레벨테스트 결과는 별도로 보관되며, 40문항 정식 진단 보고서에는 영향을 주지 않습니다.
+              <strong>유형별 연습 결과 보관 안내</strong><br />
+              이 유형별 연습 결과는 별도로 보관되며, 일반 40문항 정식 진단 보고서에는 영향을 주지 않습니다.
+              오답 다시 풀기는 이 연습 결과에서 틀린 문항과 미응답 문항만 대상으로 진행됩니다.
             </div>`
-          : `<div class="notice">
-              <strong>샘플 결과 주의</strong><br />
-              현재 결과는 TOPIK I 읽기 31~70번 전체 40문항이 아니라 ${totalQuestions}문항 기준입니다.
-              화면 기능과 진단 구조 확인용으로 사용하고, 실제 예상 수준은 31~70번 전체 문항 입력 후 판단하세요.
-            </div>`
+          : isLevelTest
+            ? `<div class="notice">
+                <strong>결과 보관 안내</strong><br />
+                이 레벨테스트 결과는 별도로 보관되며, 40문항 정식 진단 보고서에는 영향을 주지 않습니다.
+              </div>`
+            : `<div class="notice">
+                <strong>샘플 결과 주의</strong><br />
+                현재 결과는 TOPIK I 읽기 31~70번 전체 40문항이 아니라 ${totalQuestions}문항 기준입니다.
+                화면 기능과 진단 구조 확인용으로 사용하고, 실제 예상 수준은 31~70번 전체 문항 입력 후 판단하세요.
+              </div>`
     }
 
     <h3 class="section-title">시험 정보</h3>
@@ -1103,10 +1179,21 @@ function getReportWrongQuestionNumbers(report) {
   const problemItems = Array.isArray(report && report.problemItems)
     ? report.problemItems
     : [];
+  const isQuestionPractice = Boolean(report && report.isQuestionPractice);
 
   return problemItems
     .map((item) => Number(item.question_number))
-    .filter((number) => Number.isFinite(number) && number >= 31 && number <= 70)
+    .filter((number) => {
+      if (!Number.isFinite(number) || number <= 0) {
+        return false;
+      }
+
+      if (isQuestionPractice) {
+        return true;
+      }
+
+      return number >= 31 && number <= 70;
+    })
     .filter((number, index, array) => array.indexOf(number) === index)
     .sort((a, b) => a - b);
 }
@@ -1135,7 +1222,7 @@ function getStoredWrongReviewState() {
       exists: true,
       numbers: parsed
         .map((number) => Number(number))
-        .filter((number) => Number.isFinite(number) && number >= 31 && number <= 70)
+        .filter((number) => Number.isFinite(number) && number > 0)
         .filter((number, index, array) => array.indexOf(number) === index)
         .sort((a, b) => a - b)
     };
@@ -1166,7 +1253,7 @@ function normalizeQuestionNumberList(numbers) {
 
   return numbers
     .map((number) => Number(number))
-    .filter((number) => Number.isFinite(number) && number >= 31 && number <= 70)
+    .filter((number) => Number.isFinite(number) && number > 0)
     .filter((number, index, array) => array.indexOf(number) === index)
     .sort((a, b) => a - b);
 }
@@ -1187,17 +1274,74 @@ function isSameWrongReviewSource(sourceA, sourceB) {
   );
 }
 
+function getRemainingWrongReviewNumbersFromPackage(reviewPackage, reportNumbers) {
+  const directNumbers = normalizeQuestionNumberList(
+    reviewPackage && reviewPackage.remaining_wrong_review_question_numbers
+  );
+
+  if (directNumbers.length) {
+    return directNumbers;
+  }
+
+  const progress =
+    reviewPackage && (
+      reviewPackage.latest_wrong_review_partial_progress ||
+      reviewPackage.latest_wrong_review_result ||
+      {}
+    );
+
+  const progressItems = Array.isArray(progress && progress.items)
+    ? progress.items
+    : [];
+
+  const derivedNumbers = progressItems
+    .filter((item) => {
+      return (
+        item &&
+        (item.is_correct !== true ||
+          item.is_answered === false ||
+          isUnanswered(item.student_answer))
+      );
+    })
+    .map((item) => Number(
+      item.question_number ||
+      item.original_question_number ||
+      item.practice_original_question_number ||
+      item.source_question_number
+    ))
+    .filter((number) => Number.isFinite(number) && number > 0)
+    .filter((number, index, array) => array.indexOf(number) === index)
+    .sort((a, b) => a - b);
+
+  if (derivedNumbers.length) {
+    return derivedNumbers;
+  }
+
+  const totalReviewQuestions = numberOrZero(progress && progress.total_review_questions);
+  const answeredCount = numberOrZero(progress && progress.answered_count);
+
+  if (totalReviewQuestions > 0 && answeredCount < totalReviewQuestions && reportNumbers.length) {
+    return reportNumbers;
+  }
+
+  return directNumbers;
+}
+
 function getActiveWrongReviewNumbers(report) {
   const reportNumbers = getReportWrongQuestionNumbers(report);
   const reviewPackage = getWrongReviewStoragePackage();
-
-  if (
+  const sourceMatches = Boolean(
     reviewPackage &&
-    reviewPackage.source_result &&
-    isSameWrongReviewSource(reviewPackage.source_result, report && report.source) &&
-    Array.isArray(reviewPackage.remaining_wrong_review_question_numbers)
-  ) {
-    return normalizeQuestionNumberList(reviewPackage.remaining_wrong_review_question_numbers);
+      reviewPackage.source_result &&
+      isSameWrongReviewSource(reviewPackage.source_result, report && report.source)
+  );
+
+  if (sourceMatches && Array.isArray(reviewPackage.remaining_wrong_review_question_numbers)) {
+    return getRemainingWrongReviewNumbersFromPackage(reviewPackage, reportNumbers);
+  }
+
+  if (report && report.isQuestionPractice) {
+    return reportNumbers;
   }
 
   if (report && report.isLevelTest) {
@@ -1206,7 +1350,12 @@ function getActiveWrongReviewNumbers(report) {
 
   const storedState = getStoredWrongReviewState();
 
-  if (storedState.exists) {
+  /*
+    저장소에 []만 남아 있는 경우가 있습니다.
+    이 []가 현재 보고서와 연결된 오답풀이 패키지인지 확인할 수 없으면
+    현재 보고서의 오답·미응답 문항을 우선 사용합니다.
+  */
+  if (storedState.exists && storedState.numbers.length > 0) {
     return storedState.numbers;
   }
 
@@ -1256,9 +1405,11 @@ function renderWrongReviewButton(report) {
     return;
   }
 
-  const buttonLabel = report && report.isLevelTest
-    ? "레벨테스트 오답 다시 풀기"
-    : "오답 다시 풀기";
+  const buttonLabel = report && report.isQuestionPractice
+    ? "유형 연습 오답 다시 풀기"
+    : report && report.isLevelTest
+      ? "레벨테스트 오답 다시 풀기"
+      : "오답 다시 풀기";
 
   const button = document.createElement("button");
   button.type = "button";
@@ -1317,21 +1468,35 @@ function startWrongReview(report) {
     return;
   }
 
+  const isQuestionPractice = Boolean(report && report.isQuestionPractice);
+  const isLevelTest = Boolean(report && report.isLevelTest);
+  const reportMode = isQuestionPractice ? "question-practice" : isLevelTest ? "leveltest" : "full";
+  const sourceLabel = isQuestionPractice
+    ? "reading-diagnosis-question-practice"
+    : isLevelTest
+      ? "reading-diagnosis-leveltest"
+      : "reading-diagnosis";
+
   try {
     localStorage.setItem(
       WRONG_REVIEW_STORAGE_KEY,
       JSON.stringify(activeWrongNumbers)
     );
 
+    if (isQuestionPractice) {
+      localStorage.setItem(
+        QUESTION_PRACTICE_WRONG_REVIEW_STORAGE_KEY,
+        JSON.stringify(activeWrongNumbers)
+      );
+    }
+
     localStorage.setItem(
       WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY,
       JSON.stringify({
         saved_at: new Date().toISOString(),
-        source: report && report.isLevelTest
-          ? "reading-diagnosis-leveltest"
-          : "reading-diagnosis",
+        source: sourceLabel,
         source_result: report.source || {},
-        report_mode: report && report.isLevelTest ? "leveltest" : "full",
+        report_mode: reportMode,
         remaining_wrong_review_question_numbers: activeWrongNumbers
       })
     );
@@ -1341,7 +1506,13 @@ function startWrongReview(report) {
     return;
   }
 
-  window.location.href = WRONG_REVIEW_TEST_URL + "&v=wrong-review-" + Date.now();
+  const sourceParam = isQuestionPractice
+    ? "&source=question-practice"
+    : isLevelTest
+      ? "&source=leveltest"
+      : "";
+
+  window.location.href = WRONG_REVIEW_TEST_URL + sourceParam + "&v=wrong-review-" + Date.now();
 }
 
 function renderTypeBarChart(stats) {
@@ -1434,17 +1605,18 @@ function renderExamInfoTable(result) {
   const generatedExamRound = result.generated_exam_round || "전체 랜덤";
   const timeRange = `${formatDateTime(result.started_at)} ~ ${formatDateTime(result.submitted_at)}`;
   const isLevelTest = isLevelTestResultData(result);
+  const isQuestionPractice = isQuestionPracticeResultData(result);
 
   return `
     <table>
       <tbody>
         <tr>
           <th>시험명</th>
-          <td>${escapeHtml(isLevelTest ? "TOPIK I 읽기 레벨테스트" : (result.test_name || "TOPIK I Reading"))}</td>
+          <td>${escapeHtml(isQuestionPractice ? "TOPIK I 읽기 유형별 문항 선택 연습" : isLevelTest ? "TOPIK I 읽기 레벨테스트" : (result.test_name || "TOPIK I Reading"))}</td>
         </tr>
         <tr>
           <th>시험 범위</th>
-          <td>${escapeHtml(isLevelTest ? "TOPIK I 읽기 레벨테스트 20문항" : (result.test_scope || "TOPIK I PBT Reading 31-70"))}</td>
+          <td>${escapeHtml(isQuestionPractice ? "TOPIK I 읽기 유형별 연습" : isLevelTest ? "TOPIK I 읽기 레벨테스트 20문항" : (result.test_scope || "TOPIK I PBT Reading 31-70"))}</td>
         </tr>
         <tr>
           <th>출제 방식</th>
