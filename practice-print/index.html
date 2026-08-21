@@ -1260,7 +1260,7 @@
 
       <div class="notice">
         이 도구는 시험 실행 기능이 아닙니다. 기존 문제은행을 읽어 교사용 문제지와 정답표를 출력합니다.
-        TOPIK I 읽기 원본 번호는 31번~70번 기준으로 표시됩니다.
+        TOPIK I 읽기 문항 번호는 31번~70번 기준으로 표시됩니다.
       </div>
 
       <div class="print-setting-note screen-only clean-pdf-notice" id="printSettingNote">
@@ -1293,10 +1293,10 @@
       </div>
 
       <div class="field-group">
-        <div class="group-label">출제 회차 선택</div>
-        <div class="round-toolbar screen-only" aria-label="출제 회차 빠른 선택">
-          <button id="selectAllRoundsButton" class="round-action-button" type="button">회차 전체 선택</button>
-          <button id="clearAllRoundsButton" class="round-action-button gray" type="button">회차 전체 해제</button>
+        <div class="group-label">출제 시험지 선택</div>
+        <div class="round-toolbar screen-only" aria-label="출제 시험지 빠른 선택">
+          <button id="selectAllRoundsButton" class="round-action-button" type="button">시험지 전체 선택</button>
+          <button id="clearAllRoundsButton" class="round-action-button gray" type="button">시험지 전체 해제</button>
         </div>
         <div id="roundList" class="round-list">
           문제은행을 불러오는 중입니다.
@@ -1307,7 +1307,7 @@
         <div class="group-label">출력 순서</div>
         <label class="radio-line">
           <input type="radio" name="printOrder" value="source" checked />
-          회차·원본 번호순
+          시험지·문항 번호순
         </label>
         <label class="radio-line">
           <input type="radio" name="printOrder" value="random" />
@@ -1318,7 +1318,7 @@
       <div class="field-group">
         <label class="checkbox-line">
           <input id="showSourceInfoInput" type="checkbox" checked />
-          문제 카드에 원본 정보 표시
+          문제 카드에 시험지 정보 표시
         </label>
       </div>
 
@@ -1335,11 +1335,11 @@
 
     <section class="preview-panel" aria-label="문제지 미리보기">
       <div id="printArea">
-        <h2 id="printTitle" class="print-title">TOPIK I 읽기 원본 31~70번 유형별 문제지</h2>
+        <h2 id="printTitle" class="print-title">TOPIK I 읽기 31~70번 유형별 문제지</h2>
         <div id="printMeta" class="print-meta">문제지 미리보기를 생성하세요.</div>
 
         <div id="emptyPreview" class="empty-preview">
-          왼쪽에서 범위와 회차를 선택한 뒤 <strong>문제지 미리보기 생성</strong>을 누르세요.<br />
+          왼쪽에서 범위와 시험지를 선택한 뒤 <strong>문제지 미리보기 생성</strong>을 누르세요.<br />
           예: 31~34번 유형만 모으려면 시작 31, 끝 34로 설정합니다.
         </div>
 
@@ -1349,6 +1349,6 @@
     </section>
   </main>
 
-  <script src="./practice-print.js?v=topik1-practice-print-step46-17-compact-v3"></script>
+  <script src="./practice-print.js?v=topik1-practice-print-alias-round-step1"></script>
 </body>
 </html>

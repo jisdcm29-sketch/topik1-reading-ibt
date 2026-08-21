@@ -2,7 +2,7 @@
 
 /*
   TOPIK I Reading Practice Print Tool
-  version: step46-14-topik1-practice-print-round-select-buttons-v1
+  version: alias-round-step1
 
   역할:
   - 실제 업로드된 고정 시험지 exam-manifest.json/data/exams/reading-*.json을 우선 읽고, 회차 표시도 manifest 기준으로 고정한다.
@@ -76,6 +76,72 @@
 
   function normalizeText(value) {
     return String(value == null ? "" : value).trim();
+  }
+
+  /*
+    학생 화면용 시험지 별칭 표시
+    - 내부 source_round, file, answer_key_file 값은 바꾸지 않는다.
+    - 출력 도구 화면과 인쇄물에는 실제 회차 대신 실전A/실전B 형식으로만 표시한다.
+  */
+  const PRACTICE_ROUND_ALIAS_ORDER = [
+    "36", "35", "37", "41", "52", "60", "64", "83",
+    "91", "96", "97", "99", "100", "102", "103"
+  ];
+
+  const PRACTICE_ROUND_ALIAS_MAP = {
+    "36": "실전A",
+    "35": "실전B",
+    "37": "실전C",
+    "41": "실전D",
+    "52": "실전E",
+    "60": "실전F",
+    "64": "실전G",
+    "83": "실전H",
+    "91": "실전I",
+    "96": "실전J",
+    "97": "실전K",
+    "99": "실전L",
+    "100": "실전M",
+    "102": "실전N",
+    "103": "실전O"
+  };
+
+  function getPracticeRoundAlias(roundValue) {
+    const round = normalizeText(roundValue);
+
+    if (!round) {
+      return "시험지 미상";
+    }
+
+    return PRACTICE_ROUND_ALIAS_MAP[round] || "실전";
+  }
+
+  function compareRoundsByAlias(left, right) {
+    const leftText = normalizeText(left);
+    const rightText = normalizeText(right);
+    const leftIndex = PRACTICE_ROUND_ALIAS_ORDER.indexOf(leftText);
+    const rightIndex = PRACTICE_ROUND_ALIAS_ORDER.indexOf(rightText);
+
+    if (leftIndex >= 0 && rightIndex >= 0) {
+      return leftIndex - rightIndex;
+    }
+
+    if (leftIndex >= 0) {
+      return -1;
+    }
+
+    if (rightIndex >= 0) {
+      return 1;
+    }
+
+    const leftNumber = Number(leftText);
+    const rightNumber = Number(rightText);
+
+    if (Number.isFinite(leftNumber) && Number.isFinite(rightNumber) && leftNumber !== rightNumber) {
+      return leftNumber - rightNumber;
+    }
+
+    return leftText.localeCompare(rightText, "ko");
   }
 
   function getFirstNumber(value) {
@@ -953,16 +1019,7 @@
         .filter(isSelectableRound)
     ));
 
-    return rounds.sort(function (a, b) {
-      const na = Number(a);
-      const nb = Number(b);
-
-      if (Number.isFinite(na) && Number.isFinite(nb)) {
-        return na - nb;
-      }
-
-      return String(a).localeCompare(String(b), "ko");
-    });
+    return rounds.sort(compareRoundsByAlias);
   }
 
   function syncRoundQuickButtons() {
@@ -1007,7 +1064,7 @@
       return [
         '<label class="checkbox-line">',
         `<input class="round-checkbox" type="checkbox" value="${escapeHtml(round)}" checked />`,
-        `${escapeHtml(round)}회`,
+        escapeHtml(getPracticeRoundAlias(round)),
         '</label>'
       ].join("");
     }).join("");
@@ -1136,8 +1193,8 @@
       : `${options.start}~${options.end}번`;
 
     return answerOnly
-      ? `TOPIK I 읽기 원본 ${rangeText} 유형별 정답표`
-      : `TOPIK I 읽기 원본 ${rangeText} 유형별 문제지`;
+      ? `TOPIK I 읽기 ${rangeText} 유형별 정답표`
+      : `TOPIK I 읽기 ${rangeText} 유형별 문제지`;
   }
 
   function getPrintNumber(record, fallbackIndex) {
@@ -1211,10 +1268,10 @@
       : "source-info hide-source";
 
     const roundText = isSelectableRound(record.source_round)
-      ? `${record.source_round}회`
-      : "회차 미상";
+      ? getPracticeRoundAlias(record.source_round)
+      : "시험지 미상";
 
-    return `<span class="${sourceClass}">${escapeHtml(roundText)} 원본 ${record.display_number}번</span>`;
+    return `<span class="${sourceClass}">${escapeHtml(roundText)} · ${escapeHtml(record.display_number + "번")}</span>`;
   }
 
   function renderImage(url) {
@@ -1640,7 +1697,7 @@
   function renderAnswerSection(records, title) {
     const rows = records.map(function (record, index) {
       const roundText = isUsableRound(record.source_round)
-        ? `${record.source_round}회`
+        ? getPracticeRoundAlias(record.source_round)
         : "미상";
 
       return [
@@ -1658,7 +1715,7 @@
     return [
       `<h2 class="answer-title">${escapeHtml(title)}</h2>`,
       '<table class="answer-table">',
-      '<thead><tr><th>출력 순서</th><th>정답</th><th>원본 회차</th><th>원본 번호</th><th>유형</th><th>진단 영역</th></tr></thead>',
+      '<thead><tr><th>출력 순서</th><th>정답</th><th>시험지</th><th>문항 번호</th><th>유형</th><th>진단 영역</th></tr></thead>',
       `<tbody>${rows}</tbody>`,
       '</table>'
     ].join("");
@@ -1697,7 +1754,7 @@
     if (!records.length) {
       if (elements.emptyPreview) {
         elements.emptyPreview.classList.remove("hidden");
-        elements.emptyPreview.innerHTML = "조건에 맞는 문항이 없습니다.<br />범위 또는 회차 선택을 다시 확인하세요.";
+        elements.emptyPreview.innerHTML = "조건에 맞는 문항이 없습니다.<br />범위 또는 시험지 선택을 다시 확인하세요.";
       }
 
       if (elements.problemSection) {
@@ -1824,7 +1881,7 @@
 
     if (elements.emptyPreview) {
       elements.emptyPreview.classList.remove("hidden");
-      elements.emptyPreview.innerHTML = '왼쪽에서 범위와 회차를 선택한 뒤 <strong>문제지 미리보기 생성</strong>을 누르세요.<br />예: 31~34번 유형만 모으려면 시작 31, 끝 34로 설정합니다.';
+      elements.emptyPreview.innerHTML = '왼쪽에서 범위와 시험지를 선택한 뒤 <strong>문제지 미리보기 생성</strong>을 누르세요.<br />예: 31~34번 유형만 모으려면 시작 31, 끝 34로 설정합니다.';
     }
 
     if (elements.problemSection) {
@@ -1911,7 +1968,7 @@
         ? ` 경고 ${state.examLoadWarnings.length}건이 있습니다.`
         : "";
 
-      setStatus(`${sourceLabel}를 불러왔습니다. 사용 가능 문항 ${state.records.length}개, 회차 ${rounds.length}개입니다.${warningText}`, false);
+      setStatus(`${sourceLabel}를 불러왔습니다. 사용 가능 문항 ${state.records.length}개, 시험지 ${rounds.length}개입니다.${warningText}`, false);
     } catch (error) {
       console.error(error);
       setStatus(error.message || "문제지 출력 자료를 불러오는 중 오류가 발생했습니다.", true);
