@@ -38,10 +38,13 @@ const LEVEL_TEST_CONFIG = {
 
 const AUTO_DIAGNOSIS_STORAGE_KEY = "topik1_latest_reading_result";
 const LEVEL_TEST_RESULT_STORAGE_KEY = "topik1_latest_leveltest_result";
+const QUESTION_PRACTICE_RESULT_STORAGE_KEY = "topik1_latest_question_practice_result";
+const QUESTION_PRACTICE_WRONG_NUMBERS_STORAGE_KEY = "topik1_question_practice_wrong_review_question_numbers";
 const WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY = "topik1_wrong_review_question_numbers";
 const WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY = "topik1_wrong_review_source_result";
 const AUTO_DIAGNOSIS_URL = "../reading-diagnosis/index.html?auto=1";
 const LEVEL_TEST_DIAGNOSIS_URL = "../reading-diagnosis/index.html?auto=1&mode=leveltest";
+const QUESTION_PRACTICE_DIAGNOSIS_URL = "../reading-diagnosis/index.html?auto=1&mode=question-practice";
 
 const EXAM_MANIFEST_URLS = [
   "./data/exam-manifest.json",
@@ -54,6 +57,86 @@ let examManifestLoadPromise = null;
 
 let currentRunMode = "normal";
 let selectedExamType = "full";
+
+
+/*
+  TOPIK I 문항 선택 연습
+  - 여러 회차를 선택한 뒤 TOPIK I 읽기 유형 구간을 하나 선택하면
+    해당 회차들의 같은 유형 문항을 모아 시험 화면에서 풀 수 있게 한다.
+  - 일반 40문항 시험 결과(topik1_latest_reading_result)는 덮어쓰지 않는다.
+*/
+const TOPIK1_QUESTION_PRACTICE_TYPES = [
+  {
+    key: "topic-31-33",
+    label: "31~33 중심 화제 파악하기",
+    short_label: "31~33 중심 화제",
+    description: "짧은 글을 읽고 무엇에 대한 이야기인지 고릅니다.",
+    start: 31,
+    end: 33
+  },
+  {
+    key: "blank-34-39",
+    label: "34~39 빈칸 채우기",
+    short_label: "34~39 빈칸",
+    description: "문맥에 맞는 단어, 조사, 연결 어미를 고릅니다.",
+    start: 34,
+    end: 39
+  },
+  {
+    key: "practical-40-42",
+    label: "40~42 실용문 세부 정보",
+    short_label: "40~42 실용문",
+    description: "안내문, 표, 광고, 표지판 등의 세부 정보를 확인합니다.",
+    start: 40,
+    end: 42
+  },
+  {
+    key: "detail-43-45",
+    label: "43~45 세부 내용 파악",
+    short_label: "43~45 내용 일치",
+    description: "짧은 글을 읽고 내용과 같은 것을 고릅니다.",
+    start: 43,
+    end: 45
+  },
+  {
+    key: "main-46-48",
+    label: "46~48 중심 내용 파악",
+    short_label: "46~48 중심 내용",
+    description: "글의 중심 생각과 핵심 내용을 고릅니다.",
+    start: 46,
+    end: 48
+  },
+  {
+    key: "short-set-49-56",
+    label: "49~56 단문 종합 독해",
+    short_label: "49~56 1지문 2문항",
+    description: "중간 길이의 생활문·설명문을 읽고 두 문항을 함께 풉니다.",
+    start: 49,
+    end: 56
+  },
+  {
+    key: "order-57-58",
+    label: "57~58 문장 순서 배열",
+    short_label: "57~58 문장 순서",
+    description: "문장의 시간적·논리적 흐름을 보고 알맞은 순서를 고릅니다.",
+    start: 57,
+    end: 58
+  },
+  {
+    key: "long-set-59-70",
+    label: "59~70 장문 종합 독해",
+    short_label: "59~70 장문 1지문 2문항",
+    description: "긴 지문에서 삽입 위치, 빈칸, 세부 내용 일치를 풉니다.",
+    start: 59,
+    end: 70
+  }
+];
+
+const questionPracticeSelection = {
+  open: false,
+  selectedRoundValues: [],
+  selectedTypeKey: ""
+};
 
 
 const DEFAULT_READING_POINTS = {  31: 2, 32: 2, 33: 2,
@@ -967,30 +1050,53 @@ function getCompactExamLabel(entry) {
     return "시험지";
   }
 
-  const round = String(entry.round || "").trim();
-  const mode = String(entry.mode || "").trim();
+  /*
+    학생 인증 화면용 회차 별칭 표시
+    - 내부 round/source_round/file 값은 절대 바꾸지 않는다.
+    - 실제 문제지 로딩, 채점, 결과 JSON, 진단 보고서 연결은 기존 회차값을 그대로 사용한다.
+    - 화면에만 35회/36회 같은 실제 회차명 대신 실전A/실전B 형식으로 표시한다.
+  */
+  const round = String(entry.round || entry.source_round || "").trim();
+  const mode = String(entry.mode || entry.selection_type || "").trim();
   const examType = entry.exam_type === "leveltest" ? "leveltest" : "full";
+
+  const roundAliasMap = {
+    "36": "실전A",
+    "35": "실전B",
+    "37": "실전C",
+    "41": "실전D",
+    "52": "실전E",
+    "60": "실전F",
+    "64": "실전G",
+    "83": "실전H",
+    "91": "실전I",
+    "96": "실전J",
+    "97": "실전K",
+    "99": "실전L",
+    "100": "실전M",
+    "102": "실전N",
+    "103": "실전O"
+  };
+
+  const baseAlias = roundAliasMap[round] || "실전";
 
   if (examType === "leveltest") {
     if (mode === "round" && round && round !== "mixed") {
-      return `${round}회 레벨테스트`;
+      return `${baseAlias} 레벨테스트`;
     }
 
     return "랜덤 레벨테스트";
   }
 
   if (mode === "round" && round && round !== "mixed") {
-    return `${round}회`;
+    return baseAlias;
   }
 
   if (mode === "random") {
     return "랜덤";
   }
 
-  return String(entry.label || "")
-    .replace(/\s*40문항\s*실전시험/g, "")
-    .replace(/\s*실전시험/g, "")
-    .trim() || "시험지";
+  return "시험지";
 }
 
 function getCompactExamSelectionMessage(entry) {
@@ -1653,11 +1759,13 @@ function createExamModeSelector() {
   select.addEventListener("change", updateExamModeHelpText);
 
   refreshExamSelectionUi();
+  renderQuestionPracticePanel();
 
   loadExamManifest()
     .then(function (entries) {
       renderExamModeSelectOptions(select, entries);
       refreshExamSelectionUi();
+      renderQuestionPracticePanel();
     })
     .catch(function (error) {
       console.warn("시험지 manifest 적용 실패, 기본 목록 사용:", error);
@@ -1666,6 +1774,613 @@ function createExamModeSelector() {
     });
 }
 
+
+
+function getQuestionPracticeTypeByKey(key) {
+  return TOPIK1_QUESTION_PRACTICE_TYPES.find(function (type) {
+    return type.key === key;
+  }) || null;
+}
+
+function getQuestionPracticeRoundEntries() {
+  return getExamSelectionEntries().filter(function (entry) {
+    return (
+      entry &&
+      (entry.exam_type || "full") === "full" &&
+      entry.mode === "round" &&
+      entry.file &&
+      entry.enabled !== false &&
+      entry.student_visible !== false
+    );
+  });
+}
+
+function isQuestionPracticeSelectionActive() {
+  return Boolean(questionPracticeSelection.selectedTypeKey);
+}
+
+function isQuestionPracticeExamOptions(options) {
+  return Boolean(
+    options &&
+    (options.exam_type === "question-practice" ||
+      options.mode === "question-practice")
+  );
+}
+
+function isQuestionPracticeResult(result) {
+  return Boolean(
+    result &&
+    (result.generated_exam_type === "question-practice" ||
+      result.generated_exam_mode === "question-practice")
+  );
+}
+
+function getWrongReviewReportModeFromSource(sourceResult) {
+  if (sourceResult && isQuestionPracticeResult(sourceResult)) {
+    return "question-practice";
+  }
+
+  if (sourceResult && isLevelTestResult(sourceResult)) {
+    return "leveltest";
+  }
+
+  return "full";
+}
+
+function getWrongReviewSourceLabelFromMode(reportMode) {
+  if (reportMode === "question-practice") {
+    return "reading-test-question-practice";
+  }
+
+  if (reportMode === "leveltest") {
+    return "reading-test-leveltest";
+  }
+
+  return "reading-test";
+}
+
+function getQuestionPracticeStatusText() {
+  const selectedType = getQuestionPracticeTypeByKey(questionPracticeSelection.selectedTypeKey);
+  const selectedRoundCount = questionPracticeSelection.selectedRoundValues.length;
+
+  if (!selectedType) {
+    return "회차를 선택한 뒤 유형을 선택하면, 선택한 회차의 같은 유형 문항만 시험처럼 풉니다.";
+  }
+
+  if (!selectedRoundCount) {
+    return `${selectedType.short_label} 선택됨 · 연습할 회차를 1개 이상 선택하세요.`;
+  }
+
+  return `${selectedType.short_label} 선택됨 · ${selectedRoundCount}개 실전 회차에서 같은 유형 문항을 모읍니다.`;
+}
+
+function setQuestionPracticeStatus(message, color) {
+  const status = document.getElementById("questionPracticeStatusText");
+  if (!status) {
+    return;
+  }
+
+  status.textContent = message || getQuestionPracticeStatusText();
+  status.style.color = color || "#188038";
+}
+
+function getQuestionPracticeRoundButtonHtml(entry) {
+  const selected = questionPracticeSelection.selectedRoundValues.includes(entry.value);
+  const label = getCompactExamLabel(entry);
+
+  return `
+    <button
+      type="button"
+      class="question-practice-round-button"
+      data-practice-round-value="${escapeAttribute(entry.value)}"
+      aria-pressed="${selected ? "true" : "false"}"
+      style="
+        min-height:34px;
+        border:2px solid ${selected ? "#0877f2" : "#d7e6f8"};
+        border-radius:9px;
+        background:${selected ? "#e9f3ff" : "#ffffff"};
+        color:#003f8f;
+        font-size:14px;
+        font-weight:900;
+        cursor:pointer;
+        text-align:left;
+        padding:6px 10px;
+      "
+    >
+      ${escapeHtml(label)}
+    </button>
+  `;
+}
+
+function getQuestionPracticeTypeButtonHtml(type) {
+  const selected = questionPracticeSelection.selectedTypeKey === type.key;
+
+  return `
+    <button
+      type="button"
+      class="question-practice-type-button"
+      data-practice-type-key="${escapeAttribute(type.key)}"
+      aria-pressed="${selected ? "true" : "false"}"
+      style="
+        min-height:56px;
+        border:2px solid ${selected ? "#0877f2" : "#d7e6f8"};
+        border-radius:10px;
+        background:${selected ? "#e9f3ff" : "#ffffff"};
+        color:#003f8f;
+        font-size:14px;
+        font-weight:900;
+        cursor:pointer;
+        text-align:left;
+        padding:8px 10px;
+        line-height:1.35;
+      "
+    >
+      <div>${escapeHtml(type.label)}</div>
+      <div style="margin-top:2px; color:#111827; font-size:12px; font-weight:800;">
+        ${escapeHtml(type.description)}
+      </div>
+    </button>
+  `;
+}
+
+function renderQuestionPracticePanel() {
+  const startButton = elements && elements.startButton
+    ? elements.startButton
+    : document.getElementById("startButton");
+
+  if (!startButton) {
+    return;
+  }
+
+  let panel = document.getElementById("questionPracticePanel");
+  const shouldCreate = !panel;
+
+  if (shouldCreate) {
+    panel = document.createElement("div");
+    panel.id = "questionPracticePanel";
+    panel.style.margin = "12px 0 16px";
+    panel.style.padding = "14px";
+    panel.style.border = "1px solid #cfe2ff";
+    panel.style.borderRadius = "12px";
+    panel.style.background = "#f8fbff";
+
+    const examSelectBox = document.getElementById("examSelectBox");
+    const parent = startButton.parentNode;
+
+    if (examSelectBox && examSelectBox.parentNode === parent) {
+      parent.insertBefore(panel, examSelectBox.nextSibling);
+    } else {
+      parent.insertBefore(panel, startButton);
+    }
+  }
+
+  const roundEntries = getQuestionPracticeRoundEntries();
+  const knownRoundValues = new Set(roundEntries.map(function (entry) {
+    return entry.value;
+  }));
+
+  questionPracticeSelection.selectedRoundValues =
+    questionPracticeSelection.selectedRoundValues.filter(function (value) {
+      return knownRoundValues.has(value);
+    });
+
+  const bodyHiddenAttribute = questionPracticeSelection.open ? "" : " hidden";
+
+  panel.innerHTML = `
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:8px;
+        border-top:1px solid #d8e7f8;
+        padding-top:12px;
+      "
+    >
+      <div style="font-size:17px; font-weight:900; color:#003f8f;">
+        문항 선택 연습
+      </div>
+      <button
+        id="questionPracticeToggleButton"
+        type="button"
+        style="
+          min-height:32px;
+          border:2px solid #0877f2;
+          border-radius:9px;
+          background:#ffffff;
+          color:#0877f2;
+          font-size:13px;
+          font-weight:900;
+          cursor:pointer;
+          padding:6px 10px;
+          white-space:nowrap;
+        "
+      >
+        ${questionPracticeSelection.open ? "문항 선택 연습 닫기" : "문항 선택 연습 열기"}
+      </button>
+    </div>
+
+    <div
+      id="questionPracticeBody"
+      ${bodyHiddenAttribute}
+      style="
+        margin-top:10px;
+        padding:12px;
+        border:1px solid #d7e6f8;
+        border-radius:10px;
+        background:#ffffff;
+      "
+    >
+      <div style="color:#111827; font-size:13px; line-height:1.55; font-weight:800; margin-bottom:10px;">
+        여러 회차를 선택한 뒤 같은 유형을 선택합니다. 선택한 유형은 아래 <strong>시험 시작</strong> 버튼을 누르면 하나의 연습 시험지처럼 진행됩니다.
+      </div>
+
+      <div style="font-size:14px; font-weight:900; color:#111827; margin-bottom:6px;">
+        연습 회차 선택
+      </div>
+
+      <div
+        style="
+          display:grid;
+          grid-template-columns:1fr 1fr;
+          gap:8px;
+          margin-bottom:8px;
+        "
+      >
+        <button
+          id="questionPracticeSelectAllRoundsButton"
+          type="button"
+          style="
+            min-height:32px;
+            border:1px solid #0877f2;
+            border-radius:9px;
+            background:#ffffff;
+            color:#0877f2;
+            font-size:13px;
+            font-weight:900;
+            cursor:pointer;
+          "
+        >
+          전체 선택
+        </button>
+        <button
+          id="questionPracticeClearRoundsButton"
+          type="button"
+          style="
+            min-height:32px;
+            border:1px solid #cbd5e1;
+            border-radius:9px;
+            background:#ffffff;
+            color:#384152;
+            font-size:13px;
+            font-weight:900;
+            cursor:pointer;
+          "
+        >
+          전체 해제
+        </button>
+      </div>
+
+      <div
+        id="questionPracticeRoundList"
+        style="
+          display:grid;
+          grid-template-columns:1fr 1fr;
+          gap:7px;
+          margin-bottom:12px;
+        "
+      >
+        ${
+          roundEntries.length
+            ? roundEntries.map(getQuestionPracticeRoundButtonHtml).join("")
+            : '<div style="grid-column:1/-1; color:#d93025; font-size:13px; font-weight:800;">선택 가능한 회차별 시험지가 없습니다.</div>'
+        }
+      </div>
+
+      <div style="font-size:14px; font-weight:900; color:#111827; margin-bottom:6px;">
+        대표 유형 선택
+      </div>
+
+      <div
+        id="questionPracticeTypeList"
+        style="
+          display:grid;
+          grid-template-columns:1fr 1fr;
+          gap:8px;
+        "
+      >
+        ${TOPIK1_QUESTION_PRACTICE_TYPES.map(getQuestionPracticeTypeButtonHtml).join("")}
+      </div>
+
+      <button
+        id="questionPracticeClearTypeButton"
+        type="button"
+        style="
+          width:100%;
+          min-height:34px;
+          margin-top:10px;
+          border:1px solid #cbd5e1;
+          border-radius:9px;
+          background:#ffffff;
+          color:#003f8f;
+          font-size:13px;
+          font-weight:900;
+          cursor:pointer;
+        "
+      >
+        전체 시험으로 보기
+      </button>
+
+      <div
+        id="questionPracticeStatusText"
+        style="
+          margin-top:8px;
+          min-height:18px;
+          color:#188038;
+          text-align:center;
+          font-size:13px;
+          line-height:1.35;
+          font-weight:900;
+        "
+      >
+        ${escapeHtml(getQuestionPracticeStatusText())}
+      </div>
+    </div>
+  `;
+
+  const toggleButton = document.getElementById("questionPracticeToggleButton");
+  if (toggleButton) {
+    toggleButton.addEventListener("click", function () {
+      questionPracticeSelection.open = !questionPracticeSelection.open;
+      renderQuestionPracticePanel();
+    });
+  }
+
+  panel.querySelectorAll(".question-practice-round-button").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const value = button.getAttribute("data-practice-round-value");
+      const index = questionPracticeSelection.selectedRoundValues.indexOf(value);
+
+      if (index >= 0) {
+        questionPracticeSelection.selectedRoundValues.splice(index, 1);
+      } else if (value) {
+        questionPracticeSelection.selectedRoundValues.push(value);
+      }
+
+      renderQuestionPracticePanel();
+    });
+  });
+
+  const selectAllButton = document.getElementById("questionPracticeSelectAllRoundsButton");
+  if (selectAllButton) {
+    selectAllButton.addEventListener("click", function () {
+      questionPracticeSelection.selectedRoundValues = roundEntries.map(function (entry) {
+        return entry.value;
+      });
+      renderQuestionPracticePanel();
+    });
+  }
+
+  const clearRoundsButton = document.getElementById("questionPracticeClearRoundsButton");
+  if (clearRoundsButton) {
+    clearRoundsButton.addEventListener("click", function () {
+      questionPracticeSelection.selectedRoundValues = [];
+      renderQuestionPracticePanel();
+    });
+  }
+
+  panel.querySelectorAll(".question-practice-type-button").forEach(function (button) {
+    button.addEventListener("click", function () {
+      questionPracticeSelection.selectedTypeKey = button.getAttribute("data-practice-type-key") || "";
+      questionPracticeSelection.open = true;
+      renderQuestionPracticePanel();
+    });
+  });
+
+  const clearTypeButton = document.getElementById("questionPracticeClearTypeButton");
+  if (clearTypeButton) {
+    clearTypeButton.addEventListener("click", function () {
+      questionPracticeSelection.selectedTypeKey = "";
+      setQuestionPracticeStatus("문항 선택 연습을 해제했습니다. 위에서 선택한 전체 시험으로 진행합니다.", "#188038");
+      renderQuestionPracticePanel();
+    });
+  }
+}
+
+function getQuestionPracticeOriginalNumber(question, fallbackIndex) {
+  /*
+    문항 선택 연습용 원본 번호 판정
+    - 업로드된 고정 시험지 파일은 question_number/original_question_number/template_slot이
+      31~70번 구조로 들어 있는 경우가 많다.
+    - 일부 파일이 1~40번 내부 번호를 쓰거나 번호 필드가 불안정해도
+      배열 순서를 기준으로 31~70번으로 복구한다.
+    - 화면에는 practice_display_label로 실전A 31처럼 표시하고,
+      내부 파일 경로와 source_round 값은 바꾸지 않는다.
+  */
+  const targetSlots = question && Array.isArray(question.target_slots)
+    ? question.target_slots
+    : [];
+
+  const candidates = [
+    question && question.original_question_number,
+    question && question.source_question_number,
+    question && question.display_question_number,
+    question && question.template_slot,
+    question && question.question_number,
+    question && question.target_slot,
+    question && question.slot,
+    question && question.number,
+    question && question.original_number,
+    question && question.source_number,
+    targetSlots.length ? targetSlots[0] : null
+  ];
+
+  for (let i = 0; i < candidates.length; i += 1) {
+    const numberValue = Number(candidates[i]);
+
+    if (!Number.isFinite(numberValue)) {
+      continue;
+    }
+
+    if (numberValue >= 31 && numberValue <= 70) {
+      return numberValue;
+    }
+
+    if (numberValue >= 1 && numberValue <= 40) {
+      return numberValue + 30;
+    }
+  }
+
+  const indexValue = Number(fallbackIndex);
+  if (Number.isFinite(indexValue) && indexValue >= 0 && indexValue < 40) {
+    return TEST_CONFIG.questionNumberStart + indexValue;
+  }
+
+  return 0;
+}
+
+function getSelectedQuestionPracticeEntries() {
+  const selectedValues = questionPracticeSelection.selectedRoundValues;
+  const valueSet = new Set(selectedValues);
+
+  return getQuestionPracticeRoundEntries().filter(function (entry) {
+    return valueSet.has(entry.value);
+  });
+}
+
+function getPracticeTimeLimitMinutes(totalQuestions) {
+  const n = Number(totalQuestions) || 0;
+
+  if (n <= 0) {
+    return 10;
+  }
+
+  return Math.min(60, Math.max(10, n * 2));
+}
+
+async function generateQuestionPracticeExamForCurrentSelection() {
+  const typeDefinition = getQuestionPracticeTypeByKey(questionPracticeSelection.selectedTypeKey);
+
+  if (!typeDefinition) {
+    throw new Error("문항 선택 연습 유형을 먼저 선택하세요.");
+  }
+
+  const selectedEntries = getSelectedQuestionPracticeEntries();
+
+  if (!selectedEntries.length) {
+    throw new Error("문항 선택 연습에 사용할 회차를 1개 이상 선택하세요.");
+  }
+
+  const practiceQuestions = [];
+  const generatedExamId = `TOPIK1-QUESTION-PRACTICE-${Date.now()}`;
+
+  for (let entryIndex = 0; entryIndex < selectedEntries.length; entryIndex += 1) {
+    const entry = selectedEntries[entryIndex];
+    const examOptions = {
+      mode: "round",
+      round: entry.round || entry.source_round || "",
+      label: entry.label || getCompactExamLabel(entry),
+      exam_type: "full",
+      question_count: entry.question_count || TEST_CONFIG.expectedTotalQuestions,
+      time_limit_minutes: entry.time_limit_minutes || TEST_CONFIG.timeLimitMinutes,
+      file: entry.file || "",
+      manifest_id: entry.id || entry.value || ""
+    };
+
+    const loadedQuestions = await loadQuestionsFromManifestExamFile(examOptions);
+    const roundAlias = getCompactExamLabel(entry);
+
+    if (!Array.isArray(loadedQuestions)) {
+      continue;
+    }
+
+    loadedQuestions.forEach(function (question, questionIndex) {
+      const originalNumber = getQuestionPracticeOriginalNumber(question, questionIndex);
+
+      if (originalNumber < typeDefinition.start || originalNumber > typeDefinition.end) {
+        return;
+      }
+
+      const practiceOrderNumber = practiceQuestions.length + 1;
+      const clonedQuestion = {
+        ...question,
+        id: `QP-${entry.value}-${question && (question.id || question.item_id) || originalNumber}-${practiceOrderNumber}`,
+        question_number: practiceOrderNumber,
+        generated_exam_id: generatedExamId,
+        source_round: entry.round || entry.source_round || "",
+        source_question_number: originalNumber,
+        original_question_number: originalNumber,
+        practice_original_question_number: originalNumber,
+        practice_round_alias: roundAlias,
+        practice_display_label: `${roundAlias} ${originalNumber}`,
+        practice_type_key: typeDefinition.key,
+        practice_type_label: typeDefinition.label,
+        template_slot: originalNumber
+      };
+
+      if (clonedQuestion.passage_group_id) {
+        clonedQuestion.passage_group_id = `QP-${entry.value}-${clonedQuestion.passage_group_id}`;
+      }
+
+      if (clonedQuestion.group_id) {
+        clonedQuestion.group_id = `QP-${entry.value}-${clonedQuestion.group_id}`;
+      }
+
+      if (clonedQuestion.shared_passage_id) {
+        clonedQuestion.shared_passage_id = `QP-${entry.value}-${clonedQuestion.shared_passage_id}`;
+      }
+
+      if (Array.isArray(clonedQuestion.passage_group_numbers)) {
+        clonedQuestion.passage_group_numbers = clonedQuestion.passage_group_numbers
+          .map(Number)
+          .filter(Number.isFinite);
+      }
+
+      practiceQuestions.push(clonedQuestion);
+    });
+  }
+
+  if (!practiceQuestions.length) {
+    const selectedAliases = selectedEntries.map(getCompactExamLabel).join(", ");
+    throw new Error(
+      `선택한 회차와 유형에 해당하는 문항을 찾지 못했습니다. 선택 회차: ${selectedAliases || "없음"}, 유형: ${typeDefinition.label}`
+    );
+  }
+
+  const normalizedData = normalizeQuestions(practiceQuestions);
+  const groupedData = enrichPassageGroups(normalizedData);
+
+  validateQuestions(groupedData);
+
+  questions = groupedData;
+  latestExamGenerationOptions = {
+    mode: "question-practice",
+    round: selectedEntries.map(function (entry) {
+      return entry.round || entry.source_round || "";
+    }).filter(Boolean).join(","),
+    label: `${typeDefinition.short_label} 문항 선택 연습`,
+    exam_type: "question-practice",
+    question_count: questions.length,
+    time_limit_minutes: getPracticeTimeLimitMinutes(questions.length),
+    question_practice_type_key: typeDefinition.key,
+    question_practice_type_label: typeDefinition.label,
+    question_practice_range: `${typeDefinition.start}~${typeDefinition.end}`,
+    question_practice_round_aliases: selectedEntries.map(getCompactExamLabel)
+  };
+
+  answers = {};
+  reviewMarks = {};
+  sentenceOrderAnswers = {};
+  selectedSentenceForOrder = null;
+  currentIndex = 0;
+
+  return {
+    examGenerationOptions: latestExamGenerationOptions,
+    generatedExamId,
+    totalQuestions: questions.length,
+    generationSource: "question-practice"
+  };
+}
 
 function getSelectedExamGenerationOptions() {
   const select = document.getElementById("examModeSelect");
@@ -1757,6 +2472,10 @@ function getActiveTimeLimitSeconds() {
 }
 
 function getResultTestScope() {
+  if (isQuestionPracticeExamOptions(latestExamGenerationOptions)) {
+    return "TOPIK I PBT Reading Question Practice";
+  }
+
   return isLevelTestExamOptions(latestExamGenerationOptions)
     ? "TOPIK I PBT Reading Level Test"
     : "TOPIK I PBT Reading 31-70";
@@ -2475,6 +3194,8 @@ function normalizeQuestions(data) {
         question.correct_position ||
         question.answer_position ||
         "",
+      source_round: question.source_round || "",
+      original_question_number: question.original_question_number || "",
       source_bank_id: question.source_bank_id || "",
       source_set_id: question.source_set_id || "",
       generated_exam_id: question.generated_exam_id || "",
@@ -2483,7 +3204,12 @@ function normalizeQuestions(data) {
         question.template_slot === null ||
         question.template_slot === ""
           ? questionNumber
-          : Number(question.template_slot)
+          : Number(question.template_slot),
+      practice_original_question_number: question.practice_original_question_number || "",
+      practice_round_alias: question.practice_round_alias || "",
+      practice_display_label: question.practice_display_label || "",
+      practice_type_key: question.practice_type_key || "",
+      practice_type_label: question.practice_type_label || ""
     };
   });
 }
@@ -2596,6 +3322,29 @@ function getQuestionTraceFields(question) {
     source_bank_id: question.source_bank_id || null,
     source_set_id: question.source_set_id || null,
     generated_exam_id: question.generated_exam_id || null,
+    source_round: question.source_round || null,
+    source_question_number:
+      question.source_question_number === undefined ||
+      question.source_question_number === null ||
+      question.source_question_number === ""
+        ? null
+        : Number(question.source_question_number),
+    original_question_number:
+      question.original_question_number === undefined ||
+      question.original_question_number === null ||
+      question.original_question_number === ""
+        ? null
+        : Number(question.original_question_number),
+    practice_original_question_number:
+      question.practice_original_question_number === undefined ||
+      question.practice_original_question_number === null ||
+      question.practice_original_question_number === ""
+        ? null
+        : Number(question.practice_original_question_number),
+    practice_round_alias: question.practice_round_alias || "",
+    practice_display_label: question.practice_display_label || "",
+    practice_type_key: question.practice_type_key || "",
+    practice_type_label: question.practice_type_label || "",
     template_slot: Number.isFinite(templateSlot)
       ? templateSlot
       : Number(question.question_number)
@@ -2636,6 +3385,21 @@ function getWrongReviewSourceResult() {
     return reviewPackage;
   }
 
+  const params = new URLSearchParams(window.location.search);
+  const requestedSource = String(params.get("source") || params.get("mode") || "").toLowerCase();
+  const latestQuestionPracticeResult = parseJsonSafely(
+    localStorage.getItem(QUESTION_PRACTICE_RESULT_STORAGE_KEY),
+    null
+  );
+
+  if (
+    (requestedSource === "question-practice" || requestedSource === "question_practice") &&
+    latestQuestionPracticeResult &&
+    Array.isArray(latestQuestionPracticeResult.items)
+  ) {
+    return latestQuestionPracticeResult;
+  }
+
   const latestLevelTestResult = parseJsonSafely(
     localStorage.getItem(LEVEL_TEST_RESULT_STORAGE_KEY),
     null
@@ -2666,6 +3430,10 @@ function getWrongReviewSourceResult() {
 
 function getWrongReviewReturnDiagnosisUrl() {
   const sourceResult = getWrongReviewSourceResult();
+
+  if (sourceResult && isQuestionPracticeResult(sourceResult)) {
+    return QUESTION_PRACTICE_DIAGNOSIS_URL;
+  }
 
   if (sourceResult && isLevelTestResult(sourceResult)) {
     return LEVEL_TEST_DIAGNOSIS_URL;
@@ -2817,6 +3585,29 @@ function convertResultItemToQuestion(item) {
     source_bank_id: item.source_bank_id || "",
     source_set_id: item.source_set_id || "",
     generated_exam_id: item.generated_exam_id || "",
+    source_round: item.source_round || "",
+    source_question_number:
+      item.source_question_number === undefined ||
+      item.source_question_number === null ||
+      item.source_question_number === ""
+        ? null
+        : Number(item.source_question_number),
+    original_question_number:
+      item.original_question_number === undefined ||
+      item.original_question_number === null ||
+      item.original_question_number === ""
+        ? questionNumber
+        : Number(item.original_question_number),
+    practice_original_question_number:
+      item.practice_original_question_number === undefined ||
+      item.practice_original_question_number === null ||
+      item.practice_original_question_number === ""
+        ? null
+        : Number(item.practice_original_question_number),
+    practice_round_alias: item.practice_round_alias || "",
+    practice_display_label: item.practice_display_label || "",
+    practice_type_key: item.practice_type_key || "",
+    practice_type_label: item.practice_type_label || "",
     template_slot:
       item.template_slot === undefined ||
       item.template_slot === null ||
@@ -2947,19 +3738,30 @@ function saveWrongReviewProgressBeforeReturn() {
       ? existingPackage.source_result
       : getWrongReviewSourceResult();
 
+  const reportMode = getWrongReviewReportModeFromSource(existingSourceResult);
+  const savedAt = new Date().toISOString();
+
   localStorage.setItem(
     WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY,
     JSON.stringify(remainingNumbers)
   );
 
+  if (reportMode === "question-practice") {
+    localStorage.setItem(
+      QUESTION_PRACTICE_WRONG_NUMBERS_STORAGE_KEY,
+      JSON.stringify(remainingNumbers)
+    );
+  }
+
   localStorage.setItem(
     WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY,
     JSON.stringify({
-      saved_at: new Date().toISOString(),
+      saved_at: savedAt,
       source: "reading-test-wrong-review-partial-return",
       source_result: existingSourceResult,
+      report_mode: reportMode,
       latest_wrong_review_partial_progress: {
-        saved_at: new Date().toISOString(),
+        saved_at: savedAt,
         total_review_questions: questions.length,
         answered_count: progressItems.filter(function (item) {
           return item.is_answered;
@@ -2972,6 +3774,7 @@ function saveWrongReviewProgressBeforeReturn() {
   );
 
   console.info("오답풀이 중간 진행 저장 완료:", {
+    reportMode,
     remainingNumbers,
     progressItems
   });
@@ -3145,13 +3948,20 @@ async function startTest() {
       elements.startButton.textContent = "시험지 확인 중...";
     }
 
-    elements.startMessage.textContent = "선택한 시험지를 확인하고 있습니다.";
+    let generatedExamInfo = null;
 
-    const generatedExamInfo = await generateSelectedExamForCurrentSelection();
+    if (isQuestionPracticeSelectionActive()) {
+      elements.startMessage.textContent = "문항 선택 연습 시험지를 확인하고 있습니다.";
+      generatedExamInfo = await generateQuestionPracticeExamForCurrentSelection();
+      currentRunMode = "question_practice";
+    } else {
+      elements.startMessage.textContent = "선택한 시험지를 확인하고 있습니다.";
+      generatedExamInfo = await generateSelectedExamForCurrentSelection();
 
-    currentRunMode = isLevelTestExamOptions(latestExamGenerationOptions)
-      ? "leveltest"
-      : "normal";
+      currentRunMode = isLevelTestExamOptions(latestExamGenerationOptions)
+        ? "leveltest"
+        : "normal";
+    }
 
     console.info("TOPIK I Reading 시험 시작 전 시험지 적용 완료:", generatedExamInfo);
   } catch (error) {
@@ -3187,8 +3997,12 @@ async function startTest() {
   latestResultText = "";
   elements.startMessage.textContent = "";
 
-  sortQuestionsByNumber();
-  currentIndex = getStartQuestionIndex();
+  if (isQuestionPracticeExamOptions(latestExamGenerationOptions)) {
+    currentIndex = 0;
+  } else {
+    sortQuestionsByNumber();
+    currentIndex = getStartQuestionIndex();
+  }
 
   if (elements.studentNameDisplay) {
     elements.studentNameDisplay.textContent = studentName;
@@ -3286,6 +4100,10 @@ function renderQuestion() {
 
 
 function getQuestionDisplayLabel(question) {
+  if (question && question.practice_display_label) {
+    return `[${question.practice_display_label}]`;
+  }
+
   if (
     Array.isArray(question.passage_group_numbers) &&
     question.passage_group_numbers.length > 1
@@ -3304,6 +4122,10 @@ function getQuestionDisplayLabel(question) {
 }
 
 function getQuestionLocalLabel(question) {
+  if (question && question.practice_display_label) {
+    return `${question.practice_display_label}`;
+  }
+
   if (
     Array.isArray(question.passage_group_numbers) &&
     question.passage_group_numbers.length > 1
@@ -3561,72 +4383,72 @@ function renderQuestionInstruction(question) {
 
   if (question.type === "blank_choice") {
     setInstructionHtml(
-      `[${number}] <보기>와 같이 빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.`
+      `${displayLabel} <보기>와 같이 빈칸에 들어갈 말로 가장 알맞은 것을 고르십시오.`
     );
     return;
   }
 
   if (question.type === "sentence_insert") {
     setInstructionHtml(
-      `[${number}] 다음 문장이 들어갈 위치로 알맞은 곳을 고르십시오.`
+      `${displayLabel} 다음 문장이 들어갈 위치로 알맞은 곳을 고르십시오.`
     );
     return;
   }
 
   if (question.type === "not_matching") {
     setInstructionHtml(
-      `[${number}] 다음 글을 읽고 내용과 다른 것을 고르십시오.`
+      `${displayLabel} 다음 글을 읽고 내용과 다른 것을 고르십시오.`
     );
     return;
   }
 
   if (question.type === "topic_content") {
-    setInstructionHtml(`[${number}] 무엇에 대한 내용입니까?`);
+    setInstructionHtml(`${displayLabel} 무엇에 대한 내용입니까?`);
     return;
   }
 
   if (question.type === "main_idea") {
     setInstructionHtml(
-      `[${number}] 다음 글을 읽고 중심 생각으로 알맞은 것을 고르십시오.`
+      `${displayLabel} 다음 글을 읽고 중심 생각으로 알맞은 것을 고르십시오.`
     );
     return;
   }
 
   if (question.type === "sentence_order") {
-    setInstructionHtml(`[${number}] 다음을 순서대로 맞게 배열하십시오.`);
+    setInstructionHtml(`${displayLabel} 다음을 순서대로 맞게 배열하십시오.`);
     return;
   }
 
   if (question.type === "detail") {
     setInstructionHtml(
-      `[${number}] 다음 글을 읽고 내용과 같은 것을 고르십시오.`
+      `${displayLabel} 다음 글을 읽고 내용과 같은 것을 고르십시오.`
     );
     return;
   }
 
   if (question.type === "notice") {
     setInstructionHtml(
-      `[${number}] 다음 안내문이나 광고문을 읽고 물음에 답하십시오.`
+      `${displayLabel} 다음 안내문이나 광고문을 읽고 물음에 답하십시오.`
     );
     return;
   }
 
   if (question.type === "practical_text") {
-    setInstructionHtml(`[${number}] 다음 글을 읽고 물음에 답하십시오.`);
+    setInstructionHtml(`${displayLabel} 다음 글을 읽고 물음에 답하십시오.`);
     return;
   }
 
   if (question.type === "long_passage_detail") {
-    setInstructionHtml(`[${number}] 다음 글을 읽고 물음에 답하십시오.`);
+    setInstructionHtml(`${displayLabel} 다음 글을 읽고 물음에 답하십시오.`);
     return;
   }
 
   if (question.type === "long_passage_inference") {
-    setInstructionHtml(`[${number}] 다음 글을 읽고 물음에 답하십시오.`);
+    setInstructionHtml(`${displayLabel} 다음 글을 읽고 물음에 답하십시오.`);
     return;
   }
 
-  setInstructionHtml(`[${number}] ${question.question}`);
+  setInstructionHtml(`${displayLabel} ${question.question}`);
 }
 
 function renderQuestionStage(question) {
@@ -6390,9 +7212,55 @@ function selectAnswer(questionId, optionNumber) {
   renderQuestion();
 }
 
+function setExamFooterButtonVisible(button, visible) {
+  if (!button) {
+    return;
+  }
+
+  if (visible) {
+    button.classList.remove("hidden");
+    button.style.display = "inline-flex";
+    button.removeAttribute("aria-hidden");
+    button.tabIndex = 0;
+  } else {
+    button.classList.add("hidden");
+    button.style.display = "none";
+    button.setAttribute("aria-hidden", "true");
+    button.tabIndex = -1;
+  }
+}
+
 function renderNavigationButtons() {
-  elements.prevButton.disabled = currentIndex === 0;
-  elements.nextButton.disabled = currentIndex === questions.length - 1;
+  const isFirstQuestion = currentIndex === 0;
+  const isLastQuestion = currentIndex === questions.length - 1;
+
+  if (elements.prevButton) {
+    elements.prevButton.disabled = isFirstQuestion;
+  }
+
+  applyExamFooterNavigationVisibility(isLastQuestion);
+
+  /*
+    index.html의 기존 보조 스크립트는 일반 40문항 시험 기준으로 70번에서만 제출 버튼을 보이게 한다.
+    문항 선택 연습은 마지막 문항 번호가 31~33, 34~39처럼 70번이 아닐 수 있으므로,
+    보조 스크립트가 버튼을 다시 숨긴 뒤에도 현재 JS 기준의 마지막 문항 상태를 다시 적용한다.
+  */
+  [0, 90, 160].forEach(function (delay) {
+    window.setTimeout(function () {
+      applyExamFooterNavigationVisibility(currentIndex === questions.length - 1);
+    }, delay);
+  });
+}
+
+function applyExamFooterNavigationVisibility(isLastQuestion) {
+  if (elements.nextButton) {
+    elements.nextButton.disabled = Boolean(isLastQuestion);
+    setExamFooterButtonVisible(elements.nextButton, !isLastQuestion);
+  }
+
+  if (elements.submitButton) {
+    setExamFooterButtonVisible(elements.submitButton, Boolean(isLastQuestion));
+  }
 }
 
 function goToPreviousQuestion() {
@@ -6594,6 +7462,21 @@ function isQuestionAnswered(question) {
 function renderAnswerStatus() {
   const answeredCount = countAnsweredQuestions();
   const totalCount = questions.length;
+  const progressCount = totalCount > 0
+    ? Math.min(totalCount, currentIndex + 1)
+    : 0;
+
+  /*
+    문항 선택 연습에서는 상단 숫자를 '답안 선택 수'가 아니라
+    '현재 보고 있는 문항 순서 / 전체 문항 수'로 표시한다.
+    실제 응답 문항 수는 결과 채점과 전체 문제 팝업에서는 기존 answeredCount 기준을 유지한다.
+  */
+  if (currentRunMode === "question_practice" || isQuestionPracticeExamOptions(latestExamGenerationOptions)) {
+    elements.answerStatusText.textContent = `${progressCount} / ${totalCount}`;
+    elements.sidebarStatusText.textContent =
+      `현재 ${progressCount} / 총 ${totalCount}문항 · 답안 선택 ${answeredCount}문항`;
+    return;
+  }
 
   elements.answerStatusText.textContent = `${answeredCount} / ${totalCount}`;
   elements.sidebarStatusText.textContent = `총 ${totalCount}문항 중 ${answeredCount}문항 답안 선택`;
@@ -6743,7 +7626,9 @@ function gradeTest(submitReason) {
     question_number_start: TEST_CONFIG.questionNumberStart,
     question_number_end: TEST_CONFIG.questionNumberEnd,
     expected_total_questions: getActiveExpectedTotalQuestions(),
-    is_full_40_question_set: totalQuestions === TEST_CONFIG.expectedTotalQuestions && !isLevelTestExamOptions(latestExamGenerationOptions),
+    is_full_40_question_set: totalQuestions === TEST_CONFIG.expectedTotalQuestions &&
+      !isLevelTestExamOptions(latestExamGenerationOptions) &&
+      !isQuestionPracticeExamOptions(latestExamGenerationOptions),
     student_name: studentName,
     student_phone: studentPhone,
     started_at: startedAt,
@@ -6759,6 +7644,16 @@ function gradeTest(submitReason) {
     earned_points: earnedPoints,
     section_score_100: sectionScore100,
     unanswered_questions: getUnansweredQuestionNumbers(),
+    question_practice: isQuestionPracticeExamOptions(latestExamGenerationOptions)
+      ? {
+          type_key: latestExamGenerationOptions.question_practice_type_key || "",
+          type_label: latestExamGenerationOptions.question_practice_type_label || "",
+          range: latestExamGenerationOptions.question_practice_range || "",
+          round_aliases: Array.isArray(latestExamGenerationOptions.question_practice_round_aliases)
+            ? latestExamGenerationOptions.question_practice_round_aliases.slice()
+            : []
+        }
+      : null,
     items
   };
 }
@@ -7002,6 +7897,11 @@ function renderResult(result) {
   const submittedAtText = formatDateTimeForDisplay(result.submitted_at);
   const resultTitle = document.querySelector("#resultScreen h1");
 
+  if (isQuestionPracticeResult(result)) {
+    renderQuestionPracticeResult(result, submittedAtText);
+    return;
+  }
+
   if (isLevelTestResult(result)) {
     renderLevelTestResult(result, submittedAtText);
     return;
@@ -7058,6 +7958,330 @@ function renderResult(result) {
 
   if (elements.categoryAnalysis) {
     elements.categoryAnalysis.innerHTML = "";
+  }
+}
+
+
+function renderQuestionPracticeResult(result, submittedAtText) {
+  const resultTitle = document.querySelector("#resultScreen h1");
+  const resultSubtitle = document.querySelector("#resultScreen .start-subtitle");
+  const selectedLabel = result.generated_exam_label || "문항 선택 연습";
+  const correctRate = result.total_questions > 0
+    ? Math.round((result.correct_count / result.total_questions) * 100)
+    : 0;
+  const hasWrongItems = Number(result.wrong_count) > 0;
+
+  if (resultTitle) {
+    resultTitle.textContent = "문항 선택 연습 결과";
+  }
+
+  if (resultSubtitle) {
+    resultSubtitle.textContent =
+      "선택한 여러 회차의 같은 유형 문항을 모아 푼 연습 결과입니다. 일반 40문항 진단 결과는 덮어쓰지 않습니다.";
+  }
+
+  elements.resultSummary.innerHTML = `
+    <div
+      class="summary-card"
+      style="
+        grid-column:1 / -1;
+        border-color:#b9d8ff;
+        background:#f8fbff;
+      "
+    >
+      <strong>연습 유형</strong>
+      <div style="font-size:24px; font-weight:900; color:#111827; margin:4px 0;">
+        ${escapeHtml(selectedLabel)}
+      </div>
+      <div style="color:#374151; font-weight:700; line-height:1.65;">
+        선택 회차: ${escapeHtml(formatQuestionPracticeRoundAliases(result))}
+      </div>
+      <div style="margin-top:8px; color:#5f6368; font-size:14px; line-height:1.55;">
+        ※ 이 결과는 유형별 반복 연습용 결과입니다. 일반 40문항 정식 진단 보고서 저장값은 유지됩니다.
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <strong>응시자</strong>
+      ${escapeHtml(result.student_name)}
+    </div>
+    <div class="summary-card">
+      <strong>제출 시간</strong>
+      ${escapeHtml(submittedAtText)}
+    </div>
+    <div class="summary-card">
+      <strong>총 문항</strong>
+      ${result.total_questions}문항
+    </div>
+
+    <div class="summary-card">
+      <strong>연습 점수</strong>
+      ${result.section_score_100} / 100
+    </div>
+    <div class="summary-card">
+      <strong>정답 수</strong>
+      ${result.correct_count} / ${result.total_questions}
+    </div>
+    <div class="summary-card">
+      <strong>정답률</strong>
+      ${correctRate}%
+    </div>
+
+    <div class="summary-card">
+      <strong>응답 문항</strong>
+      ${result.answered_count} / ${result.total_questions}
+    </div>
+    <div class="summary-card">
+      <strong>미응답</strong>
+      ${result.unanswered_count}문항
+    </div>
+    <div class="summary-card">
+      <strong>오답·미응답</strong>
+      ${result.wrong_count}문항
+    </div>
+
+    <div
+      class="summary-card"
+      style="
+        grid-column:1 / -1;
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+        align-items:center;
+      "
+    >
+      ${
+        hasWrongItems
+          ? '<button type="button" class="button" id="questionPracticeWrongReviewButton">오답 다시 풀기</button>'
+          : '<span style="color:#188038; font-weight:900;">오답이 없습니다.</span>'
+      }
+      <button type="button" class="button secondary" id="questionPracticeRetrySameButton">같은 조건으로 다시 풀기</button>
+      <button type="button" class="button gray" id="questionPracticeGoStartButton">처음 화면으로</button>
+      <span style="color:#5f6368; font-size:14px; line-height:1.5;">
+        오답 다시 풀기는 틀린 문항과 미응답 문항만 다시 출제합니다.
+      </span>
+    </div>
+  `;
+
+  if (elements.resultTable) {
+    elements.resultTable.innerHTML = buildQuestionPracticeQuestionOverview(result);
+  }
+
+  if (elements.categoryAnalysis) {
+    elements.categoryAnalysis.innerHTML = "";
+  }
+
+  saveQuestionPracticeResultForReview(result);
+  bindQuestionPracticeResultButtons(result);
+}
+
+function formatQuestionPracticeRoundAliases(result) {
+  const aliases =
+    result &&
+    result.question_practice &&
+    Array.isArray(result.question_practice.round_aliases)
+      ? result.question_practice.round_aliases
+      : [];
+
+  if (aliases.length) {
+    return aliases.join(", ");
+  }
+
+  const itemAliases = Array.from(
+    new Set(
+      (Array.isArray(result && result.items) ? result.items : [])
+        .map(function (item) {
+          return item.practice_round_alias || "";
+        })
+        .filter(Boolean)
+    )
+  );
+
+  return itemAliases.length ? itemAliases.join(", ") : "-";
+}
+
+function getQuestionPracticeItemLabel(item) {
+  if (item && item.practice_display_label) {
+    return item.practice_display_label;
+  }
+
+  if (item && item.practice_round_alias && item.practice_original_question_number) {
+    return `${item.practice_round_alias} ${item.practice_original_question_number}`;
+  }
+
+  if (item && item.original_question_number) {
+    return `${item.original_question_number}번`;
+  }
+
+  return item && item.question_number ? `${item.question_number}번` : "-";
+}
+
+function buildQuestionPracticeQuestionOverview(result) {
+  const items = Array.isArray(result && result.items) ? result.items : [];
+
+  if (!items.length) {
+    return "";
+  }
+
+  const rows = items.map(function (item) {
+    const noAnswer = item.student_answer === null || item.student_answer === undefined;
+    const status = noAnswer
+      ? "미응답"
+      : item.is_correct
+        ? "정답"
+        : "오답";
+    const statusColor = item.is_correct ? "#188038" : noAnswer ? "#e88900" : "#d93025";
+
+    return `
+      <tr>
+        <td style="white-space:nowrap; font-weight:900; border:1px solid #e3e6ea; padding:8px;">${escapeHtml(getQuestionPracticeItemLabel(item))}</td>
+        <td style="border:1px solid #e3e6ea; padding:8px;">${escapeHtml(item.category || "-")}</td>
+        <td style="white-space:nowrap; color:${statusColor}; font-weight:900; border:1px solid #e3e6ea; padding:8px;">${status}</td>
+        <td style="white-space:nowrap; border:1px solid #e3e6ea; padding:8px;">${Number(item.earned_points) || 0} / ${Number(item.points) || 0}</td>
+      </tr>
+    `;
+  }).join("");
+
+  return `
+    <details style="margin-top:16px;" open>
+      <summary
+        style="
+          cursor:pointer;
+          font-size:18px;
+          font-weight:900;
+          color:#003f8f;
+          padding:12px 14px;
+          border:1px solid #cfe3ff;
+          border-radius:12px;
+          background:#f8fbff;
+        "
+      >
+        문항별 결과 보기
+      </summary>
+      <div style="overflow-x:auto; margin-top:10px;">
+        <table style="width:100%; border-collapse:collapse; font-size:14px; background:#ffffff;">
+          <thead>
+            <tr style="background:#f8fbff;">
+              <th style="border:1px solid #e3e6ea; padding:8px; text-align:left;">문항</th>
+              <th style="border:1px solid #e3e6ea; padding:8px; text-align:left;">유형</th>
+              <th style="border:1px solid #e3e6ea; padding:8px; text-align:left;">결과</th>
+              <th style="border:1px solid #e3e6ea; padding:8px; text-align:left;">점수</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </details>
+  `;
+}
+
+function saveQuestionPracticeResultForReview(result) {
+  try {
+    if (!isQuestionPracticeResult(result)) {
+      return;
+    }
+
+    const wrongNumbers = getWrongReviewQuestionNumbersFromResult(result);
+    const savedAt = new Date().toISOString();
+    const dataForPractice = {
+      ...result,
+      question_practice_connection: {
+        saved_at: savedAt,
+        storage_key: QUESTION_PRACTICE_RESULT_STORAGE_KEY,
+        wrong_numbers_storage_key: QUESTION_PRACTICE_WRONG_NUMBERS_STORAGE_KEY,
+        source: "reading-test-question-practice"
+      }
+    };
+
+    localStorage.setItem(
+      QUESTION_PRACTICE_RESULT_STORAGE_KEY,
+      JSON.stringify(dataForPractice)
+    );
+
+    localStorage.setItem(
+      QUESTION_PRACTICE_WRONG_NUMBERS_STORAGE_KEY,
+      JSON.stringify(wrongNumbers)
+    );
+
+    console.info("문항 선택 연습 결과 저장 완료:", {
+      result_key: QUESTION_PRACTICE_RESULT_STORAGE_KEY,
+      wrong_numbers_key: QUESTION_PRACTICE_WRONG_NUMBERS_STORAGE_KEY,
+      wrongNumbers
+    });
+  } catch (error) {
+    console.error("문항 선택 연습 결과 저장 실패:", error);
+  }
+}
+
+function prepareQuestionPracticeWrongReview(result) {
+  const wrongNumbers = getWrongReviewQuestionNumbersFromResult(result);
+
+  if (!wrongNumbers.length) {
+    alert("다시 풀 오답 또는 미응답 문항이 없습니다.");
+    return;
+  }
+
+  const sourceResult = {
+    ...result,
+    question_practice_wrong_review_source: true
+  };
+
+  const savedAt = new Date().toISOString();
+
+  localStorage.setItem(
+    WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY,
+    JSON.stringify(wrongNumbers)
+  );
+
+  localStorage.setItem(
+    QUESTION_PRACTICE_WRONG_NUMBERS_STORAGE_KEY,
+    JSON.stringify(wrongNumbers)
+  );
+
+  localStorage.setItem(
+    WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY,
+    JSON.stringify({
+      saved_at: savedAt,
+      source: "reading-test-question-practice",
+      source_result: sourceResult,
+      report_mode: "question-practice",
+      remaining_wrong_review_question_numbers: wrongNumbers
+    })
+  );
+
+  window.location.href = "./index.html?mode=wrong-review&source=question-practice&v=question-practice-wrong-review-" + Date.now();
+}
+
+function bindQuestionPracticeResultButtons(result) {
+  const wrongReviewButton = document.getElementById("questionPracticeWrongReviewButton");
+  const retrySameButton = document.getElementById("questionPracticeRetrySameButton");
+  const startButton = document.getElementById("questionPracticeGoStartButton");
+
+  if (wrongReviewButton) {
+    wrongReviewButton.addEventListener("click", function () {
+      prepareQuestionPracticeWrongReview(result);
+    });
+  }
+
+  if (retrySameButton) {
+    retrySameButton.addEventListener("click", function () {
+      showScreen("start");
+      if (elements.startMessage) {
+        elements.startMessage.textContent = "이전 문항 선택 연습 조건이 유지되어 있습니다. 시험 시작을 누르면 다시 연습할 수 있습니다.";
+        elements.startMessage.style.color = "#188038";
+      }
+      window.scrollTo({ top: 0, behavior: "auto" });
+    });
+  }
+
+  if (startButton) {
+    startButton.addEventListener("click", function () {
+      showScreen("start");
+      if (elements.startMessage) {
+        elements.startMessage.textContent = "";
+      }
+      window.scrollTo({ top: 0, behavior: "auto" });
+    });
   }
 }
 
@@ -7393,17 +8617,28 @@ function saveWrongReviewRemainingNumbers(result) {
       ? existingPackage.source_result
       : getWrongReviewSourceResult();
 
+  const reportMode = getWrongReviewReportModeFromSource(existingSourceResult);
+  const savedAt = new Date().toISOString();
+
   localStorage.setItem(
     WRONG_REVIEW_QUESTION_NUMBERS_STORAGE_KEY,
     JSON.stringify(remainingNumbers)
   );
 
+  if (reportMode === "question-practice") {
+    localStorage.setItem(
+      QUESTION_PRACTICE_WRONG_NUMBERS_STORAGE_KEY,
+      JSON.stringify(remainingNumbers)
+    );
+  }
+
   localStorage.setItem(
     WRONG_REVIEW_SOURCE_RESULT_STORAGE_KEY,
     JSON.stringify({
-      saved_at: new Date().toISOString(),
+      saved_at: savedAt,
       source: "reading-test-wrong-review",
       source_result: existingSourceResult,
+      report_mode: reportMode,
       latest_wrong_review_result: result,
       remaining_wrong_review_question_numbers: remainingNumbers
     })
@@ -7430,6 +8665,14 @@ function saveReadingResultForDiagnosis(result) {
       saveLevelTestResult(result);
       console.info(
         "레벨테스트 결과이므로 topik1_latest_reading_result를 덮어쓰지 않습니다."
+      );
+      return;
+    }
+
+    if (isQuestionPracticeResult(result)) {
+      saveQuestionPracticeResultForReview(result);
+      console.info(
+        "문항 선택 연습 결과이므로 topik1_latest_reading_result를 덮어쓰지 않습니다."
       );
       return;
     }
@@ -7504,16 +8747,22 @@ function renderDiagnosisLinkButton() {
     return;
   }
 
-  if (latestResult && isLevelTestResult(latestResult)) {
+  if (latestResult && (isLevelTestResult(latestResult) || isQuestionPracticeResult(latestResult))) {
     openDiagnosisButton.style.display = "none";
     openDiagnosisButton.setAttribute("aria-hidden", "true");
     openDiagnosisButton.onclick = null;
     return;
   }
 
-  const diagnosisUrl = isWrongReviewResult(latestResult) && isLevelTestResult(getWrongReviewSourceResult())
-    ? LEVEL_TEST_DIAGNOSIS_URL
-    : AUTO_DIAGNOSIS_URL;
+  const wrongReviewSourceResult = isWrongReviewResult(latestResult)
+    ? getWrongReviewSourceResult()
+    : null;
+
+  const diagnosisUrl = isWrongReviewResult(latestResult) && isQuestionPracticeResult(wrongReviewSourceResult)
+    ? QUESTION_PRACTICE_DIAGNOSIS_URL
+    : isWrongReviewResult(latestResult) && isLevelTestResult(wrongReviewSourceResult)
+      ? LEVEL_TEST_DIAGNOSIS_URL
+      : AUTO_DIAGNOSIS_URL;
 
   openDiagnosisButton.style.display = "inline-flex";
   openDiagnosisButton.removeAttribute("aria-hidden");
