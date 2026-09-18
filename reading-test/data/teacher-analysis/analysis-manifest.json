@@ -1,0 +1,24 @@
+{
+  "version": "reading-teacher-analysis-r5-3-20260919",
+  "schema_version": "teacher-analysis-v1.1",
+  "description": "TOPIK I Reading teacher-only Korean-to-Mongolian analysis manifest. Representative-type pilot: Q31, Q35, Q49-50, Q53, Q57, Q59.",
+  "lookup_priority": [
+    "source_bank_id",
+    "source_set_id+original_question_number",
+    "source_round+original_question_number",
+    "source_round+source_question_number"
+  ],
+  "round_files": {
+    "36": "./data/teacher-analysis/reading-36.json"
+  },
+  "shared_passage_support": true,
+  "representative_questions": [
+    31,
+    35,
+    49,
+    50,
+    53,
+    57,
+    59
+  ]
+}
