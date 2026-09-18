@@ -1551,6 +1551,9 @@
     }
 
   </style>
+      <link rel="stylesheet" href="./style-step-r2-reading-login-dashboard.css?v=step-r2-3" />
+    <link rel="stylesheet" href="./style-step-r3-reading-dashboard-controls.css?v=step-r3-5" />
+  <link rel="stylesheet" href="./style-step-r3-screen-switch-fix.css?v=step-r3-3" />
 </head>
 
 <body>
@@ -1606,17 +1609,8 @@
           padding:38px 16px 56px;
         "
       >
-        <div
-          style="
-            width:min(520px, 92vw);
-          "
-        >
-          <div
-            style="
-              text-align:center;
-              margin-bottom:30px;
-            "
-          >
+        <div id="readingStartDashboard" class="reading-start-dashboard" style="width:min(520px, 92vw);">
+          <div class="reading-login-intro" style="text-align:center; margin-bottom:30px;">
             <div
               style="
                 color:#003f8f;
@@ -1639,7 +1633,7 @@
             </div>
           </div>
 
-          <div class="form-row" style="margin-bottom:18px;">
+          <div class="form-row reading-auth-row" style="margin-bottom:18px;">
             <label for="authPasswordInput" style="font-size:17px; font-weight:900;">
               인증 비밀번호
             </label>
@@ -1767,7 +1761,7 @@
             </div>
           </div>
 
-          <div class="form-row" style="margin-bottom:18px;">
+          <div class="form-row reading-name-row" style="margin-bottom:18px;">
             <label for="studentNameInput" style="font-size:17px; font-weight:900;">
               응시자 이름
             </label>
@@ -1785,7 +1779,7 @@
             />
           </div>
 
-          <div class="form-row" style="margin-bottom:18px;">
+          <div class="form-row reading-phone-row" style="margin-bottom:18px;">
             <label for="studentPhoneInput" style="font-size:17px; font-weight:900;">
               전화번호
             </label>
@@ -2060,6 +2054,9 @@ studentNameInput.focus();
   <script src="./question-generator.js?v=browser-random-v1"></script>
   <script src="./reading-test.js?v=start-screen-fit-v4"></script>
   <script src="./practice-print-link.js?v=topik1-practice-print-link-1"></script>
+  <script src="./reading-start-screen-polish.js?v=step-r2-3"></script>
+      <script src="./reading-role-gate.js?v=step-r3-4"></script>
+    <script src="./reading-practice-controls.js?v=step-r3-5"></script>
 
   <script>
     /*

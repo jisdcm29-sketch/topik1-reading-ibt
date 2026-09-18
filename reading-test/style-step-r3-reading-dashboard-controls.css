@@ -1,0 +1,264 @@
+/*
+  TOPIK I Reading - STEP R3-2
+  Listening-aligned color states + practice time/status/handout UI.
+  Loaded after the R2-3 dashboard stylesheet so it can safely override only
+  the first-screen controls added in this step.
+*/
+
+/* ---------- Left selection cards: stronger Listening-like state colors ---------- */
+body #startScreen #examTypeButtonArea .exam-type-button {
+  border-color: #9fc2f2 !important;
+  background: #ffffff !important;
+  color: #164f95 !important;
+}
+
+body #startScreen #examTypeButtonArea .exam-type-button[aria-pressed="true"] {
+  border-color: #2563eb !important;
+  background: #e9f2ff !important;
+  color: #0b4da9 !important;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .20) !important;
+}
+
+body #startScreen #examMethodButtonArea .exam-method-button {
+  border-color: #86d2df !important;
+  background: #ffffff !important;
+  color: #0b6478 !important;
+}
+
+body #startScreen #examMethodButtonArea .exam-method-button[data-r3-selected="true"] {
+  border-color: #0891b2 !important;
+  background: #e7f9fc !important;
+  color: #075e72 !important;
+  box-shadow: inset 0 0 0 1px rgba(8, 145, 178, .18) !important;
+}
+
+body #startScreen #examDetailToggleButton {
+  border-color: #8b6ee8 !important;
+  background: #f3efff !important;
+  color: #5132aa !important;
+}
+
+body #startScreen #examDetailList .exam-detail-button {
+  border-color: #c7b8f4 !important;
+  background: #ffffff !important;
+  color: #5132aa !important;
+}
+
+body #startScreen #examDetailList .exam-detail-button[data-r3-selected="true"] {
+  border-color: #7c3aed !important;
+  background: #eee8ff !important;
+  color: #5b21b6 !important;
+  box-shadow: inset 0 0 0 1px rgba(124, 58, 237, .16) !important;
+}
+
+/* ---------- Right practice board ---------- */
+body #startScreen .question-practice-round-button {
+  border-color: #9fd9c9 !important;
+  background: #ffffff !important;
+  color: #126854 !important;
+}
+
+body #startScreen .question-practice-round-button[aria-pressed="true"] {
+  border-color: #0f9f7a !important;
+  background: #dcf8ee !important;
+  color: #087457 !important;
+  box-shadow: inset 0 0 0 1px rgba(15, 159, 122, .16) !important;
+}
+
+body #startScreen .question-practice-type-button {
+  border-color: #c2b5f5 !important;
+  background: #ffffff !important;
+  color: #4c3699 !important;
+}
+
+body #startScreen .question-practice-type-button[aria-pressed="true"] {
+  border-color: #7c3aed !important;
+  background: #eee8ff !important;
+  color: #5b21b6 !important;
+  box-shadow: inset 0 0 0 1px rgba(124, 58, 237, .16) !important;
+}
+
+/* ---------- Teacher-only total-time selection ---------- */
+body #startScreen #readingPracticeTimeControl {
+  min-height: 48px !important;
+  display: grid !important;
+  grid-template-columns: 76px minmax(0, 1fr) auto !important;
+  gap: 9px !important;
+  align-items: center !important;
+  padding: 7px 9px !important;
+  margin: 0 !important;
+  border: 1px solid #f1c77a !important;
+  border-radius: 11px !important;
+  background: linear-gradient(180deg, #fffdf5 0%, #fff8e7 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .85) !important;
+}
+
+body #startScreen .reading-practice-time-title {
+  color: #805214 !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+body #startScreen .reading-practice-time-buttons {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+}
+
+body #startScreen .reading-practice-time-buttons button {
+  min-height: 34px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 5px 7px !important;
+  border: 1px solid #e3b85f !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  color: #78501a !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+
+body #startScreen .reading-practice-time-buttons button.active,
+body #startScreen .reading-practice-time-buttons button[aria-pressed="true"] {
+  border-color: #e59b18 !important;
+  background: linear-gradient(180deg, #ffbd43 0%, #f3a71e 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(207, 132, 10, .20) !important;
+}
+
+body #startScreen .reading-practice-time-note {
+  color: #9a6d2e !important;
+  font-size: 11px !important;
+  font-weight: 750 !important;
+  white-space: nowrap !important;
+}
+
+/* ---------- Selection result status ----------
+   STEP R3-5: keep this row visible before selection so the dashboard does
+   not jump in height. Inactive = soft gray, ready = clear green. */
+body #startScreen #questionPracticeStatusText {
+  min-height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 8px 10px !important;
+  border: 1px solid #d4dde8 !important;
+  border-radius: 10px !important;
+  background: #f6f8fb !important;
+  color: #8a99ab !important;
+  font-size: 13px !important;
+  line-height: 1.25 !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  opacity: 1 !important;
+}
+
+body #startScreen #questionPracticeStatusText[data-r3-ready="true"] {
+  border-color: #a9e2c2 !important;
+  background: #eafaf1 !important;
+  color: #08773d !important;
+  box-shadow: inset 0 0 0 1px rgba(15, 159, 122, .06) !important;
+}
+
+/* ---------- Selected-question student handout ---------- */
+body #startScreen #readingPracticeHandoutButton {
+  width: 100% !important;
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 8px 10px !important;
+  border: 2px solid #e4a11b !important;
+  border-radius: 11px !important;
+  background: #fff7df !important;
+  color: #8b5a00 !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  cursor: pointer !important;
+}
+
+body #startScreen #readingPracticeHandoutButton:hover:not(:disabled) {
+  background: #ffefbd !important;
+  box-shadow: 0 5px 12px rgba(188, 122, 0, .12) !important;
+}
+
+body #startScreen #readingPracticeHandoutButton:disabled {
+  border-color: #cad8e8 !important;
+  background: #f8fafc !important;
+  color: #9aabc0 !important;
+  opacity: 1 !important;
+  cursor: not-allowed !important;
+}
+
+/* The R2 body uses a flex column. Keep the new controls compact and stacked. */
+body #startScreen #questionPracticeBody,
+body #startScreen #questionPracticeBody[hidden] {
+  gap: 10px !important;
+}
+
+/* Student role: teacher-only time preset and handout remain absent. */
+body.topik1-reading-login-student #readingPracticeTimeControl,
+body.topik1-reading-login-student #readingPracticeHandoutButton,
+body.topik1-reading-student-mode #readingPracticeTimeControl,
+body.topik1-reading-student-mode #readingPracticeHandoutButton {
+  display: none !important;
+}
+
+/* Teacher print link remains purple and visually distinct. */
+body #startScreen #topik1PracticePrintLinkBox > button {
+  border-color: #8b6ee8 !important;
+  background: #f0ebff !important;
+  color: #5636ad !important;
+}
+
+@media (min-width: 1000px) and (max-height: 790px) {
+  body #startScreen #readingPracticeTimeControl {
+    min-height: 42px !important;
+    padding: 5px 7px !important;
+  }
+
+  body #startScreen .reading-practice-time-buttons button {
+    min-height: 30px !important;
+    font-size: 12px !important;
+  }
+
+  body #startScreen #questionPracticeStatusText {
+    min-height: 36px !important;
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+  }
+
+  body #startScreen #readingPracticeHandoutButton {
+    min-height: 39px !important;
+    font-size: 12.5px !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  body #startScreen #readingPracticeTimeControl {
+    grid-template-columns: 66px minmax(0, 1fr) !important;
+  }
+
+  body #startScreen .reading-practice-time-note {
+    display: none !important;
+  }
+}
+
+@media (max-width: 700px) {
+  body #startScreen #readingPracticeTimeControl {
+    grid-template-columns: 1fr !important;
+  }
+
+  body #startScreen .reading-practice-time-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}

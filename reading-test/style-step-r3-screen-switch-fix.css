@@ -1,0 +1,23 @@
+/*
+  TOPIK I Reading - STEP R3-3
+  Screen switching safety fix.
+
+  Cause fixed:
+  - R2/R3 dashboard CSS intentionally gives #startScreen display:flex !important.
+  - reading-test.js switches screens by adding/removing the .hidden class.
+  - The stronger #startScreen rule could therefore beat the generic .hidden rule,
+    leaving the login/dashboard visible above the test screen.
+
+  Scope:
+  - Screen visibility only.
+  - No exam, timer, role, scoring, question, result, or print logic is changed.
+*/
+
+html body #startScreen.hidden,
+html body #testScreen.hidden,
+html body #resultScreen.hidden,
+html body #startScreen[hidden],
+html body #testScreen[hidden],
+html body #resultScreen[hidden] {
+  display: none !important;
+}
