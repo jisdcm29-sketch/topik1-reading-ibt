@@ -1,0 +1,342 @@
+/* TOPIK I Reading - R5-3 teacher analysis UI */
+#topik1TeacherAnalysisToolbar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 10px 0 14px;
+  padding: 9px 10px;
+  border: 1px solid #c9d8eb;
+  border-radius: 10px;
+  background: #f7fbff;
+}
+
+body.topik1-reading-teacher-mode #topik1TeacherAnalysisToolbar {
+  display: flex;
+}
+
+#topik1TeacherAnalysisToolbar .teacher-analysis-label {
+  font-size: 13px;
+  font-weight: 900;
+  color: #0b5fc7;
+  white-space: nowrap;
+}
+
+#topik1TeacherAnalysisToolbar .teacher-analysis-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.teacher-analysis-button {
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1.5px solid #0877f2;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #075dbf;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.teacher-analysis-button:hover:not(:disabled) {
+  background: #eaf4ff;
+}
+
+.teacher-analysis-button:disabled {
+  border-color: #d3d8df;
+  background: #f4f5f7;
+  color: #9aa0a6;
+  cursor: not-allowed;
+}
+
+#topik1TeacherAnalysisStatus {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 700;
+}
+
+#topik1TeacherAnalysisDrawer {
+  position: fixed;
+  z-index: 3000;
+  top: 88px;
+  right: 14px;
+  bottom: 82px;
+  width: min(470px, 42vw);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #b7cbe5;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
+}
+
+body.topik1-reading-teacher-mode #topik1TeacherAnalysisDrawer.is-open {
+  display: flex;
+}
+
+.teacher-analysis-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #0877f2;
+  color: #ffffff;
+}
+
+.teacher-analysis-drawer-title {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.teacher-analysis-close {
+  border: 1px solid rgba(255,255,255,.65);
+  border-radius: 8px;
+  background: rgba(255,255,255,.12);
+  color: #ffffff;
+  padding: 6px 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.teacher-analysis-drawer-body {
+  flex: 1;
+  overflow: auto;
+  padding: 14px;
+  background: #f8fafc;
+}
+
+.teacher-analysis-section {
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid #dce4ee;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.teacher-analysis-section h3 {
+  margin: 0 0 8px;
+  color: #123a6d;
+  font-size: 15px;
+}
+
+.teacher-analysis-ko {
+  font-weight: 900;
+  line-height: 1.65;
+  color: #111827;
+}
+
+.teacher-analysis-mn {
+  margin-top: 5px;
+  line-height: 1.65;
+  color: #374151;
+}
+
+.teacher-analysis-structural {
+  border-left: 4px solid #f0a22e;
+  background: #fffaf0;
+}
+
+.teacher-analysis-natural {
+  border-left: 4px solid #24a36b;
+  background: #f2fbf6;
+}
+
+.teacher-analysis-chunk,
+.teacher-analysis-list-row {
+  padding: 8px 0;
+  border-top: 1px dashed #d9e0e8;
+  line-height: 1.55;
+}
+
+.teacher-analysis-chunk:first-child,
+.teacher-analysis-list-row:first-child {
+  border-top: 0;
+}
+
+.teacher-analysis-arrow {
+  color: #0877f2;
+  font-weight: 900;
+}
+
+.teacher-analysis-note {
+  margin-top: 3px;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.teacher-analysis-choice {
+  display: grid;
+  grid-template-columns: 34px minmax(80px, 1fr) 1.2fr;
+  gap: 8px;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.teacher-analysis-choice:last-child {
+  border-bottom: 0;
+}
+
+.teacher-analysis-choice-number {
+  font-weight: 900;
+  color: #075dbf;
+}
+
+.teacher-analysis-empty {
+  padding: 24px 14px;
+  text-align: center;
+  color: #6b7280;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  #topik1TeacherAnalysisDrawer {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    max-width: none;
+    border-radius: 0;
+  }
+
+  #topik1TeacherAnalysisToolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  #topik1TeacherAnalysisToolbar .teacher-analysis-actions {
+    width: 100%;
+  }
+
+  .teacher-analysis-button {
+    flex: 1;
+  }
+}
+\n\n/* R5-2: teacher-only hint / answer / reason controls */
+#topik1TeacherAnalysisToolbar .teacher-analysis-actions {
+  align-items: center;
+}
+
+.teacher-analysis-action-group {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.teacher-analysis-action-group-guide {
+  padding-left: 8px;
+  border-left: 1px solid #d7e0eb;
+}
+
+.teacher-analysis-button-hint {
+  border-color: #d69a18;
+  color: #8a5b00;
+  background: #fffaf0;
+}
+
+.teacher-analysis-button-hint:hover:not(:disabled) {
+  background: #fff0c9;
+}
+
+.teacher-analysis-button-answer {
+  border-color: #c2413b;
+  color: #a22620;
+  background: #fff7f6;
+}
+
+.teacher-analysis-button-answer:hover:not(:disabled) {
+  background: #ffe8e6;
+}
+
+.teacher-analysis-button-reason {
+  border-color: #238a5a;
+  color: #146b43;
+  background: #f2fbf6;
+}
+
+.teacher-analysis-button-reason:hover:not(:disabled) {
+  background: #def5e9;
+}
+
+.teacher-analysis-guidance-hint {
+  border-left: 4px solid #d69a18;
+  background: #fffaf0;
+}
+
+.teacher-analysis-guidance-answer {
+  border-left: 4px solid #c2413b;
+  background: #fff7f6;
+}
+
+.teacher-analysis-guidance-reason {
+  border-left: 4px solid #238a5a;
+  background: #f2fbf6;
+}
+
+.teacher-analysis-guidance-focus {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(214,154,24,.10);
+  color: #775000;
+  font-weight: 900;
+}
+
+.teacher-analysis-answer-main {
+  font-size: 22px;
+  font-weight: 900;
+  color: #a22620;
+}
+
+.teacher-analysis-evidence-title {
+  margin-top: 12px;
+  font-weight: 900;
+  color: #146b43;
+}
+
+.teacher-analysis-evidence {
+  margin-top: 7px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #cfe7da;
+  background: #ffffff;
+}
+
+@media (max-width: 1100px) {
+  #topik1TeacherAnalysisToolbar {
+    align-items: flex-start;
+  }
+
+  #topik1TeacherAnalysisToolbar .teacher-analysis-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .teacher-analysis-action-group-guide {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .teacher-analysis-action-group {
+    width: 100%;
+  }
+
+  .teacher-analysis-action-group .teacher-analysis-button {
+    flex: 1 1 140px;
+  }
+}
+
+
+/* R5-3: preserve sentence boundaries for long passages and order items */
+.teacher-analysis-ko,
+.teacher-analysis-mn {
+  white-space: pre-line;
+}
