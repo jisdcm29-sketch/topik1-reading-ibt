@@ -1,7 +1,7 @@
 {
-  "version": "reading-teacher-analysis-r5-3-20260919",
-  "schema_version": "teacher-analysis-v1.1",
-  "description": "TOPIK I Reading teacher-only Korean-to-Mongolian analysis manifest. Representative-type pilot: Q31, Q35, Q49-50, Q53, Q57, Q59.",
+  "version": "reading-teacher-analysis-r5-6-20260919",
+  "schema_version": "teacher-analysis-v1.4",
+  "description": "TOPIK I Reading teacher-only analysis. Round 36 content and strict sentence-by-sentence eojeol review are complete for Q31-Q70.",
   "lookup_priority": [
     "source_bank_id",
     "source_set_id+original_question_number",
@@ -9,16 +9,29 @@
     "source_round+source_question_number"
   ],
   "round_files": {
-    "36": "./data/teacher-analysis/reading-36.json"
+    "36": [
+      "./data/teacher-analysis/reading-36.json",
+      "./data/teacher-analysis/reading-36-r5-4-extra.json",
+      "./data/teacher-analysis/reading-36-r5-6-49-70.json"
+    ]
   },
   "shared_passage_support": true,
-  "representative_questions": [
-    31,
-    35,
-    49,
-    50,
-    53,
-    57,
-    59
+  "multi_file_round_support": true,
+  "coverage": {
+    "36": {
+      "questions": "31-70",
+      "count": 40,
+      "content_status": "complete",
+      "eojeol_reviewed_range": "31-70",
+      "eojeol_status": "complete_strict"
+    }
+  },
+  "absolute_rules": [
+    "one sentence per analysis block",
+    "Korean sentence must be split into short eojeol/expression units",
+    "every Korean chunk must have a Mongolian correspondence",
+    "never substitute a whole-sentence chunk for missing eojeol analysis",
+    "grammar/vocabulary/collocations must be separated from sentence translation",
+    "question/instruction text is not shown in sentence-translation view"
   ]
 }
