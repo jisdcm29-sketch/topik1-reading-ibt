@@ -1,7 +1,7 @@
 {
-  "version": "reading-teacher-analysis-r5-9-20260919",
+  "version": "reading-teacher-analysis-r5-10-20260919",
   "schema_version": "teacher-analysis-v1.4",
-  "description": "TOPIK I Reading teacher-only analysis. Round 36 Q31-Q70 complete_strict; Round 35 Q31-Q48 first-pass with strict eojeol review except image-source verification pending for Q40-Q42.",
+  "description": "TOPIK I Reading teacher-only analysis. Round 36 Q31-Q70 complete_strict; Round 35 Q31-Q58 analyzed, with image-source verification pending only for Q40-Q42.",
   "lookup_priority": [
     "source_bank_id",
     "source_set_id+original_question_number",
@@ -9,33 +9,34 @@
     "source_round+source_question_number"
   ],
   "round_files": {
+    "35": [
+      "./data/teacher-analysis/reading-35-r5-9-31-48.json",
+      "./data/teacher-analysis/reading-35-r5-10-49-58.json"
+    ],
     "36": [
       "./data/teacher-analysis/reading-36.json",
       "./data/teacher-analysis/reading-36-r5-4-extra.json",
       "./data/teacher-analysis/reading-36-r5-6-49-70.json"
-    ],
-    "35": [
-      "./data/teacher-analysis/reading-35-r5-9-31-48.json"
     ]
   },
   "shared_passage_support": true,
   "multi_file_round_support": true,
   "coverage": {
+    "35": {
+      "questions": "31-58",
+      "count": 28,
+      "content_status": "first_pass_image_verification_pending",
+      "eojeol_reviewed_range": "31-39,43-58",
+      "eojeol_status": "partial_strict",
+      "pending_questions": "40-42",
+      "pending_reason": "image source must be visually verified before translation/eojeol analysis"
+    },
     "36": {
       "questions": "31-70",
       "count": 40,
       "content_status": "complete",
       "eojeol_reviewed_range": "31-70",
       "eojeol_status": "complete_strict"
-    },
-    "35": {
-      "questions": "31-48",
-      "count": 18,
-      "content_status": "first_pass_image_verification_pending",
-      "eojeol_reviewed_range": "31-39,43-48",
-      "eojeol_status": "partial_strict",
-      "pending_questions": "40-42",
-      "pending_reason": "image source must be visually verified before translation/eojeol analysis"
     }
   },
   "absolute_rules": [
