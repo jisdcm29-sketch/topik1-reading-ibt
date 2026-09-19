@@ -1,7 +1,7 @@
 {
-    "version":  "reading-teacher-analysis-r5-14-type2-all-local-20260919",
+    "version":  "reading-teacher-analysis-r5-14-type2-all-20260919",
     "schema_version":  "teacher-analysis-v1.4",
-    "description":  "R5-14 local: ?ㅼ쟾 C-O Q31-Q39 ?곌껐. ??踰덉㎏ ?좏삎 Q34-Q39 ?꾩껜 ?뚯감 濡쒖뺄 寃???④퀎.",
+    "description":  "R5-14 안정판: 실전 C~O Q31~Q39 연결. 두 번째 유형 Q34~Q39 전체 회차 complete_strict 로컬 화면 검증 완료.",
     "lookup_priority":  [
                             "source_bank_id",
                             "source_set_id+original_question_number",
@@ -97,7 +97,7 @@
                                 "content_status":  "partial",
                                 "eojeol_reviewed_range":  "31-39",
                                 "eojeol_status":  "partial_strict",
-                                "display_round":  "?ㅼ쟾 C",
+                                "display_round":  "실전 C",
                                 "type_key":  "topic-31-33+blank-34-39"
                             },
                      "41":  {
@@ -106,7 +106,7 @@
                                 "content_status":  "partial",
                                 "eojeol_reviewed_range":  "31-39",
                                 "eojeol_status":  "partial_strict",
-                                "display_round":  "?ㅼ쟾 D",
+                                "display_round":  "실전 D",
                                 "type_key":  "topic-31-33+blank-34-39"
                             },
                      "52":  {
