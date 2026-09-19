@@ -1,28 +1,22 @@
 "use strict";
 
 /*
-  TOPIK I Reading - R5-4 FIX
-  Teacher-only current-position display.
-  Student answer-count behavior is intentionally untouched.
+  TOPIK I Reading - R5-7 unified progress display
+  Student and teacher both see:
+  current question position / total questions.
+
+  This module only updates the small top-right progress text.
+  It does not modify answers, scoring, timer, navigation, Google Sheet logging,
+  teacher analysis, or question data.
 */
 (function () {
-  const VERSION = "reading-teacher-progress-r5-4-fix-20260919";
+  const VERSION = "reading-progress-unified-r5-7-20260919";
 
   function bridge() {
     return window.TOPIK1ReadingBridge || null;
   }
 
-  function isTeacher() {
-    try {
-      return Boolean(bridge()?.isTeacher?.());
-    } catch (error) {
-      return false;
-    }
-  }
-
-  function updateTeacherProgress() {
-    if (!isTeacher()) return;
-
+  function updateProgress() {
     const testScreen = document.getElementById("testScreen");
     if (!testScreen || testScreen.classList.contains("hidden")) return;
 
@@ -40,24 +34,27 @@
 
     const current = Math.min(total, currentIndex + 1);
     const answerStatus = document.getElementById("answerStatusText");
+
     if (answerStatus) {
       answerStatus.textContent = `${current} / ${total}`;
-      answerStatus.title = "교사 화면: 현재 문항 위치 / 전체 문항";
+      answerStatus.title = "현재 문항 위치 / 전체 문항";
     }
   }
 
   document.addEventListener("click", function () {
-    window.setTimeout(updateTeacherProgress, 0);
-    window.setTimeout(updateTeacherProgress, 40);
+    window.setTimeout(updateProgress, 0);
+    window.setTimeout(updateProgress, 40);
   }, true);
 
-  window.addEventListener("pageshow", updateTeacherProgress);
-  window.addEventListener("focus", updateTeacherProgress);
+  window.addEventListener("pageshow", updateProgress);
+  window.addEventListener("focus", updateProgress);
 
-  window.setInterval(updateTeacherProgress, 250);
+  window.setInterval(updateProgress, 250);
 
   window.TOPIK1ReadingTeacherProgress = {
     version: VERSION,
-    refresh: updateTeacherProgress
+    refresh: updateProgress
   };
+
+  window.TOPIK1ReadingProgress = window.TOPIK1ReadingTeacherProgress;
 })();
