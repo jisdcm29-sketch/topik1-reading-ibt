@@ -1,11 +1,11 @@
-// TOPIK I Reading Result Logger Client - R4-4
+// TOPIK I Reading Result Logger Client - R5-8
 // Isolated client-side bridge for Google Sheet logging.
 // This file does NOT change scoring, question rendering, diagnosis, role control,
 // timer behavior, or question-practice behavior.
 (() => {
   "use strict";
 
-  const VERSION = "reading-r4-4-20260919";
+  const VERSION = "reading-r5-8-sheet-large-payload-20260919";
   const ENDPOINT = "https://script.google.com/macros/s/AKfycbyefpO9i9lbDfvLEdX9ORltZI2GmoYim3Jo90atlOvI0PMFnu6R8DaaDYwqIxtan4Pb/exec";
   const TEACHER_PHONE = "12345678";
   const QUEUE_KEY = "topik1-reading-result-logger-pending-v1";
@@ -119,14 +119,14 @@
     body.set("payload", JSON.stringify(entry));
 
     // no-cors is intentional.
-    // The Apps Script web app accepts the POST, while the browser does not
-    // need to read the cross-origin response. Server-side attempt_id duplicate
-    // protection makes retries safe.
+    // Do NOT use keepalive here: complete 40-question reading results can exceed
+    // the browser keepalive request-body limit and fail before reaching Apps Script.
+    // The localStorage queue already protects against navigation/network failures,
+    // and server-side attempt_id duplicate protection makes retries safe.
     await fetch(ENDPOINT, {
       method: "POST",
       mode: "no-cors",
       cache: "no-store",
-      keepalive: true,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
       },
@@ -192,7 +192,6 @@
       try {
         enqueue(result);
       } catch (error) {
-        // Sheet logging must never interrupt the existing exam flow.
         console.warn(
           "[ReadingResultLogger] isolated logging failure:",
           error
