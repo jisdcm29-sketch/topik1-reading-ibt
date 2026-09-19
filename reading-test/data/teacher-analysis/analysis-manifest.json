@@ -1,7 +1,7 @@
 {
-  "version": "reading-teacher-analysis-r5-12-20260919",
+  "version": "reading-teacher-analysis-r5-13-type1-all-20260919",
   "schema_version": "teacher-analysis-v1.4",
-  "description": "TOPIK I Reading teacher-only analysis. Round 35 and Round 36 Q31-Q70 complete_strict.",
+  "description": "실전 A/B complete_strict; 실전 C~O 첫 번째 유형 Q31-Q33 complete_strict.",
   "lookup_priority": [
     "source_bank_id",
     "source_set_id+original_question_number",
@@ -19,6 +19,45 @@
       "./data/teacher-analysis/reading-36.json",
       "./data/teacher-analysis/reading-36-r5-4-extra.json",
       "./data/teacher-analysis/reading-36-r5-6-49-70.json"
+    ],
+    "37": [
+      "./data/teacher-analysis/reading-37-r5-13-type1-31-33.json"
+    ],
+    "41": [
+      "./data/teacher-analysis/reading-41-r5-13-type1-31-33.json"
+    ],
+    "52": [
+      "./data/teacher-analysis/reading-52-r5-13-type1-31-33.json"
+    ],
+    "60": [
+      "./data/teacher-analysis/reading-60-r5-13-type1-31-33.json"
+    ],
+    "64": [
+      "./data/teacher-analysis/reading-64-r5-13-type1-31-33.json"
+    ],
+    "83": [
+      "./data/teacher-analysis/reading-83-r5-13-type1-31-33.json"
+    ],
+    "91": [
+      "./data/teacher-analysis/reading-91-r5-13-type1-31-33.json"
+    ],
+    "96": [
+      "./data/teacher-analysis/reading-96-r5-13-type1-31-33.json"
+    ],
+    "97": [
+      "./data/teacher-analysis/reading-97-r5-13-type1-31-33.json"
+    ],
+    "99": [
+      "./data/teacher-analysis/reading-99-r5-13-type1-31-33.json"
+    ],
+    "100": [
+      "./data/teacher-analysis/reading-100-r5-13-type1-31-33.json"
+    ],
+    "102": [
+      "./data/teacher-analysis/reading-102-r5-13-type1-31-33.json"
+    ],
+    "103": [
+      "./data/teacher-analysis/reading-103-r5-13-type1-31-33.json"
     ]
   },
   "shared_passage_support": true,
@@ -38,6 +77,123 @@
       "content_status": "complete",
       "eojeol_reviewed_range": "31-70",
       "eojeol_status": "complete_strict"
+    },
+    "37": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 C",
+      "type_key": "topic-31-33"
+    },
+    "41": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 D",
+      "type_key": "topic-31-33"
+    },
+    "52": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 E",
+      "type_key": "topic-31-33"
+    },
+    "60": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 F",
+      "type_key": "topic-31-33"
+    },
+    "64": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 G",
+      "type_key": "topic-31-33"
+    },
+    "83": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 H",
+      "type_key": "topic-31-33"
+    },
+    "91": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 I",
+      "type_key": "topic-31-33"
+    },
+    "96": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 J",
+      "type_key": "topic-31-33"
+    },
+    "97": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 K",
+      "type_key": "topic-31-33"
+    },
+    "99": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 L",
+      "type_key": "topic-31-33"
+    },
+    "100": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 M",
+      "type_key": "topic-31-33"
+    },
+    "102": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 N",
+      "type_key": "topic-31-33"
+    },
+    "103": {
+      "questions": "31-33",
+      "count": 3,
+      "content_status": "partial",
+      "eojeol_reviewed_range": "31-33",
+      "eojeol_status": "partial_strict",
+      "display_round": "실전 O",
+      "type_key": "topic-31-33"
     }
   },
   "absolute_rules": [
