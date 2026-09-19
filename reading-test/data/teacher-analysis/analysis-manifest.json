@@ -1,7 +1,7 @@
 {
-  "version": "reading-teacher-analysis-r5-6-20260919",
+  "version": "reading-teacher-analysis-r5-9-20260919",
   "schema_version": "teacher-analysis-v1.4",
-  "description": "TOPIK I Reading teacher-only analysis. Round 36 content and strict sentence-by-sentence eojeol review are complete for Q31-Q70.",
+  "description": "TOPIK I Reading teacher-only analysis. Round 36 Q31-Q70 complete_strict; Round 35 Q31-Q48 first-pass with strict eojeol review except image-source verification pending for Q40-Q42.",
   "lookup_priority": [
     "source_bank_id",
     "source_set_id+original_question_number",
@@ -13,6 +13,9 @@
       "./data/teacher-analysis/reading-36.json",
       "./data/teacher-analysis/reading-36-r5-4-extra.json",
       "./data/teacher-analysis/reading-36-r5-6-49-70.json"
+    ],
+    "35": [
+      "./data/teacher-analysis/reading-35-r5-9-31-48.json"
     ]
   },
   "shared_passage_support": true,
@@ -24,6 +27,15 @@
       "content_status": "complete",
       "eojeol_reviewed_range": "31-70",
       "eojeol_status": "complete_strict"
+    },
+    "35": {
+      "questions": "31-48",
+      "count": 18,
+      "content_status": "first_pass_image_verification_pending",
+      "eojeol_reviewed_range": "31-39,43-48",
+      "eojeol_status": "partial_strict",
+      "pending_questions": "40-42",
+      "pending_reason": "image source must be visually verified before translation/eojeol analysis"
     }
   },
   "absolute_rules": [
@@ -32,6 +44,7 @@
     "every Korean chunk must have a Mongolian correspondence",
     "never substitute a whole-sentence chunk for missing eojeol analysis",
     "grammar/vocabulary/collocations must be separated from sentence translation",
-    "question/instruction text is not shown in sentence-translation view"
+    "question/instruction text is not shown in sentence-translation view",
+    "image-source text must be visually verified before translation is finalized"
   ]
 }
