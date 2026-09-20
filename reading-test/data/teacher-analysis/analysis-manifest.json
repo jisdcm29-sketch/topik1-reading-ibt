@@ -1,7 +1,7 @@
 ﻿{
-    "version":  "reading-teacher-analysis-r5-22a-q61-62-translation-fix-c-o-local-test-20260920",
+    "version":  "reading-teacher-analysis-r5-23-common-passage-67-68-d-o-local-test-20260920",
     "schema_version":  "teacher-analysis-v1.4",
-    "description":  "R5-22A 로컬 검수 후보: D~O Q61-Q62 본문 번역/어절 대응 전면 재검수. Q65-Q66 보존. Q63-Q64 이미지형 보류. Q67+ 미적용. reading-test.js 변경 없음.",
+    "description":  "R5-23: 실전 C 선행 검수 정상 확인 후 D~O Q67-Q68 공통 지문 일괄 적용. Q63-Q64 이미지형 보류. Q69+ 미적용. reading-test.js 변경 없음.",
     "lookup_priority":  [
                             "source_bank_id",
                             "source_set_id+original_question_number",
@@ -30,7 +30,8 @@
                                    "./data/teacher-analysis/reading-37-r5-19-sentence-insert-59.json",
                                    "./data/teacher-analysis/reading-37-r5-20-common-passage-detail-60.json",
                                    "./data/teacher-analysis/reading-37-r5-21-common-passage-61-62.json",
-                                   "./data/teacher-analysis/reading-37-r5-22-common-passage-65-66.json"
+                                   "./data/teacher-analysis/reading-37-r5-22-common-passage-65-66.json",
+                                   "./data/teacher-analysis/reading-37-r5-23-common-passage-67-68.json"
                                ],
                         "41":  [
                                    "./data/teacher-analysis/reading-41-r5-13-type1-31-33.json",
@@ -42,7 +43,8 @@
                                    "./data/teacher-analysis/reading-41-r5-19-sentence-insert-59.json",
                                    "./data/teacher-analysis/reading-41-r5-20-common-passage-detail-60.json",
                                    "./data/teacher-analysis/reading-41-r5-21-common-passage-61-62.json",
-                                   "./data/teacher-analysis/reading-41-r5-22-common-passage-65-66.json"
+                                   "./data/teacher-analysis/reading-41-r5-22-common-passage-65-66.json",
+                                   "./data/teacher-analysis/reading-41-r5-23-common-passage-67-68.json"
                                ],
                         "52":  [
                                    "./data/teacher-analysis/reading-52-r5-13-type1-31-33.json",
@@ -54,7 +56,8 @@
                                    "./data/teacher-analysis/reading-52-r5-19-sentence-insert-59.json",
                                    "./data/teacher-analysis/reading-52-r5-20-common-passage-detail-60.json",
                                    "./data/teacher-analysis/reading-52-r5-21-common-passage-61-62.json",
-                                   "./data/teacher-analysis/reading-52-r5-22-common-passage-65-66.json"
+                                   "./data/teacher-analysis/reading-52-r5-22-common-passage-65-66.json",
+                                   "./data/teacher-analysis/reading-52-r5-23-common-passage-67-68.json"
                                ],
                         "60":  [
                                    "./data/teacher-analysis/reading-60-r5-13-type1-31-33.json",
@@ -66,7 +69,8 @@
                                    "./data/teacher-analysis/reading-60-r5-19-sentence-insert-59.json",
                                    "./data/teacher-analysis/reading-60-r5-20-common-passage-detail-60.json",
                                    "./data/teacher-analysis/reading-60-r5-21-common-passage-61-62.json",
-                                   "./data/teacher-analysis/reading-60-r5-22-common-passage-65-66.json"
+                                   "./data/teacher-analysis/reading-60-r5-22-common-passage-65-66.json",
+                                   "./data/teacher-analysis/reading-60-r5-23-common-passage-67-68.json"
                                ],
                         "64":  [
                                    "./data/teacher-analysis/reading-64-r5-13-type1-31-33.json",
@@ -78,7 +82,8 @@
                                    "./data/teacher-analysis/reading-64-r5-19-sentence-insert-59.json",
                                    "./data/teacher-analysis/reading-64-r5-20-common-passage-detail-60.json",
                                    "./data/teacher-analysis/reading-64-r5-21-common-passage-61-62.json",
-                                   "./data/teacher-analysis/reading-64-r5-22-common-passage-65-66.json"
+                                   "./data/teacher-analysis/reading-64-r5-22-common-passage-65-66.json",
+                                   "./data/teacher-analysis/reading-64-r5-23-common-passage-67-68.json"
                                ],
                         "83":  [
                                    "./data/teacher-analysis/reading-83-r5-13-type1-31-33.json",
@@ -90,7 +95,8 @@
                                    "./data/teacher-analysis/reading-83-r5-19-sentence-insert-59.json",
                                    "./data/teacher-analysis/reading-83-r5-20-common-passage-detail-60.json",
                                    "./data/teacher-analysis/reading-83-r5-21-common-passage-61-62.json",
-                                   "./data/teacher-analysis/reading-83-r5-22-common-passage-65-66.json"
+                                   "./data/teacher-analysis/reading-83-r5-22-common-passage-65-66.json",
+                                   "./data/teacher-analysis/reading-83-r5-23-common-passage-67-68.json"
                                ],
                         "91":  [
                                    "./data/teacher-analysis/reading-91-r5-13-type1-31-33.json",
@@ -102,7 +108,8 @@
                                    "./data/teacher-analysis/reading-91-r5-19-sentence-insert-59.json",
                                    "./data/teacher-analysis/reading-91-r5-20-common-passage-detail-60.json",
                                    "./data/teacher-analysis/reading-91-r5-21-common-passage-61-62.json",
-                                   "./data/teacher-analysis/reading-91-r5-22-common-passage-65-66.json"
+                                   "./data/teacher-analysis/reading-91-r5-22-common-passage-65-66.json",
+                                   "./data/teacher-analysis/reading-91-r5-23-common-passage-67-68.json"
                                ],
                         "96":  [
                                    "./data/teacher-analysis/reading-96-r5-13-type1-31-33.json",
@@ -114,7 +121,8 @@
                                    "./data/teacher-analysis/reading-96-r5-19-sentence-insert-59.json",
                                    "./data/teacher-analysis/reading-96-r5-20-common-passage-detail-60.json",
                                    "./data/teacher-analysis/reading-96-r5-21-common-passage-61-62.json",
-                                   "./data/teacher-analysis/reading-96-r5-22-common-passage-65-66.json"
+                                   "./data/teacher-analysis/reading-96-r5-22-common-passage-65-66.json",
+                                   "./data/teacher-analysis/reading-96-r5-23-common-passage-67-68.json"
                                ],
                         "97":  [
                                    "./data/teacher-analysis/reading-97-r5-13-type1-31-33.json",
@@ -126,7 +134,8 @@
                                    "./data/teacher-analysis/reading-97-r5-19-sentence-insert-59.json",
                                    "./data/teacher-analysis/reading-97-r5-20-common-passage-detail-60.json",
                                    "./data/teacher-analysis/reading-97-r5-21-common-passage-61-62.json",
-                                   "./data/teacher-analysis/reading-97-r5-22-common-passage-65-66.json"
+                                   "./data/teacher-analysis/reading-97-r5-22-common-passage-65-66.json",
+                                   "./data/teacher-analysis/reading-97-r5-23-common-passage-67-68.json"
                                ],
                         "99":  [
                                    "./data/teacher-analysis/reading-99-r5-13-type1-31-33.json",
@@ -138,7 +147,8 @@
                                    "./data/teacher-analysis/reading-99-r5-19-sentence-insert-59.json",
                                    "./data/teacher-analysis/reading-99-r5-20-common-passage-detail-60.json",
                                    "./data/teacher-analysis/reading-99-r5-21-common-passage-61-62.json",
-                                   "./data/teacher-analysis/reading-99-r5-22-common-passage-65-66.json"
+                                   "./data/teacher-analysis/reading-99-r5-22-common-passage-65-66.json",
+                                   "./data/teacher-analysis/reading-99-r5-23-common-passage-67-68.json"
                                ],
                         "100":  [
                                     "./data/teacher-analysis/reading-100-r5-13-type1-31-33.json",
@@ -150,7 +160,8 @@
                                     "./data/teacher-analysis/reading-100-r5-19-sentence-insert-59.json",
                                     "./data/teacher-analysis/reading-100-r5-20-common-passage-detail-60.json",
                                     "./data/teacher-analysis/reading-100-r5-21-common-passage-61-62.json",
-                                    "./data/teacher-analysis/reading-100-r5-22-common-passage-65-66.json"
+                                    "./data/teacher-analysis/reading-100-r5-22-common-passage-65-66.json",
+                                    "./data/teacher-analysis/reading-100-r5-23-common-passage-67-68.json"
                                 ],
                         "102":  [
                                     "./data/teacher-analysis/reading-102-r5-13-type1-31-33.json",
@@ -162,7 +173,8 @@
                                     "./data/teacher-analysis/reading-102-r5-19-sentence-insert-59.json",
                                     "./data/teacher-analysis/reading-102-r5-20-common-passage-detail-60.json",
                                     "./data/teacher-analysis/reading-102-r5-21-common-passage-61-62.json",
-                                    "./data/teacher-analysis/reading-102-r5-22-common-passage-65-66.json"
+                                    "./data/teacher-analysis/reading-102-r5-22-common-passage-65-66.json",
+                                    "./data/teacher-analysis/reading-102-r5-23-common-passage-67-68.json"
                                 ],
                         "103":  [
                                     "./data/teacher-analysis/reading-103-r5-13-type1-31-33.json",
@@ -174,7 +186,8 @@
                                     "./data/teacher-analysis/reading-103-r5-19-sentence-insert-59.json",
                                     "./data/teacher-analysis/reading-103-r5-20-common-passage-detail-60.json",
                                     "./data/teacher-analysis/reading-103-r5-21-common-passage-61-62.json",
-                                    "./data/teacher-analysis/reading-103-r5-22-common-passage-65-66.json"
+                                    "./data/teacher-analysis/reading-103-r5-22-common-passage-65-66.json",
+                                    "./data/teacher-analysis/reading-103-r5-23-common-passage-67-68.json"
                                 ]
                     },
     "shared_passage_support":  true,
@@ -196,121 +209,121 @@
                                 "eojeol_status":  "complete_strict"
                             },
                      "37":  {
-                                "questions":  "31-39,43-62,65-66",
-                                "count":  31,
+                                "questions":  "31-39,43-62,65-68",
+                                "count":  33,
                                 "content_status":  "partial",
-                                "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                 "eojeol_status":  "partial_strict",
                                 "display_round":  "실전 C",
-                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-61-62+common-passage-set-65-66"
+                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-61-62+common-passage-set-65-66+common-passage-set-67-68"
                             },
                      "41":  {
-                                "questions":  "31-39,43-62,65-66",
-                                "count":  31,
+                                "questions":  "31-39,43-62,65-68",
+                                "count":  33,
                                 "content_status":  "partial",
-                                "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                 "eojeol_status":  "partial_strict",
                                 "display_round":  "실전 D",
-                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                             },
                      "52":  {
-                                "questions":  "31-39,43-62,65-66",
-                                "count":  31,
+                                "questions":  "31-39,43-62,65-68",
+                                "count":  33,
                                 "content_status":  "partial",
-                                "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                 "eojeol_status":  "partial_strict",
                                 "display_round":  "실전 E",
-                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                             },
                      "60":  {
-                                "questions":  "31-39,43-62,65-66",
-                                "count":  31,
+                                "questions":  "31-39,43-62,65-68",
+                                "count":  33,
                                 "content_status":  "partial",
-                                "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                 "eojeol_status":  "partial_strict",
                                 "display_round":  "실전 F",
-                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                             },
                      "64":  {
-                                "questions":  "31-39,43-62,65-66",
-                                "count":  31,
+                                "questions":  "31-39,43-62,65-68",
+                                "count":  33,
                                 "content_status":  "partial",
-                                "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                 "eojeol_status":  "partial_strict",
                                 "display_round":  "실전 G",
-                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                             },
                      "83":  {
-                                "questions":  "31-39,43-62,65-66",
-                                "count":  31,
+                                "questions":  "31-39,43-62,65-68",
+                                "count":  33,
                                 "content_status":  "partial",
-                                "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                 "eojeol_status":  "partial_strict",
                                 "display_round":  "실전 H",
-                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                             },
                      "91":  {
-                                "questions":  "31-39,43-62,65-66",
-                                "count":  31,
+                                "questions":  "31-39,43-62,65-68",
+                                "count":  33,
                                 "content_status":  "partial",
-                                "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                 "eojeol_status":  "partial_strict",
                                 "display_round":  "실전 I",
-                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                             },
                      "96":  {
-                                "questions":  "31-39,43-62,65-66",
-                                "count":  31,
+                                "questions":  "31-39,43-62,65-68",
+                                "count":  33,
                                 "content_status":  "partial",
-                                "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                 "eojeol_status":  "partial_strict",
                                 "display_round":  "실전 J",
-                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                             },
                      "97":  {
-                                "questions":  "31-39,43-62,65-66",
-                                "count":  31,
+                                "questions":  "31-39,43-62,65-68",
+                                "count":  33,
                                 "content_status":  "partial",
-                                "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                 "eojeol_status":  "partial_strict",
                                 "display_round":  "실전 K",
-                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                             },
                      "99":  {
-                                "questions":  "31-39,43-62,65-66",
-                                "count":  31,
+                                "questions":  "31-39,43-62,65-68",
+                                "count":  33,
                                 "content_status":  "partial",
-                                "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                 "eojeol_status":  "partial_strict",
                                 "display_round":  "실전 L",
-                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                             },
                      "100":  {
-                                 "questions":  "31-39,43-62,65-66",
-                                 "count":  31,
+                                 "questions":  "31-39,43-62,65-68",
+                                 "count":  33,
                                  "content_status":  "partial",
-                                 "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                 "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                  "eojeol_status":  "partial_strict",
                                  "display_round":  "실전 M",
-                                 "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                 "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                              },
                      "102":  {
-                                 "questions":  "31-39,43-62,65-66",
-                                 "count":  31,
+                                 "questions":  "31-39,43-62,65-68",
+                                 "count":  33,
                                  "content_status":  "partial",
-                                 "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                 "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                  "eojeol_status":  "partial_strict",
                                  "display_round":  "실전 N",
-                                 "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                 "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                              },
                      "103":  {
-                                 "questions":  "31-39,43-62,65-66",
-                                 "count":  31,
+                                 "questions":  "31-39,43-62,65-68",
+                                 "count":  33,
                                  "content_status":  "partial",
-                                 "eojeol_reviewed_range":  "31-39,43-62,65-66",
+                                 "eojeol_reviewed_range":  "31-39,43-62,65-68",
                                  "eojeol_status":  "partial_strict",
                                  "display_round":  "실전 O",
-                                 "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66"
+                                 "type_key":  "topic-31-33+blank-34-39+same-content-43-45+main-idea-46-48+common-passage-49-56+sentence-order-57-58+sentence-insert-59+common-passage-detail-60+common-passage-set-65-66+common-passage-set-67-68"
                              }
                  },
     "absolute_rules":  [
