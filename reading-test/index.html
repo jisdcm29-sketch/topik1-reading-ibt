@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
@@ -1884,7 +1884,7 @@ if (newExamMessage && !enabled) {
           return;
         }
 
-        if (inputPassword !== READING_AUTH_PASSWORD) {
+        if (inputPassword.toLowerCase() !== READING_AUTH_PASSWORD.toLowerCase()) {
           setAuthMessage("인증 비밀번호가 맞지 않습니다.", "#d93025");
           authPasswordInput.select();
           setCandidateInputsEnabled(false);
