@@ -109,7 +109,7 @@ const TOPIK1_QUESTION_PRACTICE_TYPES = [
   {
     key: "short-set-49-56",
     label: "49~56 단문 종합 독해",
-    short_label: "49~56 1지문 2문항",
+    short_label: "49~56 단문 독해",
     description: "중간 길이의 생활문·설명문을 읽고 두 문항을 함께 풉니다.",
     start: 49,
     end: 56
@@ -125,7 +125,7 @@ const TOPIK1_QUESTION_PRACTICE_TYPES = [
   {
     key: "long-set-59-60",
     label: "59~60 문장 삽입 + 내용 일치",
-    short_label: "59~60 문장 삽입·내용 일치",
+    short_label: "59~60 삽입·일치",
     description: "문장 삽입 위치를 앞뒤 문맥으로 확인하고 글의 내용과 대조합니다.",
     start: 59,
     end: 60
@@ -133,7 +133,7 @@ const TOPIK1_QUESTION_PRACTICE_TYPES = [
   {
     key: "long-set-61-62",
     label: "61~62 문맥 빈칸 + 내용 일치",
-    short_label: "61~62 문맥 빈칸·내용 일치",
+    short_label: "61~62 빈칸·일치",
     description: "문맥에 맞는 표현을 완성하고 내용과 같은 사실을 고릅니다.",
     start: 61,
     end: 62
@@ -141,7 +141,7 @@ const TOPIK1_QUESTION_PRACTICE_TYPES = [
   {
     key: "long-set-63-64",
     label: "63~64 작성 목적 + 내용 일치",
-    short_label: "63~64 작성 목적·내용 일치",
+    short_label: "63~64 목적·일치",
     description: "공지문·이메일 등의 작성 목적과 세부 정보의 일치를 구별합니다.",
     start: 63,
     end: 64
@@ -149,7 +149,7 @@ const TOPIK1_QUESTION_PRACTICE_TYPES = [
   {
     key: "long-set-65-66",
     label: "65~66 문맥 빈칸 + 내용 일치",
-    short_label: "65~66 문맥 빈칸·내용 일치",
+    short_label: "65~66 빈칸·일치",
     description: "설명문의 논리적 연결과 지문에 나타난 사실을 확인합니다.",
     start: 65,
     end: 66
@@ -157,7 +157,7 @@ const TOPIK1_QUESTION_PRACTICE_TYPES = [
   {
     key: "long-set-67-68",
     label: "67~68 문맥 빈칸 + 사실 판단",
-    short_label: "67~68 문맥 빈칸·사실 판단",
+    short_label: "67~68 빈칸·판단",
     description: "회차에 따라 빈칸 2문항 또는 빈칸·내용 일치 문항을 풉니다.",
     start: 67,
     end: 68
@@ -165,7 +165,7 @@ const TOPIK1_QUESTION_PRACTICE_TYPES = [
   {
     key: "long-set-69-70",
     label: "69~70 문맥 빈칸 + 근거 추론",
-    short_label: "69~70 문맥 빈칸·근거 추론",
+    short_label: "69~70 빈칸·추론",
     description: "문맥에 맞는 표현을 고르고 근거 있는 추론을 판단합니다.",
     start: 69,
     end: 70
@@ -1934,32 +1934,18 @@ function getQuestionPracticeRoundButtonHtml(entry) {
 
 function getQuestionPracticeTypeButtonHtml(type) {
   const selected = questionPracticeSelection.selectedTypeKey === type.key;
-
+  const shortName = type.short_label || type.label;
   return `
-    <button
-      type="button"
-      class="question-practice-type-button"
+    <button type="button" class="question-practice-type-button"
       data-practice-type-key="${escapeAttribute(type.key)}"
       aria-pressed="${selected ? "true" : "false"}"
-      style="
-        min-height:56px;
-        border:2px solid ${selected ? "#0877f2" : "#d7e6f8"};
-        border-radius:10px;
-        background:${selected ? "#e9f3ff" : "#ffffff"};
-        color:#003f8f;
-        font-size:14px;
-        font-weight:900;
-        cursor:pointer;
-        text-align:left;
-        padding:8px 10px;
-        line-height:1.35;
-      "
-    >
-      <div>${escapeHtml(type.label)}</div>
-      <div style="margin-top:2px; color:#111827; font-size:12px; font-weight:800;">
-        ${escapeHtml(type.description)}
-      </div>
-    </button>
+      aria-label="${escapeAttribute(type.label)}"
+      title="${escapeAttribute(type.label)}"
+      style="min-height:36px; border:2px solid ${selected ? "#0877f2" : "#d7e6f8"};
+      border-radius:10px; background:${selected ? "#e9f3ff" : "#ffffff"};
+      color:#3d33b7; font-size:13px; font-weight:900; cursor:pointer; text-align:center;
+      padding:5px 4px; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
+    >${escapeHtml(shortName)}</button>
   `;
 }
 
@@ -2055,7 +2041,7 @@ function renderQuestionPracticePanel() {
         여러 회차를 선택한 뒤 같은 유형을 선택합니다. 선택한 유형은 아래 <strong>시험 시작</strong> 버튼을 누르면 하나의 연습 시험지처럼 진행됩니다.
       </div>
 
-      <div style="font-size:14px; font-weight:900; color:#111827; margin-bottom:6px;">
+      <div id="questionPracticeRoundHeading" style="font-size:14px; font-weight:900; color:#111827; margin-bottom:6px;">
         연습 회차 선택
       </div>
 
@@ -2117,7 +2103,7 @@ function renderQuestionPracticePanel() {
         }
       </div>
 
-      <div style="font-size:14px; font-weight:900; color:#111827; margin-bottom:6px;">
+      <div id="questionPracticeTypeHeading" style="font-size:14px; font-weight:900; color:#111827; margin-bottom:6px;">
         대표 유형 선택
       </div>
 
