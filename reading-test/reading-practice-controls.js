@@ -28,7 +28,12 @@
     "main-46-48": { start: 46, end: 48, short: "46~48 중심 내용", countPerRound: 3 },
     "short-set-49-56": { start: 49, end: 56, short: "49~56 단문 종합 독해", countPerRound: 8 },
     "order-57-58": { start: 57, end: 58, short: "57~58 문장 순서", countPerRound: 2 },
-    "long-set-59-70": { start: 59, end: 70, short: "59~70 장문 종합 독해", countPerRound: 12 }
+    "long-set-59-60": { start: 59, end: 60, short: "59~60 문장 삽입·내용 일치", countPerRound: 2 },
+    "long-set-61-62": { start: 61, end: 62, short: "61~62 문맥 빈칸·내용 일치", countPerRound: 2 },
+    "long-set-63-64": { start: 63, end: 64, short: "63~64 작성 목적·내용 일치", countPerRound: 2 },
+    "long-set-65-66": { start: 65, end: 66, short: "65~66 문맥 빈칸·내용 일치", countPerRound: 2 },
+    "long-set-67-68": { start: 67, end: 68, short: "67~68 문맥 빈칸·사실 판단", countPerRound: 2 },
+    "long-set-69-70": { start: 69, end: 70, short: "69~70 문맥 빈칸·근거 추론", countPerRound: 2 }
   };
 
   let originalGetActiveTimeLimitSeconds = null;
