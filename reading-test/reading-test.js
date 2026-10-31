@@ -123,11 +123,51 @@ const TOPIK1_QUESTION_PRACTICE_TYPES = [
     end: 58
   },
   {
-    key: "long-set-59-70",
-    label: "59~70 장문 종합 독해",
-    short_label: "59~70 장문 1지문 2문항",
-    description: "긴 지문에서 삽입 위치, 빈칸, 세부 내용 일치를 풉니다.",
+    key: "long-set-59-60",
+    label: "59~60 문장 삽입 + 내용 일치",
+    short_label: "59~60 문장 삽입·내용 일치",
+    description: "문장 삽입 위치를 앞뒤 문맥으로 확인하고 글의 내용과 대조합니다.",
     start: 59,
+    end: 60
+  },
+  {
+    key: "long-set-61-62",
+    label: "61~62 문맥 빈칸 + 내용 일치",
+    short_label: "61~62 문맥 빈칸·내용 일치",
+    description: "문맥에 맞는 표현을 완성하고 내용과 같은 사실을 고릅니다.",
+    start: 61,
+    end: 62
+  },
+  {
+    key: "long-set-63-64",
+    label: "63~64 작성 목적 + 내용 일치",
+    short_label: "63~64 작성 목적·내용 일치",
+    description: "공지문·이메일 등의 작성 목적과 세부 정보의 일치를 구별합니다.",
+    start: 63,
+    end: 64
+  },
+  {
+    key: "long-set-65-66",
+    label: "65~66 문맥 빈칸 + 내용 일치",
+    short_label: "65~66 문맥 빈칸·내용 일치",
+    description: "설명문의 논리적 연결과 지문에 나타난 사실을 확인합니다.",
+    start: 65,
+    end: 66
+  },
+  {
+    key: "long-set-67-68",
+    label: "67~68 문맥 빈칸 + 사실 판단",
+    short_label: "67~68 문맥 빈칸·사실 판단",
+    description: "회차에 따라 빈칸 2문항 또는 빈칸·내용 일치 문항을 풉니다.",
+    start: 67,
+    end: 68
+  },
+  {
+    key: "long-set-69-70",
+    label: "69~70 문맥 빈칸 + 근거 추론",
+    short_label: "69~70 문맥 빈칸·근거 추론",
+    description: "문맥에 맞는 표현을 고르고 근거 있는 추론을 판단합니다.",
+    start: 69,
     end: 70
   }
 ];
@@ -2334,6 +2374,17 @@ async function generateQuestionPracticeExamForCurrentSelection() {
         clonedQuestion.passage_group_numbers = clonedQuestion.passage_group_numbers
           .map(Number)
           .filter(Number.isFinite);
+      }
+
+      // 문항 선택 연습에서는 원래의 2문항 세트를 유지하되, 연습 화면 번호로 연결합니다.
+      // 그룹 ID가 없는 옛 회차도 59~70번의 삽입·빈칸 답이 같은 지문에 반영되게 합니다.
+      if (originalNumber >= 59 && originalNumber <= 70) {
+        const pairStart = originalNumber % 2 === 1 ? originalNumber : originalNumber - 1;
+        clonedQuestion.passage_group_id = `QP-${entry.value}-pair-${pairStart}-${pairStart + 1}`;
+        clonedQuestion.passage_group_title = `[${pairStart}~${pairStart + 1}] 공통 지문`;
+        clonedQuestion.passage_group_numbers = [];
+        clonedQuestion.shared_passage_index = originalNumber === pairStart ? 1 : 2;
+        clonedQuestion.shared_passage_total = 2;
       }
 
       practiceQuestions.push(clonedQuestion);
