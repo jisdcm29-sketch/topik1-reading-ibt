@@ -11,7 +11,7 @@
   - Keep reading-test.js untouched.
 */
 (function () {
-  const VERSION = "step-r3-5-20260919";
+  const VERSION = "step-r3-6-ui-20261031";
   const TEACHER_PHONE = "12345678";
   const TIMER_STORAGE_KEY = "topik1-reading-question-practice-timer-mode";
   const VALID_TIMER_MODES = new Set(["auto", "60", "90", "unlimited"]);
@@ -19,6 +19,16 @@
   const TIME_CONTROL_ID = "readingPracticeTimeControl";
   const HANDOUT_BUTTON_ID = "readingPracticeHandoutButton";
   const HANDOUT_STYLE_CLASS = "reading-practice-handout-button";
+  // Apply after the dashboard stylesheets, which are linked inside the page body.
+  const COMPACT_STYLE_ID = "topik1ReadingCompactPracticeUi20261031";
+  function ensureCompactPracticeUi() {
+    if (document.getElementById(COMPACT_STYLE_ID)) return;
+    const el = document.createElement("style");
+    el.id = COMPACT_STYLE_ID;
+    el.textContent = "body #startScreen #questionPracticeRoundHeading { display:none !important; }\nbody #startScreen .question-practice-type-button { min-width:0 !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; }\n@media(min-width:1000px) {\n body #startScreen #readingStartDashboard { height:calc(100% - 16px) !important; }\n body #startScreen #questionPracticePanel { padding:9px !important; overflow-x:hidden !important; overflow-y:auto !important; }\n body #startScreen #questionPracticePanel > div:first-child { margin-bottom:5px !important; }\n body #startScreen #questionPracticeBody,body #startScreen #questionPracticeBody[hidden] { gap:5px !important; }\n body #startScreen #questionPracticeRoundList { padding:6px !important; gap:5px !important; margin-bottom:0 !important; }\n body #startScreen .question-practice-round-button { min-height:32px !important; padding:3px !important; font-size:12.5px !important; }\n body #startScreen #readingPracticeTimeControl { min-height:34px !important; padding:3px 6px !important; gap:5px !important; }\n body #startScreen .reading-practice-time-title { font-size:12.5px !important; }\n body #startScreen .reading-practice-time-buttons button { min-height:28px !important; padding:4px !important; font-size:12px !important; }\n body #startScreen #questionPracticeTypeHeading { margin:0 !important; font-size:13px !important; }\n body #startScreen #questionPracticeTypeList { gap:5px !important; }\n body #startScreen .question-practice-type-button { min-height:32px !important; padding:5px 3px !important; font-size:12px !important; line-height:1.1 !important; }\n body #startScreen #questionPracticeClearTypeButton { min-height:36px !important; margin:0 !important; font-size:12.5px !important; }\n body #startScreen #questionPracticeStatusText { min-height:30px !important; padding:4px 7px !important; font-size:11.5px !important; }\n body #startScreen #readingPracticeHandoutButton { min-height:36px !important; margin:0 !important; padding:5px 7px !important; font-size:12px !important; }\n}\n@media(max-width:999px) {\n body #startScreen #questionPracticePanel { overflow:visible !important; }\n body #startScreen .question-practice-type-button { font-size:12px !important; }\n body #startScreen #readingPracticeHandoutButton { margin-top:8px !important; }\n}";
+    document.body.appendChild(el);
+  }
+
 
   const TYPE_INFO = {
     "topic-31-33": { start: 31, end: 33, short: "31~33 중심 화제", countPerRound: 3 },
@@ -26,14 +36,14 @@
     "practical-40-42": { start: 40, end: 42, short: "40~42 실용문 세부 정보", countPerRound: 3 },
     "detail-43-45": { start: 43, end: 45, short: "43~45 세부 내용 파악", countPerRound: 3 },
     "main-46-48": { start: 46, end: 48, short: "46~48 중심 내용", countPerRound: 3 },
-    "short-set-49-56": { start: 49, end: 56, short: "49~56 단문 종합 독해", countPerRound: 8 },
+    "short-set-49-56": { start: 49, end: 56, short: "49~56 단문 독해", countPerRound: 8 },
     "order-57-58": { start: 57, end: 58, short: "57~58 문장 순서", countPerRound: 2 },
-    "long-set-59-60": { start: 59, end: 60, short: "59~60 문장 삽입·내용 일치", countPerRound: 2 },
-    "long-set-61-62": { start: 61, end: 62, short: "61~62 문맥 빈칸·내용 일치", countPerRound: 2 },
-    "long-set-63-64": { start: 63, end: 64, short: "63~64 작성 목적·내용 일치", countPerRound: 2 },
-    "long-set-65-66": { start: 65, end: 66, short: "65~66 문맥 빈칸·내용 일치", countPerRound: 2 },
-    "long-set-67-68": { start: 67, end: 68, short: "67~68 문맥 빈칸·사실 판단", countPerRound: 2 },
-    "long-set-69-70": { start: 69, end: 70, short: "69~70 문맥 빈칸·근거 추론", countPerRound: 2 }
+    "long-set-59-60": { start: 59, end: 60, short: "59~60 삽입·일치", countPerRound: 2 },
+    "long-set-61-62": { start: 61, end: 62, short: "61~62 빈칸·일치", countPerRound: 2 },
+    "long-set-63-64": { start: 63, end: 64, short: "63~64 목적·일치", countPerRound: 2 },
+    "long-set-65-66": { start: 65, end: 66, short: "65~66 빈칸·일치", countPerRound: 2 },
+    "long-set-67-68": { start: 67, end: 68, short: "67~68 빈칸·판단", countPerRound: 2 },
+    "long-set-69-70": { start: 69, end: 70, short: "69~70 빈칸·추론", countPerRound: 2 }
   };
 
   let originalGetActiveTimeLimitSeconds = null;
@@ -228,7 +238,7 @@
       button.className = HANDOUT_STYLE_CLASS;
       button.type = "button";
       button.disabled = true;
-      button.textContent = "선택한 문항 학생용 유인물 출력";
+      button.textContent = "학생용 유인물 출력";
       button.addEventListener("click", openSelectedHandout);
       status.insertAdjacentElement("afterend", button);
     }
@@ -251,9 +261,9 @@
         const roundSummary = makeRoundSummary(selection.rounds);
         status.textContent = `${roundSummary} 선택됨 · 대표 유형을 선택하세요.`;
       } else if (selection.type && selection.rounds.length === 0) {
-        status.textContent = `${selection.type.short} 선택됨 · 연습 회차를 선택하세요.`;
+        status.textContent = `${selection.type.short} 선택됨 · 실전 회차를 선택하세요.`;
       } else {
-        status.textContent = "연습 회차와 대표 유형을 선택하세요.";
+        status.textContent = "실전 회차와 대표 유형을 선택하세요.";
       }
     }
 
@@ -264,11 +274,11 @@
       button.setAttribute("aria-disabled", button.disabled ? "true" : "false");
 
       if (selection.ready) {
-        button.textContent = `선택한 문항 학생용 유인물 출력 (${selection.rounds.length}개 회차)`;
+        button.textContent = `학생용 유인물 출력 (${selection.rounds.length}개 회차)`;
         button.title = `${selection.type.short} · ${selection.rounds.length}개 회차 · ${selection.totalQuestions}문항`;
       } else {
-        button.textContent = "선택한 문항 학생용 유인물 출력";
-        button.title = "연습 회차와 대표 유형을 먼저 선택하세요.";
+        button.textContent = "학생용 유인물 출력";
+        button.title = "실전 회차와 대표 유형을 먼저 선택하세요.";
       }
     }
   }
@@ -294,7 +304,7 @@
 
     const selection = getPracticeSelection();
     if (!selection.ready) {
-      alert("학생용 유인물로 출력할 연습 회차와 대표 유형을 먼저 선택하세요.");
+      alert("학생용 유인물로 출력할 실전 회차와 대표 유형을 먼저 선택하세요.");
       updateStatusAndHandout();
       return;
     }
@@ -474,6 +484,7 @@
   }
 
   function init() {
+    ensureCompactPracticeUi();
     installTimerHooks();
     installObservers();
     scheduleUpdate();
