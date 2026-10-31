@@ -371,16 +371,51 @@ const TOPIK1_READING_TYPE_DEFINITIONS = [
   },
   {
     id: "T07",
-    label: "문장 순서·문장 삽입",
-    focus: "글의 흐름, 삽입 위치, 문장 간 연결 단서 파악",
+    label: "문장 순서 배열",
+    focus: "글의 시간적·논리적 순서를 파악하기",
     start: 57,
-    end: 60
+    end: 58
   },
   {
     id: "T08",
-    label: "긴 지문·공통 지문",
-    focus: "긴 글의 세부 내용, 추론, 글쓴이 의도 파악",
+    label: "문장 삽입·내용 일치",
+    focus: "삽입 문장의 앞뒤 연결 및 본문 사실 일치",
+    start: 59,
+    end: 60
+  },
+  {
+    id: "T09",
+    label: "문맥 빈칸·내용 일치",
+    focus: "문맥에 맞는 표현 선택 및 내용 일치",
     start: 61,
+    end: 62
+  },
+  {
+    id: "T10",
+    label: "작성 목적·내용 일치",
+    focus: "작성 의사소통 목적 및 본문 정보 일치",
+    start: 63,
+    end: 64
+  },
+  {
+    id: "T11",
+    label: "문맥 빈칸·내용 일치 (65~66)",
+    focus: "설명문에서 문맥 표현과 정보 일치",
+    start: 65,
+    end: 66
+  },
+  {
+    id: "T12",
+    label: "문맥 빈칸·사실 판단",
+    focus: "회차별 빈칸 두 개 또는 빈칸·사실 일치",
+    start: 67,
+    end: 68
+  },
+  {
+    id: "T13",
+    label: "문맥 빈칸·근거 추론",
+    focus: "문맥 표현 완성 및 지문의 근거로 추론",
+    start: 69,
     end: 70
   }
 ];
@@ -401,11 +436,14 @@ function inferTopik1ReadingTypeId(item) {
     item && item.diagnostic_area
   ].join(" ");
 
-  if (/문장 삽입|삽입/.test(text)) return "T07";
+  // 번호가 없는 옛 결과를 위한 추정 분류이며, 원본 번호(31~70)를 우선합니다.
+  if (/문장 삽입|삽입/.test(text)) return "T08";
   if (/문장 순서|문장 배열|순서/.test(text)) return "T07";
+  if (/추론/.test(text)) return "T13";
+  if (/공지문의 목적|작성 목적|글쓴이.*목적/.test(text)) return "T10";
   if (/자료|그림|표|이미지|초대장|메시지/.test(text)) return "T03";
   if (/생활문|공지문|안내문/.test(text)) return "T06";
-  if (/긴 지문|추론/.test(text)) return "T08";
+  if (/긴 지문/.test(text)) return "T11";
   if (/공통 지문/.test(text)) return "T06";
   if (/중심/.test(text)) return "T05";
   if (/주제|소재/.test(text)) return "T01";
